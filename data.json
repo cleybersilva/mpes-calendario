@@ -1,0 +1,742 @@
+{
+  "meta": {
+    "curso": "Mestrado Profissional em Engenharia de Software",
+    "instituicao": "CESAR School",
+    "turma": "MPES 2026.2",
+    "fonte": "Calendário MPES 2026.2 (em construção) — atualizado 21/10",
+    "updatedAt": "2026-10-28T20:30:00-03:00"
+  },
+  "items": [
+    {
+      "id": "i001",
+      "titulo": "Aula inaugural",
+      "modulo": "",
+      "categoria": "inaugural",
+      "inicio": "2026-10-23",
+      "fim": "2026-10-23",
+      "horarios": [
+        "sex1"
+      ],
+      "professor": "",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i002",
+      "titulo": "Gestão — Básico",
+      "modulo": "Construção de Software I",
+      "categoria": "gestao",
+      "inicio": "2026-10-23",
+      "fim": "2026-10-24",
+      "horarios": [
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Allan Araujo",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i014",
+      "titulo": "Acompanhamento dos projetos",
+      "modulo": "",
+      "categoria": "acompanhamento",
+      "inicio": "2026-10-28",
+      "fim": "2026-10-28",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "Washington Almeida",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i003",
+      "titulo": "Requisitos — Básico",
+      "modulo": "Construção de Software I",
+      "categoria": "requisitos",
+      "inicio": "2026-11-06",
+      "fim": "2026-11-07",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Rodrigo Medeiros",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i015",
+      "titulo": "Acompanhamento dos projetos",
+      "modulo": "",
+      "categoria": "acompanhamento",
+      "inicio": "2026-11-11",
+      "fim": "2026-11-11",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "Washington Almeida",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i004",
+      "titulo": "Arquitetura — Básico",
+      "modulo": "Construção de Software I",
+      "categoria": "arquitetura",
+      "inicio": "2026-11-13",
+      "fim": "2026-11-14",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Walter Seiffert",
+      "modalidade": "online",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i005",
+      "titulo": "Interoperabilidade — Básico",
+      "modulo": "Construção de Software I",
+      "categoria": "interoperabilidade",
+      "inicio": "2026-11-27",
+      "fim": "2026-11-28",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Fernando Carvalho",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i016",
+      "titulo": "Acompanhamento dos projetos",
+      "modulo": "",
+      "categoria": "acompanhamento",
+      "inicio": "2026-12-09",
+      "fim": "2026-12-09",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "Washington Almeida",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i006",
+      "titulo": "Gestão — Intermediário",
+      "modulo": "Construção de Software II",
+      "categoria": "gestao",
+      "inicio": "2026-12-11",
+      "fim": "2026-12-12",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Suzanna Sandes",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i007",
+      "titulo": "Requisitos — Intermediário",
+      "modulo": "Construção de Software II",
+      "categoria": "requisitos",
+      "inicio": "2026-12-18",
+      "fim": "2026-12-19",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Allan Araujo",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i017",
+      "titulo": "Acompanhamento dos projetos",
+      "modulo": "",
+      "categoria": "acompanhamento",
+      "inicio": "2027-01-06",
+      "fim": "2027-01-06",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "Washington Almeida",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i008",
+      "titulo": "Arquitetura — Intermediário",
+      "modulo": "Construção de Software II",
+      "categoria": "arquitetura",
+      "inicio": "2027-01-08",
+      "fim": "2027-01-09",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Carlos Diego",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i009",
+      "titulo": "Interoperabilidade — Intermediário",
+      "modulo": "Construção de Software II",
+      "categoria": "interoperabilidade",
+      "inicio": "2027-01-22",
+      "fim": "2027-01-23",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "A definir",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i018",
+      "titulo": "Acompanhamento dos projetos",
+      "modulo": "",
+      "categoria": "acompanhamento",
+      "inicio": "2027-01-27",
+      "fim": "2027-01-27",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "Washington Almeida",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i026",
+      "titulo": "Avaliação de projetos — SR1",
+      "modulo": "",
+      "categoria": "avaliacao",
+      "inicio": "2027-02-17",
+      "fim": "2027-02-17",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i010",
+      "titulo": "Gestão — Avançado",
+      "modulo": "Construção de Software III",
+      "categoria": "gestao",
+      "inicio": "2027-02-19",
+      "fim": "2027-02-20",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Suzanna Sandes",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i019",
+      "titulo": "Acompanhamento dos projetos",
+      "modulo": "",
+      "categoria": "acompanhamento",
+      "inicio": "2027-02-24",
+      "fim": "2027-02-24",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "Washington Almeida",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i011",
+      "titulo": "Requisitos — Avançado",
+      "modulo": "Construção de Software III",
+      "categoria": "requisitos",
+      "inicio": "2027-02-26",
+      "fim": "2027-02-27",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Aêda Sousa",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i020",
+      "titulo": "Acompanhamento dos projetos",
+      "modulo": "",
+      "categoria": "acompanhamento",
+      "inicio": "2027-03-10",
+      "fim": "2027-03-10",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "Washington Almeida",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i012",
+      "titulo": "Interoperabilidade — Avançado",
+      "modulo": "Construção de Software III",
+      "categoria": "interoperabilidade",
+      "inicio": "2027-03-12",
+      "fim": "2027-03-13",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Milton Lima",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i021",
+      "titulo": "Acompanhamento dos projetos",
+      "modulo": "",
+      "categoria": "acompanhamento",
+      "inicio": "2027-03-24",
+      "fim": "2027-03-24",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "Washington Almeida",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i013",
+      "titulo": "Arquitetura — Avançado",
+      "modulo": "Construção de Software III",
+      "categoria": "arquitetura",
+      "inicio": "2027-04-02",
+      "fim": "2027-04-03",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Carlos Diego",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i022",
+      "titulo": "Acompanhamento dos projetos",
+      "modulo": "",
+      "categoria": "acompanhamento",
+      "inicio": "2027-04-14",
+      "fim": "2027-04-14",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "Washington Almeida",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i023",
+      "titulo": "Acompanhamento dos projetos",
+      "modulo": "",
+      "categoria": "acompanhamento",
+      "inicio": "2027-04-28",
+      "fim": "2027-04-28",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "Washington Almeida",
+      "modalidade": "presencial",
+      "semestre": 1,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i024",
+      "titulo": "Acompanhamento dos projetos",
+      "modulo": "",
+      "categoria": "acompanhamento",
+      "inicio": "2027-05-12",
+      "fim": "2027-05-12",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "Washington Almeida",
+      "modalidade": "presencial",
+      "semestre": 2,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i027",
+      "titulo": "Avaliação de projetos — SR2",
+      "modulo": "",
+      "categoria": "avaliacao",
+      "inicio": "2027-05-19",
+      "fim": "2027-05-19",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "",
+      "modalidade": "presencial",
+      "semestre": 2,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i029",
+      "titulo": "Metodologia — Parte 1",
+      "modulo": "Metodologia",
+      "categoria": "metodologia",
+      "inicio": "2027-05-21",
+      "fim": "2027-05-22",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Gustavo",
+      "modalidade": "online",
+      "semestre": 2,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i030",
+      "titulo": "Eletivas — Parte 1",
+      "modulo": "Eletivas",
+      "categoria": "eletiva",
+      "inicio": "2027-06-04",
+      "fim": "2027-06-05",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "",
+      "modalidade": "presencial",
+      "semestre": 2,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i025",
+      "titulo": "Acompanhamento dos projetos",
+      "modulo": "",
+      "categoria": "acompanhamento",
+      "inicio": "2027-06-16",
+      "fim": "2027-06-16",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "Washington Almeida",
+      "modalidade": "presencial",
+      "semestre": 2,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i031",
+      "titulo": "Metodologia — Parte 2",
+      "modulo": "Metodologia",
+      "categoria": "metodologia",
+      "inicio": "2027-06-18",
+      "fim": "2027-06-19",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Danilo",
+      "modalidade": "presencial",
+      "semestre": 2,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i032",
+      "titulo": "Eletivas — Parte 2",
+      "modulo": "Eletivas",
+      "categoria": "eletiva",
+      "inicio": "2027-07-09",
+      "fim": "2027-07-10",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "",
+      "modalidade": "presencial",
+      "semestre": 2,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i028",
+      "titulo": "Avaliação de projetos — SR3",
+      "modulo": "",
+      "categoria": "avaliacao",
+      "inicio": "2027-07-29",
+      "fim": "2027-07-29",
+      "horarios": [
+        "qua"
+      ],
+      "professor": "",
+      "modalidade": "presencial",
+      "semestre": 2,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i033",
+      "titulo": "Metodologia — Parte 3",
+      "modulo": "Metodologia",
+      "categoria": "metodologia",
+      "inicio": "2027-07-30",
+      "fim": "2027-07-31",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Danilo",
+      "modalidade": "presencial",
+      "semestre": 2,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i034",
+      "titulo": "Metodologia — Parte 4",
+      "modulo": "Metodologia",
+      "categoria": "metodologia",
+      "inicio": "2027-08-13",
+      "fim": "2027-08-14",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "Gustavo",
+      "modalidade": "online",
+      "semestre": 2,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i035",
+      "titulo": "Eletivas — Parte 3",
+      "modulo": "Eletivas",
+      "categoria": "eletiva",
+      "inicio": "2027-08-27",
+      "fim": "2027-08-28",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "",
+      "modalidade": "presencial",
+      "semestre": 2,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i037",
+      "titulo": "Acompanhamento de Dissertação I",
+      "modulo": "",
+      "categoria": "marco",
+      "inicio": "2027-09-01",
+      "fim": "2028-03-31",
+      "horarios": [],
+      "professor": "",
+      "modalidade": "presencial",
+      "semestre": 0,
+      "local": "",
+      "notas": "De set/2027 até mar/2028",
+      "status": "auto"
+    },
+    {
+      "id": "i036",
+      "titulo": "Eletivas — Parte 4",
+      "modulo": "Eletivas",
+      "categoria": "eletiva",
+      "inicio": "2027-09-17",
+      "fim": "2027-09-18",
+      "horarios": [
+        "sex1",
+        "sex2",
+        "sab1",
+        "sab2"
+      ],
+      "professor": "",
+      "modalidade": "presencial",
+      "semestre": 2,
+      "local": "CESAR School",
+      "notas": "",
+      "status": "auto"
+    },
+    {
+      "id": "i038",
+      "titulo": "Defesa da Qualificação (prazo)",
+      "modulo": "",
+      "categoria": "marco",
+      "inicio": "2028-03-30",
+      "fim": "2028-03-30",
+      "horarios": [],
+      "professor": "",
+      "modalidade": "presencial",
+      "semestre": 0,
+      "local": "",
+      "notas": "Até 30 de março de 2028",
+      "status": "auto"
+    },
+    {
+      "id": "i039",
+      "titulo": "Acompanhamento de Dissertação II",
+      "modulo": "",
+      "categoria": "marco",
+      "inicio": "2028-04-01",
+      "fim": "2028-09-30",
+      "horarios": [],
+      "professor": "",
+      "modalidade": "presencial",
+      "semestre": 0,
+      "local": "",
+      "notas": "De abr/2028 até set/2028",
+      "status": "auto"
+    },
+    {
+      "id": "i040",
+      "titulo": "Defesa da Dissertação (prazo)",
+      "modulo": "",
+      "categoria": "marco",
+      "inicio": "2028-09-30",
+      "fim": "2028-09-30",
+      "horarios": [],
+      "professor": "",
+      "modalidade": "presencial",
+      "semestre": 0,
+      "local": "",
+      "notas": "Até 30 de setembro de 2028 — tempo regular",
+      "status": "auto"
+    }
+  ]
+}
