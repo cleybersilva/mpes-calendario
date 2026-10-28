@@ -298,7 +298,7 @@ footer a{color:var(--muted)}
       <select id="fSem" aria-label="Filtrar por semestre"><option value="">Semestres</option><option value="1">Semestre 1</option><option value="2">Semestre 2</option><option value="0">Dissertação</option></select>
       <select id="fProf" aria-label="Filtrar por professor"><option value="">Professores</option></select>
     </div>
-    <label class="toggle"><input type="checkbox" id="fPast"> Mostrar realizados</label>
+    <label class="toggle"><input type="checkbox" id="fPast" checked> Mostrar realizados</label>
   </div>
   <div class="legend" id="legend"></div>
 
@@ -775,6 +775,8 @@ async function publish(){
 }
 
 /* boot */
+try { const fp = localStorage.getItem('mpes2026_showpast'); if (fp !== null) $('#fPast').checked = fp === '1'; } catch(_){}
+$('#fPast').addEventListener('change', e => { try { localStorage.setItem('mpes2026_showpast', e.target.checked ? '1' : '0'); } catch(_){} });
 fillSelects();
 load();
 setInterval(renderNext, 30000);
