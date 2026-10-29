@@ -16,6 +16,7 @@
 [![Agenda](https://img.shields.io/badge/exporta-.ics_%C2%B7_JSON-a3e635.svg)](#️-uso)
 [![Token](https://img.shields.io/badge/token-s%C3%B3_no_navegador-yellow.svg)](#-segurança)
 
+[🌐 Página ao vivo](https://cleybersilva.github.io/mpes-calendario/) •
 [Sobre](#-sobre-o-projeto) •
 [Arquitetura](#-arquitetura) •
 [Funcionalidades](#-funcionalidades) •
@@ -26,7 +27,9 @@
 [Calendário](#-calendário-2026-2027) •
 [Autor](#-autor)
 
-**🌐 Acesse: [cleybersilva.github.io/mpes-calendario](https://cleybersilva.github.io/mpes-calendario/)**
+<a href="https://cleybersilva.github.io/mpes-calendario/"><img src="https://img.shields.io/badge/%F0%9F%93%85_Abrir_o_calend%C3%A1rio-cleybersilva.github.io%2Fmpes--calendario-FF6200?style=for-the-badge" alt="Abrir o calendário"></a>
+
+**🌐 Página do calendário: <https://cleybersilva.github.io/mpes-calendario/>**
 
 ---
 
@@ -51,7 +54,9 @@ em horário comercial e precisa negociar a saída nas sextas, isso conta. Esta
 página resolve as duas coisas: mantém o calendário editável e mostra o que
 importa para o planejamento, no celular ou no computador.
 
-![Painel no desktop](docs/screenshot-desktop.png)
+[![Painel no desktop](docs/screenshot-desktop.png)](https://cleybersilva.github.io/mpes-calendario/)
+
+> 👉 **Acesse a página ao vivo:** [cleybersilva.github.io/mpes-calendario](https://cleybersilva.github.io/mpes-calendario/), no computador ou no celular. No celular, use o menu ⋮ › *Instalar como app* para ter o calendário na tela inicial.
 
 ## 🏗️ Arquitetura
 
