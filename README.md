@@ -255,37 +255,74 @@ avaliações de projetos SR1 (17/02/2027), SR2 (19/05/2027) e SR3 (29/07/2027).
 
 ### **Cleyber Gomes da Silva**
 
-**AI Scientist / SRE Engineer** · TCS × Itaú Unibanco
-**Aluno de MBA em Inteligência Artificial e Big Data** · ICMC / USP
-**Mestrando em Engenharia de Software** · CESAR School · **Doutorando em Ciências da Educação** · VCCU
+**Senior Site Reliability Engineer & AI Specialist** · TCS × Itaú Unibanco (TAG)
+**Platform Engineering** · Veni Creator Christian University (VCCU)
+**Mestrando em Engenharia de Software** · CESAR School · **MBA em IA e Big Data** · ICMC / USP
 
 📍 João Pessoa, Paraíba, Brasil
 
 [![GitHub](https://img.shields.io/badge/GitHub-cleybersilva-181717?logo=github)](https://github.com/cleybersilva)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?logo=linkedin)](https://linkedin.com/in/cleyber-silva)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-cleybersilva-0A66C2?logo=linkedin)](https://www.linkedin.com/in/cleybersilva/)
+[![EduAutismo IA](https://img.shields.io/badge/EduAutismo_IA-eduautismo.org-6C5CE7)](https://eduautismo.org/)
 
 </div>
 
 ### Sobre o autor
 
-AI Scientist / SRE Engineer com experiência em ambientes bancários regulados,
-atualmente alocado ao **Itaú Unibanco** via **TCS (Tata Consultancy
-Services)**. Simultaneamente, mestrando em **Engenharia de Software** pela
-**CESAR School** e doutorando em **Ciências da Educação** pela **VCCU (Veni Creator
-Christian University)**, onde também atua como professor, pesquisador e
-gestor do VLE (Moodle).
+Engenheiro com mais de 15 anos em tecnologia, que saiu do desenvolvimento
+desktop e web para DevOps, DevSecOps e, hoje, **Site Reliability Engineering
+com Inteligência Artificial** em ambientes bancários regulados. Desde
+**março de 2023** está na **TCS (Tata Consultancy Services)**, atualmente
+como **Senior SRE & AI Specialist na TAG do Itaú Unibanco**, apoiando várias
+squads e Release Trains com foco em confiabilidade e observabilidade de
+sistemas críticos.
 
-Especialista em **RPA → hyperautomation**, **GitOps**, **Observability** e
-**AI aplicada a operações**. O **mpes-calendario** nasceu da necessidade
-prática de conciliar o mestrado com a rotina de trabalho: saber de antemão
-quais sextas exigem ausência, o que vem no próximo encontro e quanto falta
-para a defesa, sem depender de um PDF estático.
+No Itaú, arquitetou a união entre **SRE, Infraestrutura como Código
+(Terraform) e IA generativa**: agentes com **RAG** integrados à **AWS** e ao
+**Datadog** num modelo de **Observabilidade como Código**, que reduz a fadiga
+de alertas, valida infraestrutura de forma autônoma e gera post-mortems
+(RCAs) dentro das diretrizes de governança do banco. Também conduz war rooms
+de incidentes orientadas a Golden Signals, SLOs e Error Budgets e cuida da
+robustez dos pipelines de CI/CD.
 
-**Formação simultânea:**
-- 🎓 MBA em Inteligência Artificial e Big Data — ICMC/USP
-- 🎓 Mestrado em Engenharia de Software — CESAR School
-- 🎓 Doutorado em Ciências da Educação — VCCU
-- 🎓 Pós-graduações concorrentes em DevOps, Cloud Architecture, SRE e .NET/Azure
+Em paralelo, atua em **Platform Engineering na VCCU** (Orlando, EUA) desde
+2021, mantendo sistemas internos, o VLE em Moodle e serviços web. Na
+pesquisa, concluiu em outubro de 2026 o **MBA em IA e Big Data do ICMC/USP**
+com o **[EduAutismo IA](https://eduautismo.org/)**, sistema que usa IA para
+apoiar professores na adaptação de atividades para alunos com TEA, já em
+produção e com código aberto. No **Mestrado Profissional da CESAR School**,
+pesquisa engenharia de software suportada por IA, observabilidade de
+sistemas com LLMs e IA confiável.
+
+**Trajetória profissional:**
+
+| Período | Função | Organização |
+| --- | --- | --- |
+| mar/2023 – atual | Senior Site Reliability Engineer & AI Specialist | TCS · Itaú Unibanco (TAG) |
+| mar/2023 – nov/2023 | Senior DevSecOps Engineer | TCS · Bradesco Seguros |
+| jan/2021 – atual | Platform Engineering | Veni Creator Christian University |
+| abr/2018 – jan/2023 | DevOps Engineer | UNICORP Faculdades |
+| jan/2017 – set/2022 | Desenvolvedor Full Stack (freelance) | The Solution Consultoria |
+| jan/2010 – jan/2016 | Desenvolvedor Desktop e Front-End | Franquia Microcamp |
+
+**Formação:**
+- 🎓 Mestrado Profissional em Engenharia de Software — CESAR School (2026–2028, em andamento)
+- 🎓 MBA em Inteligência Artificial e Big Data — ICMC/USP (2025–2026)
+- 🎓 Doutorado em Ciências da Educação — VCCU (em andamento)
+- 🎓 Mestrado em Ciências da Educação, Information Technology — VCCU (2022–2023)
+- 🎓 Especialização em Site Reliability Engineering — PUC Minas (2024–2025)
+- 🎓 Pós-graduação em Arquitetura de Sistemas .NET com Azure — FIAP (2023–2024)
+- 🎓 Pós-graduação em Engenharia DevOps — Unyleya (2022–2023)
+- 🎓 MBA em Gestão de Pessoas e Coaching — UNICORP (2019–2020)
+- 🎓 Tecnólogo em Análise e Desenvolvimento de Sistemas — Estácio (2020–2022)
+- 🎓 Bacharelado em Administração — Estácio (2010–2014)
+
+**Competências:** IA generativa (LLMs, RAG, agentes) · AIOps · Observabilidade
+como Código · Datadog · Terraform · Kubernetes (AKS/EKS) · GitOps · AWS ·
+Azure · CI/CD · DevSecOps · .NET · Python.
+
+**Certificações em destaque:** EXIN Artificial Intelligence Foundation ·
+Terraform Essentials (LINUXtips) · Automatizando DevSecOps (FIAP).
 
 ---
 
