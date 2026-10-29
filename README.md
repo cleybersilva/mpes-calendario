@@ -23,6 +23,7 @@
 [Instalação](#-instalação) •
 [Uso](#️-uso) •
 [Sincronização](#-sincronização-com-o-github) •
+[Por que sincronizar](#-por-que-sincronizar) •
 [Segurança](#-segurança) •
 [Calendário](#-calendário-2026-2027) •
 [Autor](#-autor)
@@ -193,6 +194,29 @@ qualquer dispositivo:
 4. Na página: **⋮ › Configurar sincronização GitHub**, cole o token
    (usuário e repositório já vêm preenchidos) e salve.
 5. Depois de editar: **⋮ › Publicar alterações no GitHub**.
+
+### 💡 Por que sincronizar
+
+Sem publicar, cada edição fica presa ao navegador onde foi feita. Ao
+publicar, ela vira a versão oficial, que qualquer dispositivo enxerga.
+
+| Benefício | O que muda na prática |
+| --- | --- |
+| 📱 **Mesmo calendário em todo lugar** | Marcou uma aula como concluída no notebook? O celular, o computador do trabalho ou outro navegador já abrem com a mudança, sem cópias divergentes |
+| 🛟 **Edições não se perdem** | Limpar o histórico, usar aba anônima ou trocar de computador não apaga nada: cada publicação vira um commit guardado no GitHub |
+| 🕓 **Histórico de todas as mudanças** | O GitHub registra cada versão do `data.json` com data e hora; um encontro apagado por engano pode ser recuperado a qualquer momento |
+| 👥 **Compartilhável com a turma** | Quem abrir o link vê o calendário atualizado (professor confirmado, data remanejada, eletiva definida). Só quem tem o token altera; os demais apenas leem |
+| 🛡️ **Proteção contra sobrescrever** | Se a versão publicada mudou em outro aparelho desde que a página foi aberta, ela avisa antes de substituir |
+
+**Fluxo do dia a dia:** edite à vontade; quando o selo mostrar
+**"Alterações não publicadas"**, toque nele para publicar. Em 1 a 2 minutos
+o site está atualizado para todos.
+
+**Validade do token:** o token expira no prazo escolhido (sugestão: 90
+dias). Quando vencer, a publicação avisa que o token é inválido; basta
+gerar outro e colar no mesmo lugar. O token fica salvo só no navegador onde
+foi colado, então repita a configuração em cada aparelho de onde quiser
+publicar.
 
 ## 🔒 Segurança
 
