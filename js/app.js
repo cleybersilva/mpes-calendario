@@ -224,6 +224,18 @@ function renderKpis(){
     $('#kDef').textContent = `${pad(d.getMonth()+1)}/${d.getFullYear()}`; $('#kDefS').textContent = `prazo regular · ~${m} meses`; }
   else { $('#kDef').textContent = '—'; $('#kDefS').textContent = ''; }
 }
+/* uma linha por dia do encontro: "sex, 6 de novembro · 14h–17h · 18h–21h" */
+const DOW_LONG = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+const hm = t => { const [h,m] = t.split(':'); return m === '00' ? `${Number(h)}h` : `${Number(h)}h${m}`; };
+function dayLines(it){
+  const a = pd(it.inicio), b = pd(it.fim), slots = it.horarios.map(k => SLOTS[k]).filter(Boolean), out = [];
+  if ((b - a) > 7*DAY || !slots.length) return [fmtRange(it, true)];
+  for (let d = new Date(a); d <= b; d.setDate(d.getDate()+1)){
+    const ts = slots.filter(z => z.dow === d.getDay()).sort((x,y) => x.s.localeCompare(y.s)).map(z => `${hm(z.s)}–${hm(z.e)}`);
+    if (ts.length) out.push(`${DOW_LONG[d.getDay()]}, ${d.getDate()} de ${MONTHS[d.getMonth()]} · ${ts.join(' · ')}`);
+  }
+  return out.length ? out : [fmtRange(it, true)];
+}
 function nextItem(){ return state.items.filter(i => i.status !== 'cancelado' && i.categoria !== 'marco' && isUpcoming(i)).sort(byDate)[0]; }
 function renderNext(){
   const n = nextItem(), el = $('#nextCard');
@@ -234,7 +246,7 @@ function renderNext(){
   el.innerHTML = `<div class="lbl">${statusOf(n) === 'hoje' ? 'Acontecendo hoje' : 'Próximo encontro'}</div>
     <h2>${esc(n.titulo)}</h2>
     <div class="sub">${esc(n.modulo || CATS[n.categoria]?.label || '')}${n.professor ? ' · ' + esc(n.professor) : ''}</div>
-    <div class="meta"><span class="chip-w">${esc(fmtRange(n,true))}</span>${slotTxt(n) ? `<span class="chip-w">${esc(slotTxt(n))}</span>` : ''}${n.modalidade === 'online' ? '<span class="chip-w">Online</span>' : ''}</div>
+    <div class="meta">${dayLines(n).map(l => `<span class="chip-w">${esc(l)}</span>`).join('')}${n.modalidade === 'online' ? '<span class="chip-w">Online</span>' : ''}</div>
     <div class="count" aria-label="Faltam ${dd} dias, ${hh} horas e ${mm} minutos"><div><b>${dd}</b><small>dias</small></div><div><b>${hh}</b><small>horas</small></div><div><b>${mm}</b><small>min</small></div></div>`;
 }
 

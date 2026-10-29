@@ -82,8 +82,9 @@ header.top{position:sticky;top:0;z-index:30;background:color-mix(in oklab,var(--
 .next .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.12em;opacity:.85;font-weight:600}
 .next h2{font-size:clamp(20px,2.6vw,26px);margin:8px 0 4px;position:relative;z-index:1;max-width:80%}
 .next .sub{opacity:.92;position:relative;z-index:1}
-.next .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;position:relative;z-index:1}
-.chip-w{background:rgba(255,255,255,.18);padding:5px 10px;border-radius:999px;font-size:13px;font-weight:500}
+.next .meta{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:14px;position:relative;z-index:1}
+.chip-w{background:rgba(255,255,255,.18);padding:6px 12px;border-radius:999px;font-size:13.5px;font-weight:500;max-width:100%}
+.chip-w::first-letter{text-transform:uppercase}
 .count{display:flex;gap:10px;margin-top:18px;position:relative;z-index:1}
 .count div{background:rgba(0,0,0,.16);border-radius:12px;padding:8px 12px;min-width:64px;text-align:center}
 .count b{display:block;font-family:Sora,Inter,system-ui,sans-serif;font-size:22px;line-height:1.1;font-variant-numeric:tabular-nums}
