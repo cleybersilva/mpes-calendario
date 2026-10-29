@@ -5,9 +5,9 @@
 ### Calendário vivo das aulas do Mestrado Profissional em Engenharia de Software da CESAR School (turma MPES 2026.2), editável no navegador e publicado no GitHub Pages
 
 [![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-online-222222?logo=github&logoColor=white)](https://cleybersilva.github.io/mpes-calendario/)
-[![HTML5](https://img.shields.io/badge/HTML5-single_file-E34F26?logo=html5&logoColor=white)](index.html)
-[![JavaScript](https://img.shields.io/badge/JavaScript-vanilla-F7DF1E?logo=javascript&logoColor=black)](index.html)
-[![CSS](https://img.shields.io/badge/CSS-responsivo_%2B_dark_mode-1572B6?logo=css3&logoColor=white)](index.html)
+[![HTML5](https://img.shields.io/badge/HTML5-PWA-E34F26?logo=html5&logoColor=white)](index.html)
+[![JavaScript](https://img.shields.io/badge/JavaScript-vanilla-F7DF1E?logo=javascript&logoColor=black)](js/app.js)
+[![CSS](https://img.shields.io/badge/CSS-responsivo_%2B_dark_mode-1572B6?logo=css3&logoColor=white)](css/styles.css)
 [![CESAR School](https://img.shields.io/badge/CESAR_School-MPES_2026.2-FF6200)](https://www.cesar.school)
 
 [![Itens](https://img.shields.io/badge/itens-40-blue.svg)](data.json)
@@ -38,8 +38,8 @@
 do **MPES 2026.2 (CESAR School)** num painel vivo: dá para adicionar, editar,
 duplicar, marcar como concluído e excluir encontros direto no navegador, ver
 o próximo encontro com contagem regressiva e acompanhar o progresso do curso
-até a defesa da dissertação. Tudo cabe em um único `index.html` mais um
-`data.json`: sem build, sem framework, sem backend.
+até a defesa da dissertação. São arquivos estáticos (HTML, CSS, JavaScript e um
+`data.json`): sem build, sem framework, sem backend.
 
 ### 🧩 O problema que isto resolve
 
@@ -58,7 +58,7 @@ importa para o planejamento, no celular ou no computador.
 ```mermaid
 flowchart LR
     subgraph REPO["Repositório GitHub · main"]
-        H["index.html<br/>UI + lógica (vanilla JS)"]
+        H["index.html · css/ · js/<br/>UI + lógica (vanilla JS)"]
         D["data.json<br/>versão publicada do calendário"]
         A["assets/<br/>logos CESAR School"]
     end
@@ -92,7 +92,10 @@ flowchart LR
 
 | Arquivo | Papel |
 | --- | --- |
-| `index.html` | Interface, estilos e lógica, em um único arquivo |
+| `index.html` | Marcação da interface |
+| `css/styles.css` | Estilos: tema claro/escuro, layout responsivo, bottom sheets e barra inferior no celular |
+| `js/app.js` | Lógica: CRUD, validação dos dados, filtros, calendário, exportação `.ics`, sincronização com GitHub |
+| `sw.js` · `manifest.webmanifest` | PWA: funciona offline e pode ser instalado na tela inicial |
 | `data.json` | Fonte publicada dos itens (`meta` + `items`) |
 | `assets/logo-cesar.png` | Logo e favicon |
 | `docs/` | Capturas usadas neste README |
@@ -110,8 +113,11 @@ flowchart LR
 | Agenda | Exporta `.ics` com cada turno como evento (fuso America/Recife) |
 | Backup | Baixa e importa o calendário em JSON |
 | Tema | Claro e escuro, seguindo o sistema ou escolhido manualmente |
-| Responsivo | Layout próprio para celular, com botão flutuante "+" |
-| Atalho | Tecla `n` abre um novo item |
+| Mobile | Barra de navegação inferior, formulários e detalhes em *bottom sheet* (arrastar para baixo fecha), filtros em painel, botão "voltar" do celular fecha janelas, deslizar no calendário troca o mês |
+| Agenda do dia | Toque num dia do calendário para ver os itens e adicionar um novo naquela data |
+| Offline / app | Funciona sem internet com a última versão salva e pode ser instalado como app (PWA) |
+| Robustez | Dados validados e normalizados ao carregar/importar, aviso antes de sobrescrever uma versão publicada por outro dispositivo, sincronização entre abas |
+| Atalhos | `n` novo item · `/` buscar · `t` ir para hoje · `←` `→` trocar mês |
 
 ## 🚀 Instalação
 

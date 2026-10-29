@@ -6,279 +6,61 @@
 <title>MPES 2026.2 · Calendário</title>
 <meta name="description" content="Calendário vivo das aulas do Mestrado Profissional em Engenharia de Software — CESAR School, turma 2026.2">
 <meta name="theme-color" content="#FF6200">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MPES 2026.2">
+<meta property="og:title" content="MPES 2026.2 · Calendário">
+<meta property="og:description" content="Calendário vivo das aulas do Mestrado Profissional em Engenharia de Software — CESAR School">
+<meta property="og:image" content="assets/icon-512.png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="assets/logo-cesar.png">
-<link rel="apple-touch-icon" href="assets/logo-cesar.png">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --brand:#FF6200; --brand-600:#E85700; --brand-50:#FFF1E7; --brand-100:#FFE2CC;
-  --bg:#FFF8F2; --surface:#FFFFFF; --surface-2:#FBF4EE; --line:#F0E4DA; --line-2:#E6D6C8;
-  --text:#2A1A10; --muted:#7A665A; --soft:#A8968A;
-  --ok:#1F9D63; --warn:#C98A00; --danger:#D9363E;
-  --shadow:0 1px 2px rgba(60,30,10,.05),0 8px 24px -12px rgba(60,30,10,.18);
-  --radius:18px;
-  --c-inaugural:#F08A2C; --c-gestao:#4C7CE0; --c-requisitos:#2EA36B; --c-arquitetura:#E0525A;
-  --c-interoperabilidade:#D9A400; --c-metodologia:#F2884B; --c-eletiva:#8A8F99;
-  --c-acompanhamento:#8B6FD6; --c-avaliacao:#4A4A55; --c-marco:#0E9AA7; --c-outro:#B0745A;
-}
-:root[data-theme="dark"]{
-  --bg:#140D09; --surface:#1E1510; --surface-2:#251A14; --line:#33251C; --line-2:#463428;
-  --text:#F7EDE6; --muted:#BFA899; --soft:#8E7A6D; --brand-50:#2E1A0E; --brand-100:#43240F;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -14px rgba(0,0,0,.7);
-  --c-avaliacao:#9B9BAA;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#140D09; --surface:#1E1510; --surface-2:#251A14; --line:#33251C; --line-2:#463428;
-    --text:#F7EDE6; --muted:#BFA899; --soft:#8E7A6D; --brand-50:#2E1A0E; --brand-100:#43240F;
-    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -14px rgba(0,0,0,.7);
-    --c-avaliacao:#9B9BAA;
-  }
-}
-*{box-sizing:border-box}
-html,body{margin:0}
-body{background:var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
-h1,h2,h3{font-family:Sora,Inter,sans-serif;letter-spacing:-.02em;margin:0}
-button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
-.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-
-/* header */
-header.top{position:sticky;top:0;z-index:30;background:color-mix(in oklab,var(--bg) 82%,transparent);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line)}
-.top .wrap{display:flex;align-items:center;gap:14px;height:68px}
-.logo{width:42px;height:42px;border-radius:12px;flex:none;object-fit:cover;box-shadow:0 4px 14px -6px rgba(255,98,0,.6)}
-.brand-t{display:flex;flex-direction:column;min-width:0}
-.brand-t b{font-family:Sora,Inter,system-ui,sans-serif;font-size:16px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.brand-t span{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.top .grow{flex:1}
-.sync{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);padding:6px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);white-space:nowrap}
-.sync i{width:8px;height:8px;border-radius:50%;background:var(--ok)}
-.sync.dirty i{background:var(--warn)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:12px;border:1px solid var(--line-2);background:var(--surface);font-weight:600;font-size:14px;transition:.15s;white-space:nowrap}
-.btn:hover{border-color:var(--brand);color:var(--brand)}
-.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 6px 18px -8px rgba(255,98,0,.8)}
-.btn.primary:hover{background:var(--brand-600);color:#fff}
-.btn.ghost{border-color:transparent;background:transparent}
-.btn.danger{color:var(--danger)}
-.btn.danger:hover{border-color:var(--danger)}
-.icon-btn{width:40px;padding:0}
-.btn svg{width:18px;height:18px;flex:none}
-
-/* hero */
-.hero{padding:28px 0 8px}
-.hero h1{font-size:clamp(24px,3.6vw,36px);font-weight:800}
-.hero h1 em{font-style:normal;color:var(--brand)}
-.hero p{color:var(--muted);margin:6px 0 0;max-width:720px}
-
-.grid-top{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-top:22px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-.next{position:relative;overflow:hidden;padding:22px;color:#fff;background:radial-gradient(120% 140% at 100% 0%,#FF8A3D 0%,var(--brand) 45%,#C94400 100%);border:none}
-.next::after{content:"";position:absolute;right:-60px;top:-60px;width:240px;height:240px;border-radius:50%;border:34px solid rgba(255,255,255,.12)}
-.next::before{content:"";position:absolute;right:10px;top:10px;width:110px;height:110px;border-radius:50%;border:18px solid rgba(255,255,255,.12)}
-.next .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.12em;opacity:.85;font-weight:600}
-.next h2{font-size:clamp(20px,2.6vw,26px);margin:8px 0 4px;position:relative;z-index:1;max-width:80%}
-.next .sub{opacity:.92;position:relative;z-index:1}
-.next .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;position:relative;z-index:1}
-.chip-w{background:rgba(255,255,255,.18);padding:5px 10px;border-radius:999px;font-size:13px;font-weight:500}
-.count{display:flex;gap:10px;margin-top:18px;position:relative;z-index:1}
-.count div{background:rgba(0,0,0,.16);border-radius:12px;padding:8px 12px;min-width:64px;text-align:center}
-.count b{display:block;font-family:Sora,Inter,system-ui,sans-serif;font-size:22px;line-height:1.1}
-.count small{font-size:11px;opacity:.85;text-transform:uppercase;letter-spacing:.08em}
-
-.kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.kpi{padding:16px 18px;display:flex;flex-direction:column;gap:2px}
-.kpi small{color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
-.kpi b{font-family:Sora,Inter,system-ui,sans-serif;font-size:28px;line-height:1.15}
-.kpi span{font-size:12.5px;color:var(--soft)}
-.bar{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden;margin-top:8px;border:1px solid var(--line)}
-.bar i{display:block;height:100%;background:linear-gradient(90deg,#FF9A52,var(--brand));border-radius:99px;transition:width .6s}
-
-/* toolbar */
-.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:26px 0 14px}
-.tabs{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px;gap:2px}
-.tabs button{border:0;background:transparent;padding:8px 14px;border-radius:10px;font-weight:600;font-size:14px;color:var(--muted);display:inline-flex;gap:6px;align-items:center}
-.tabs button svg{width:16px;height:16px}
-.tabs button[aria-selected="true"]{background:var(--brand-50);color:var(--brand)}
-.search{flex:1;min-width:200px;position:relative}
-.search input{width:100%;height:42px;border-radius:12px;border:1px solid var(--line-2);background:var(--surface);padding:0 14px 0 40px;outline:none}
-.search input:focus,.field input:focus,.field select:focus,.field textarea:focus,.filters select:focus{border-color:var(--brand);box-shadow:0 0 0 3px color-mix(in oklab,var(--brand) 20%,transparent)}
-.search svg{position:absolute;left:13px;top:12px;width:18px;height:18px;color:var(--soft)}
-.filters{display:flex;gap:8px;flex-wrap:wrap}
-.filters select{height:42px;border-radius:12px;border:1px solid var(--line-2);background:var(--surface);padding:0 32px 0 12px;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A8968A' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
-.toggle{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);cursor:pointer;user-select:none;padding:0 4px}
-.toggle input{accent-color:var(--brand);width:16px;height:16px}
-
-.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 18px;font-size:12.5px;color:var(--muted)}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.dot{width:10px;height:10px;border-radius:3px;flex:none;background:var(--c)}
-
-/* timeline */
-.month{margin:0 0 26px}
-.month-h{display:flex;align-items:baseline;gap:10px;margin:0 0 10px;padding-left:2px}
-.month-h h3{font-size:18px;text-transform:capitalize}
-.month-h span{font-size:12.5px;color:var(--soft)}
-.items{display:grid;gap:10px}
-.item{display:grid;grid-template-columns:76px 1fr auto;gap:16px;align-items:center;padding:14px 16px 14px 14px;position:relative;transition:.15s}
-.item::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:4px;border-radius:0 4px 4px 0;background:var(--c)}
-.item:hover{transform:translateY(-1px);border-color:color-mix(in oklab,var(--c) 45%,var(--line))}
-.item.past{opacity:.6}
-.item.past:hover{opacity:1}
-.item.today{outline:2px solid var(--brand);outline-offset:2px}
-.item.cancel .it-title{text-decoration:line-through}
-.datebox{text-align:center;background:color-mix(in oklab,var(--c) 12%,var(--surface));border-radius:14px;padding:8px 4px;color:var(--text)}
-.datebox b{display:block;font-family:Sora,Inter,system-ui,sans-serif;font-size:22px;line-height:1.1}
-.datebox small{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
-.it-main{min-width:0}
-.it-top{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:3px}
-.tag{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:99px;background:color-mix(in oklab,var(--c) 15%,transparent);color:color-mix(in oklab,var(--c) 75%,var(--text))}
-.tag.plain{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
-.tag.ok{background:color-mix(in oklab,var(--ok) 14%,transparent);color:var(--ok)}
-.tag.no{background:color-mix(in oklab,var(--danger) 14%,transparent);color:var(--danger)}
-.tag.now{background:var(--brand);color:#fff}
-.it-title{font-weight:700;font-size:15.5px;font-family:Sora,Inter,system-ui,sans-serif;letter-spacing:-.01em}
-.it-sub{color:var(--muted);font-size:13.5px;display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:3px}
-.it-sub span{display:inline-flex;align-items:center;gap:5px}
-.it-sub svg{width:14px;height:14px;color:var(--soft)}
-.it-notes{font-size:13px;color:var(--soft);margin-top:4px}
-.it-act{display:flex;gap:4px}
-.it-act button{width:36px;height:36px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--soft);display:grid;place-items:center}
-.it-act button:hover{background:var(--surface-2);color:var(--brand);border-color:var(--line)}
-.it-act button.del:hover{color:var(--danger)}
-.it-act svg{width:17px;height:17px}
-
-/* calendar */
-.cal-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.cal-head h3{font-size:20px;text-transform:capitalize;flex:1}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.cal .dow{font-size:12px;color:var(--soft);font-weight:700;text-transform:uppercase;text-align:center;padding:4px 0}
-.day{min-height:112px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:6px;display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:.12s}
-.day:hover{border-color:var(--line-2)}
-.day.out{opacity:.4}
-.day.is-today{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand)}
-.day .n{font-size:12.5px;font-weight:700;color:var(--muted);padding:2px 4px}
-.day.is-today .n{color:var(--brand)}
-.ev{font-size:11.5px;line-height:1.25;padding:4px 6px;border-radius:7px;background:color-mix(in oklab,var(--c) 16%,var(--surface));color:var(--text);border-left:3px solid var(--c);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-weight:500}
-.ev:hover{background:color-mix(in oklab,var(--c) 28%,var(--surface))}
-
-/* table */
-.tbl-wrap{overflow:auto;border-radius:var(--radius)}
-table{width:100%;border-collapse:collapse;font-size:14px;min-width:820px}
-th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
-th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--surface-2);position:sticky;top:0;cursor:pointer;white-space:nowrap}
-tbody tr:hover{background:var(--surface-2)}
-td .tt{font-weight:600}
-
-.empty{text-align:center;padding:60px 20px;color:var(--muted)}
-.empty b{display:block;font-family:Sora,Inter,system-ui,sans-serif;font-size:18px;color:var(--text);margin-bottom:6px}
-
-/* modal */
-dialog{border:none;padding:0;border-radius:22px;background:var(--surface);color:var(--text);width:min(640px,calc(100vw - 24px));max-height:calc(100vh - 24px);box-shadow:0 30px 80px -20px rgba(0,0,0,.45)}
-dialog::backdrop{background:rgba(30,15,5,.45);backdrop-filter:blur(3px)}
-.m-head{display:flex;align-items:center;gap:10px;padding:20px 22px 4px}
-.m-head h2{font-size:20px;flex:1}
-.m-body{padding:12px 22px;display:grid;grid-template-columns:1fr 1fr;gap:14px;overflow:auto;max-height:calc(100vh - 190px)}
-.m-foot{display:flex;gap:10px;padding:14px 22px 20px;border-top:1px solid var(--line);flex-wrap:wrap}
-.m-foot .grow{flex:1}
-.field{display:flex;flex-direction:column;gap:6px}
-.field.full{grid-column:1/-1}
-.field label,.field .lab{font-size:12.5px;font-weight:600;color:var(--muted)}
-.field input,.field select,.field textarea{height:42px;border-radius:12px;border:1px solid var(--line-2);background:var(--bg);padding:0 12px;outline:none;width:100%}
-.field textarea{height:auto;min-height:76px;padding:10px 12px;resize:vertical}
-.slots{display:flex;flex-wrap:wrap;gap:8px}
-.slots label{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:10px;border:1px solid var(--line-2);font-size:13.5px;font-weight:500;color:var(--text);cursor:pointer;background:var(--bg)}
-.slots input{accent-color:var(--brand)}
-.slots label:has(input:checked){border-color:var(--brand);background:var(--brand-50);color:var(--brand)}
-.hint{font-size:12.5px;color:var(--soft)}
-.detail{padding:6px 22px 4px}
-.detail dl{display:grid;grid-template-columns:120px 1fr;gap:10px 14px;margin:10px 0 0;font-size:14px}
-.detail dt{color:var(--muted);font-weight:600;font-size:13px}
-.detail dd{margin:0}
-
-/* menu */
-.menu{position:relative}
-.menu-pop{position:absolute;right:0;top:48px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:6px;min-width:250px;display:none;z-index:40}
-.menu-pop.open{display:block}
-.menu-pop button{display:flex;width:100%;align-items:center;gap:10px;padding:10px 12px;border:0;background:transparent;border-radius:10px;font-size:14px;text-align:left}
-.menu-pop button:hover{background:var(--surface-2);color:var(--brand)}
-.menu-pop svg{width:17px;height:17px;color:var(--soft)}
-.menu-pop hr{border:0;border-top:1px solid var(--line);margin:6px 4px}
-
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(30px);background:var(--text);color:var(--bg);padding:12px 18px;border-radius:12px;font-weight:600;font-size:14px;opacity:0;transition:.25s;z-index:100;pointer-events:none;max-width:calc(100vw - 32px)}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.fab{display:none}
-.show-sm{display:none}
-footer{color:var(--soft);font-size:12.5px;padding:30px 0 50px;text-align:center}
-footer a{color:var(--muted)}
-
-@media (max-width:960px){
-  .grid-top{grid-template-columns:1fr}
-}
-@media (max-width:720px){
-  .wrap{padding:0 16px}
-  .top .wrap{height:62px;gap:10px}
-  .hide-sm{display:none !important}
-  .show-sm{display:inline}
-  main.wrap{padding-bottom:80px}
-  .kpi b{font-size:24px}
-  .item{grid-template-columns:62px 1fr;gap:12px}
-  .it-act{grid-column:1/-1;justify-content:flex-end;margin-top:-6px}
-  .datebox b{font-size:19px}
-  .tabs{width:100%}
-  .tabs button{flex:1;justify-content:center;padding:8px 6px}
-  .filters{width:100%}
-  .filters select{flex:1;min-width:0}
-  .cal{gap:3px}
-  .day{min-height:64px;padding:3px;border-radius:9px}
-  .day .n{font-size:11px;padding:1px 2px}
-  .ev{font-size:0;padding:0;height:6px;border-radius:3px;border-left:0;background:var(--c)}
-  .m-body{grid-template-columns:1fr}
-  .detail dl{grid-template-columns:100px 1fr}
-  .fab{display:grid;place-items:center;position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));width:58px;height:58px;border-radius:18px;background:var(--brand);color:#fff;border:0;box-shadow:0 12px 30px -10px rgba(255,98,0,.9);z-index:35}
-  .fab svg{width:26px;height:26px}
-}
-</style>
+<link rel="stylesheet" href="css/styles.css?v=2">
+<script>try{var t=localStorage.getItem('mpes2026_theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
-<body>
+<body class="loading">
+<a class="sr" href="#view">Pular para o calendário</a>
 <header class="top">
   <div class="wrap">
-    <img class="logo" src="assets/logo-cesar.png" alt="CESAR School">
+    <img class="logo" src="assets/logo-cesar.png" alt="CESAR School" width="42" height="42">
     <div class="brand-t">
       <b>MPES 2026.2</b>
       <span>Mestrado Profissional em Eng. de Software</span>
     </div>
     <div class="grow"></div>
-    <span class="sync hide-sm" id="syncBadge" title=""><i></i><span>Sincronizado</span></span>
-    <button class="btn primary hide-sm" id="btnNew"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Novo item</button>
-    <button class="btn icon-btn" id="btnTheme" aria-label="Alternar tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg></button>
+    <button class="sync" id="syncBadge" type="button" title=""><i></i><span class="hide-sm">Sincronizado</span></button>
+    <button class="btn primary hide-sm" id="btnNew" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Novo item</button>
+    <button class="btn icon-btn" id="btnTheme" type="button" aria-label="Alternar tema claro/escuro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg></button>
     <div class="menu">
-      <button class="btn icon-btn" id="btnMenu" aria-label="Mais opções" aria-haspopup="true"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
-      <div class="menu-pop" id="menuPop">
-        <button data-act="sync"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Publicar alterações no GitHub</button>
-        <button data-act="gh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>Configurar sincronização GitHub</button>
+      <button class="btn icon-btn" id="btnMenu" type="button" aria-label="Mais opções" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
+      <div class="menu-pop" id="menuPop" role="menu">
+        <button role="menuitem" data-act="sync"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Publicar alterações no GitHub</button>
+        <button role="menuitem" data-act="gh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.4 2.6a7 7 0 0 0-2 1.2l-2.5-1-2 3.4 2.1 1.6a7 7 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.4-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.2-.8.2-1.2Z"/></svg>Configurar sincronização GitHub</button>
+        <button role="menuitem" data-act="reload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Buscar versão publicada</button>
         <hr>
-        <button data-act="ics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Exportar para agenda (.ics)</button>
-        <button data-act="export"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Baixar backup (JSON)</button>
-        <button data-act="import"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Importar backup (JSON)</button>
-        <button data-act="print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimir</button>
+        <button role="menuitem" data-act="ics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Exportar para agenda (.ics)</button>
+        <button role="menuitem" data-act="export"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Baixar backup (JSON)</button>
+        <button role="menuitem" data-act="import"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Importar backup (JSON)</button>
+        <button role="menuitem" data-act="print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimir</button>
+        <button role="menuitem" data-act="install" id="btnInstall" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M12 18h.01"/></svg>Instalar como app</button>
         <hr>
-        <button data-act="reset"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Descartar alterações locais</button>
+        <button role="menuitem" data-act="reset"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Descartar alterações locais</button>
       </div>
     </div>
   </div>
 </header>
 
-<main class="wrap">
+<main class="wrap" id="main">
   <section class="hero">
     <h1>Calendário de aulas <em>MPES 2026.2</em></h1>
-    <p id="heroSub">CESAR School · Mestrado Profissional em Engenharia de Software</p>
-
+    <p>CESAR School · Mestrado Profissional em Engenharia de Software</p>
     <div class="grid-top">
-      <div class="card next" id="nextCard"></div>
+      <div class="card next" id="nextCard" role="button" tabindex="0" aria-label="Próximo encontro"><div class="lbl">Próximo encontro</div><h2>Carregando…</h2></div>
       <div class="kpis">
-        <div class="card kpi"><small>Progresso</small><b id="kProg">0%</b><span id="kProgS"></span><div class="bar"><i id="kBar" style="width:0"></i></div></div>
+        <div class="card kpi"><small>Progresso</small><b id="kProg">0%</b><span id="kProgS"></span><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="kBarWrap"><i id="kBar" style="width:0"></i></div></div>
         <div class="card kpi"><small>Encontros restantes</small><b id="kRest">0</b><span id="kRestS"></span></div>
         <div class="card kpi"><small>Sextas com aula</small><b id="kSex">0</b><span id="kSexS">ausências a planejar no trabalho</span></div>
         <div class="card kpi"><small>Defesa da dissertação</small><b id="kDef">—</b><span id="kDefS"></span></div>
@@ -287,501 +69,116 @@ footer a{color:var(--muted)}
   </section>
 
   <div class="toolbar">
-    <div class="tabs" role="tablist">
-      <button role="tab" data-view="timeline" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span class="hide-sm">Linha do tempo</span><span class="show-sm">Lista</span></button>
+    <div class="tabs" role="tablist" aria-label="Visualização">
+      <button role="tab" data-view="timeline" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Linha do tempo</button>
       <button role="tab" data-view="calendar" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Calendário</button>
       <button role="tab" data-view="table" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>Tabela</button>
     </div>
-    <label class="search"><span class="sr">Buscar</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Buscar módulo, professor, nota…"></label>
-    <div class="filters">
-      <select id="fCat" aria-label="Filtrar por tipo"><option value="">Tipos</option></select>
-      <select id="fSem" aria-label="Filtrar por semestre"><option value="">Semestres</option><option value="1">Semestre 1</option><option value="2">Semestre 2</option><option value="0">Dissertação</option></select>
-      <select id="fProf" aria-label="Filtrar por professor"><option value="">Professores</option></select>
+    <label class="search" id="searchBox"><span class="sr">Buscar</span>
+      <svg class="s-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Buscar módulo, professor, nota…" autocomplete="off" enterkeyhint="search">
+      <button class="s-clear" type="button" id="qClear" aria-label="Limpar busca"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </label>
+    <button class="btn btn-filters" id="btnFilters" type="button" aria-controls="filterPanel" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg><span class="sr">Filtros</span><span class="badge-n" id="fCount"></span></button>
+    <button class="btn btn-today" id="btnToday" type="button" title="Ir para hoje"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg><span class="hide-sm">Hoje</span></button>
+    <div class="filter-panel" id="filterPanel" aria-label="Filtros">
+      <div class="grab"></div>
+      <div class="fp-head"><h3>Filtros</h3><button class="btn ghost icon-btn" type="button" data-fp-close aria-label="Fechar filtros"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+      <div class="filters">
+        <select id="fCat" aria-label="Filtrar por tipo"><option value="">Tipos</option></select>
+        <select id="fSem" aria-label="Filtrar por semestre"><option value="">Semestres</option><option value="1">Semestre 1</option><option value="2">Semestre 2</option><option value="0">Dissertação</option></select>
+        <select id="fProf" aria-label="Filtrar por professor"><option value="">Professores</option></select>
+      </div>
+      <label class="toggle"><input type="checkbox" id="fPast" checked> Mostrar realizados</label>
+      <div class="fp-foot"><button class="btn" type="button" id="fpClear">Limpar</button><button class="btn primary" type="button" data-fp-close>Ver resultados</button></div>
     </div>
-    <label class="toggle"><input type="checkbox" id="fPast" checked> Mostrar realizados</label>
   </div>
-  <div class="legend" id="legend"></div>
+  <div class="active-filters" id="activeFilters"></div>
+  <div class="legend" id="legend" aria-label="Filtrar por tipo"></div>
 
-  <section id="view"></section>
+  <section id="view" aria-live="polite"></section>
 </main>
 
 <footer>
-  <div class="wrap">Fonte: <span id="fonte"></span> · Última edição: <span id="upd"></span><br>Página mantida por Cleyber · dados salvos no seu navegador e publicáveis no GitHub</div>
+  <div class="wrap">Fonte: <span id="fonte"></span> · Última edição: <span id="upd"></span><br>Dados salvos no seu navegador e publicáveis no GitHub · <a href="https://github.com/cleybersilva/mpes-calendario" target="_blank" rel="noopener">código-fonte</a></div>
 </footer>
 
-<button class="fab" id="fab" aria-label="Novo item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+<nav class="bnav" aria-label="Navegação">
+  <button type="button" data-view="timeline" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Lista</button>
+  <button type="button" data-view="calendar" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Calendário</button>
+  <button type="button" class="add" id="bnAdd" aria-label="Novo item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+  <button type="button" data-view="table" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>Tabela</button>
+  <button type="button" id="bnFilters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtros<span class="badge-n" id="fCount2"></span></button>
+</nav>
+<div class="backdrop" id="backdrop"></div>
 
-<!-- Item editor -->
-<dialog id="dlgEdit">
-  <form method="dialog" id="formEdit">
+<!-- Editor -->
+<dialog id="dlgEdit" aria-labelledby="editTitle">
+  <form id="formEdit" novalidate>
+    <div class="grab"></div>
     <div class="m-head"><h2 id="editTitle">Novo item</h2><button type="button" class="btn ghost icon-btn" data-close aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
     <div class="m-body">
-      <div class="field full"><label for="eTitulo">Título *</label><input id="eTitulo" required placeholder="Ex.: Gestão — Básico"></div>
-      <div class="field"><label for="eModulo">Módulo / disciplina</label><input id="eModulo" list="dlModulos" placeholder="Ex.: Construção de Software I"></div>
+      <div class="field full" id="fTitulo"><label for="eTitulo">Título *</label><input id="eTitulo" maxlength="140" placeholder="Ex.: Gestão — Básico" enterkeyhint="next"><span class="err">Informe um título.</span></div>
+      <div class="field"><label for="eModulo">Módulo / disciplina</label><input id="eModulo" list="dlModulos" maxlength="120" placeholder="Ex.: Construção de Software I"></div>
       <div class="field"><label for="eCat">Tipo</label><select id="eCat"></select></div>
-      <div class="field"><label for="eIni">Início *</label><input id="eIni" type="date" required></div>
-      <div class="field"><label for="eFim">Fim</label><input id="eFim" type="date"></div>
+      <div class="field" id="fIni"><label for="eIni">Início *</label><input id="eIni" type="date"><span class="err">Informe a data.</span></div>
+      <div class="field" id="fFim"><label for="eFim">Fim</label><input id="eFim" type="date"><span class="err">O fim não pode ser antes do início.</span></div>
       <div class="field full"><span class="lab">Horários</span>
         <div class="slots" id="eSlots"></div>
         <span class="hint">Marque os turnos do encontro. Usados também na exportação para a agenda.</span>
       </div>
-      <div class="field"><label for="eProf">Professor(a)</label><input id="eProf" list="dlProfs" placeholder="Nome"></div>
+      <div class="field"><label for="eProf">Professor(a)</label><input id="eProf" list="dlProfs" maxlength="80" placeholder="Nome"></div>
       <div class="field"><label for="eMod">Modalidade</label><select id="eMod"><option value="presencial">Presencial</option><option value="online">Online</option><option value="hibrido">Híbrido</option></select></div>
       <div class="field"><label for="eSem">Semestre</label><select id="eSem"><option value="1">Semestre 1</option><option value="2">Semestre 2</option><option value="0">Dissertação / outro</option></select></div>
       <div class="field"><label for="eStatus">Status</label><select id="eStatus"><option value="auto">Automático (pela data)</option><option value="concluido">Concluído</option><option value="cancelado">Cancelado / adiado</option></select></div>
-      <div class="field full"><label for="eLocal">Local / link</label><input id="eLocal" placeholder="Sala, endereço ou link da aula online"></div>
-      <div class="field full"><label for="eNotas">Anotações</label><textarea id="eNotas" placeholder="Leituras, entregas, observações…"></textarea></div>
+      <div class="field full"><label for="eLocal">Local / link</label><input id="eLocal" maxlength="300" placeholder="Sala, endereço ou link da aula online"></div>
+      <div class="field full"><label for="eNotas">Anotações</label><textarea id="eNotas" maxlength="2000" placeholder="Leituras, entregas, observações…"></textarea></div>
     </div>
     <div class="m-foot">
       <button type="button" class="btn danger" id="btnDel">Excluir</button>
       <button type="button" class="btn" id="btnDup">Duplicar</button>
       <span class="grow"></span>
-      <button type="button" class="btn" data-close>Cancelar</button>
-      <button type="submit" class="btn primary" value="save">Salvar</button>
+      <button type="button" class="btn hide-sm" data-close>Cancelar</button>
+      <button type="submit" class="btn primary">Salvar</button>
     </div>
   </form>
 </dialog>
 
-<!-- Detail -->
-<dialog id="dlgView">
+<!-- Detalhe -->
+<dialog id="dlgView" aria-labelledby="vTitle">
+  <div class="grab"></div>
   <div class="m-head"><h2 id="vTitle"></h2><button type="button" class="btn ghost icon-btn" data-close aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
   <div class="detail" id="vBody"></div>
-  <div class="m-foot"><span class="grow"></span><button class="btn" data-close>Fechar</button><button class="btn primary" id="vEdit">Editar</button></div>
+  <div class="m-foot">
+    <button class="btn danger icon-btn" id="vDel" type="button" aria-label="Excluir" title="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg></button>
+    <button class="btn" id="vIcs" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Agenda</button>
+    <button class="btn" id="vDone" type="button"></button>
+    <span class="grow"></span>
+    <button class="btn primary" id="vEdit" type="button">Editar</button>
+  </div>
 </dialog>
 
-<!-- GitHub settings -->
-<dialog id="dlgGh">
-  <form method="dialog" id="formGh">
-    <div class="m-head"><h2>Sincronização com GitHub</h2><button type="button" class="btn ghost icon-btn" data-close aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+<!-- GitHub -->
+<dialog id="dlgGh" aria-labelledby="ghTitle">
+  <form id="formGh" novalidate>
+    <div class="grab"></div>
+    <div class="m-head"><h2 id="ghTitle">Sincronização com GitHub</h2><button type="button" class="btn ghost icon-btn" data-close aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
     <div class="m-body">
-      <p class="hint full" style="grid-column:1/-1;margin:0">Suas edições ficam salvas neste navegador. Para que apareçam em qualquer dispositivo, publique-as: a página grava o arquivo <code>data.json</code> no repositório. Use um <b>token fine-grained</b> com permissão <i>Contents: Read and write</i> apenas neste repositório. O token fica guardado só neste navegador.</p>
-      <div class="field"><label for="gOwner">Usuário / organização</label><input id="gOwner" required placeholder="seu-usuario"></div>
-      <div class="field"><label for="gRepo">Repositório</label><input id="gRepo" required placeholder="mpes-calendario"></div>
-      <div class="field"><label for="gBranch">Branch</label><input id="gBranch" placeholder="main"></div>
-      <div class="field"><label for="gPath">Arquivo</label><input id="gPath" placeholder="data.json"></div>
-      <div class="field full"><label for="gToken">Token de acesso</label><input id="gToken" type="password" autocomplete="off" placeholder="github_pat_…"></div>
+      <p class="hint" style="grid-column:1/-1;margin:0">Suas edições ficam salvas neste navegador. Para que apareçam em qualquer dispositivo, publique-as: a página grava o arquivo <code>data.json</code> no repositório. Use um <b>token fine-grained</b> com permissão <i>Contents: Read and write</i> apenas neste repositório. O token fica guardado só neste navegador.</p>
+      <div class="field"><label for="gOwner">Usuário / organização</label><input id="gOwner" autocapitalize="off" spellcheck="false" placeholder="seu-usuario"></div>
+      <div class="field"><label for="gRepo">Repositório</label><input id="gRepo" autocapitalize="off" spellcheck="false" placeholder="mpes-calendario"></div>
+      <div class="field"><label for="gBranch">Branch</label><input id="gBranch" autocapitalize="off" spellcheck="false" placeholder="main"></div>
+      <div class="field"><label for="gPath">Arquivo</label><input id="gPath" autocapitalize="off" spellcheck="false" placeholder="data.json"></div>
+      <div class="field full"><label for="gToken">Token de acesso</label><input id="gToken" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…"></div>
     </div>
-    <div class="m-foot"><button type="button" class="btn danger" id="gForget">Esquecer token</button><span class="grow"></span><button type="button" class="btn" data-close>Cancelar</button><button type="submit" class="btn primary">Salvar</button></div>
+    <div class="m-foot"><button type="button" class="btn danger" id="gForget">Esquecer token</button><span class="grow"></span><button type="button" class="btn hide-sm" data-close>Cancelar</button><button type="submit" class="btn primary">Salvar</button></div>
   </form>
 </dialog>
 
 <input type="file" id="fileImport" accept="application/json,.json" hidden>
 <datalist id="dlModulos"></datalist><datalist id="dlProfs"></datalist>
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script>
-(() => {
-'use strict';
-const LS_DATA = 'mpes2026_data_v1', LS_GH = 'mpes2026_gh_v1', LS_THEME = 'mpes2026_theme', LS_VIEW = 'mpes2026_view';
-
-const CATS = {
-  inaugural:{label:'Aula inaugural'}, gestao:{label:'Gestão'}, requisitos:{label:'Requisitos'},
-  arquitetura:{label:'Arquitetura'}, interoperabilidade:{label:'Interoperabilidade'}, metodologia:{label:'Metodologia'},
-  eletiva:{label:'Eletivas'}, acompanhamento:{label:'Acompanhamento dos projetos'}, avaliacao:{label:'Avaliação de projetos'},
-  marco:{label:'Marco da dissertação'}, outro:{label:'Outro'}
-};
-const SLOTS = {
-  qua:{label:'Qua 19h–21h', dow:3, s:'19:00', e:'21:00'},
-  sex1:{label:'Sex 14h–17h', dow:5, s:'14:00', e:'17:00'},
-  sex2:{label:'Sex 18h–21h', dow:5, s:'18:00', e:'21:00'},
-  sab1:{label:'Sáb 08h–12h', dow:6, s:'08:00', e:'12:00'},
-  sab2:{label:'Sáb 13h–18h', dow:6, s:'13:00', e:'18:00'}
-};
-const MONTHS = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-const DOW = ['dom','seg','ter','qua','qui','sex','sáb'];
-
-let state = {meta:{}, items:[]};
-let remoteSnapshot = null;
-let view = localStorage.getItem(LS_VIEW) || 'timeline';
-let calCursor = null;
-let editingId = null;
-let sortKey = 'inicio', sortDir = 1;
-
-const $ = s => document.querySelector(s);
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const pd = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
-const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-const today0 = () => { const t = new Date(); t.setHours(0,0,0,0); return t; };
-const color = c => `var(--c-${CATS[c] ? c : 'outro'})`;
-const uid = () => 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-
-function toast(msg, ms=2600){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'), ms); }
-
-/* ---------- persistence ---------- */
-function saveLocal(){
-  state.meta.updatedAt = new Date().toISOString();
-  try { localStorage.setItem(LS_DATA, JSON.stringify(state)); } catch(e){ toast('Não foi possível salvar no navegador'); }
-  render();
-}
-function isDirty(){
-  if (!remoteSnapshot) return false;
-  return JSON.stringify(remoteSnapshot.items) !== JSON.stringify(state.items);
-}
-async function load(){
-  let remote = null, local = null;
-  try { const r = await fetch('data.json?t=' + Date.now(), {cache:'no-store'}); if (r.ok) remote = await r.json(); } catch(e){}
-  try { local = JSON.parse(localStorage.getItem(LS_DATA) || 'null'); } catch(e){}
-  remoteSnapshot = remote ? structuredClone(remote) : null;
-  if (local && local.items && (!remote || new Date(local.meta?.updatedAt||0) >= new Date(remote.meta?.updatedAt||0))) state = local;
-  else if (remote) { state = structuredClone(remote); localStorage.removeItem(LS_DATA); }
-  else state = {meta:{turma:'MPES 2026.2'}, items:[]};
-  state.items ||= []; state.meta ||= {};
-  render();
-}
-
-/* ---------- derived ---------- */
-function statusOf(it){
-  if (it.status === 'cancelado') return 'cancelado';
-  if (it.status === 'concluido') return 'concluido';
-  const t = today0(), a = pd(it.inicio), b = pd(it.fim || it.inicio);
-  if (b < t) return 'passado';
-  if (a <= t && t <= b) return 'hoje';
-  return 'futuro';
-}
-const isClass = it => !['marco','acompanhamento','avaliacao'].includes(it.categoria);
-function filtered(){
-  const q = $('#q').value.trim().toLowerCase(), c = $('#fCat').value, s = $('#fSem').value, p = $('#fProf').value, past = $('#fPast').checked;
-  return state.items.filter(it => {
-    if (c && it.categoria !== c) return false;
-    if (s !== '' && String(it.semestre) !== s) return false;
-    if (p && (it.professor||'') !== p) return false;
-    if (!past && view !== 'calendar' && ['passado','concluido'].includes(statusOf(it))) return false;
-    if (q){ const h = [it.titulo,it.modulo,it.professor,it.notas,it.local,CATS[it.categoria]?.label].join(' ').toLowerCase(); if (!h.includes(q)) return false; }
-    return true;
-  }).sort((a,b) => a.inicio.localeCompare(b.inicio) || (a.fim||'').localeCompare(b.fim||'') || a.titulo.localeCompare(b.titulo));
-}
-function fmtRange(it, long=false){
-  const a = pd(it.inicio), b = pd(it.fim || it.inicio);
-  const f = d => long ? `${DOW[d.getDay()]}, ${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()}` : `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
-  if (iso(a) === iso(b)) return f(a);
-  if (!long && a.getMonth()===b.getMonth() && a.getFullYear()===b.getFullYear()) return `${a.getDate()}–${b.getDate()}/${String(b.getMonth()+1).padStart(2,'0')}`;
-  return `${f(a)} – ${f(b)}${long?'':'/'+String(b.getFullYear()).slice(2)}`;
-}
-const slotTxt = it => (it.horarios||[]).map(k => SLOTS[k]?.label).filter(Boolean).join(' · ');
-
-/* ---------- render ---------- */
-const ICON = {
-  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
-  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
-  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg>',
-  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
-  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>',
-  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>',
-  prev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>',
-  next:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>'
-};
-
-function tagsFor(it){
-  const st = statusOf(it); let t = `<span class="tag">${esc(CATS[it.categoria]?.label || 'Outro')}</span>`;
-  if (it.modalidade === 'online') t += '<span class="tag plain">Online</span>';
-  if (it.modalidade === 'hibrido') t += '<span class="tag plain">Híbrido</span>';
-  if (st === 'hoje') t += '<span class="tag now">Hoje</span>';
-  if (st === 'concluido' || st === 'passado') t += '<span class="tag ok">Realizado</span>';
-  if (st === 'cancelado') t += '<span class="tag no">Cancelado</span>';
-  return t;
-}
-
-function renderKpis(){
-  const t = today0();
-  const classes = state.items.filter(i => isClass(i) && i.status !== 'cancelado');
-  const done = classes.filter(i => ['passado','concluido'].includes(statusOf(i))).length;
-  const pct = classes.length ? Math.round(done/classes.length*100) : 0;
-  $('#kProg').textContent = pct + '%'; $('#kBar').style.width = pct + '%';
-  $('#kProgS').textContent = `${done} de ${classes.length} encontros de aula`;
-  const upcoming = state.items.filter(i => i.status!=='cancelado' && i.categoria!=='marco' && ['futuro','hoje'].includes(statusOf(i)));
-  $('#kRest').textContent = upcoming.length;
-  $('#kRestS').textContent = `${upcoming.filter(isClass).length} de aula · ${upcoming.filter(i=>!isClass(i)).length} de projetos`;
-  let fridays = 0;
-  state.items.forEach(i => { if (i.status==='cancelado') return; if (!(i.horarios||[]).some(k=>k.startsWith('sex'))) return;
-    for (let d = pd(i.inicio); d <= pd(i.fim||i.inicio); d.setDate(d.getDate()+1)) if (d.getDay()===5 && d >= t) fridays++; });
-  $('#kSex').textContent = fridays;
-  const def = state.items.filter(i => /defesa da disserta/i.test(i.titulo)).sort((a,b)=>a.inicio.localeCompare(b.inicio))[0];
-  if (def){ const d = pd(def.inicio); const m = Math.max(0, Math.round((d - t)/(1000*60*60*24*30.44)));
-    $('#kDef').textContent = `${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`; $('#kDefS').textContent = `prazo regular · ~${m} meses`; }
-  else { $('#kDef').textContent = '—'; $('#kDefS').textContent = ''; }
-}
-
-function renderNext(){
-  const now = new Date();
-  const cand = state.items.filter(i => i.status!=='cancelado' && i.categoria!=='marco' && ['futuro','hoje'].includes(statusOf(i))).sort((a,b)=>a.inicio.localeCompare(b.inicio));
-  const n = cand[0], el = $('#nextCard');
-  if (!n){ el.innerHTML = `<div class="lbl">Próximo encontro</div><h2>Nenhum encontro agendado</h2><div class="sub">Adicione um item para começar.</div>`; return; }
-  let start = pd(n.inicio);
-  const firstSlot = (n.horarios||[]).map(k=>SLOTS[k]).filter(Boolean).sort((a,b)=>a.dow-b.dow || a.s.localeCompare(b.s))[0];
-  if (firstSlot){ const [h,m] = firstSlot.s.split(':').map(Number); start.setHours(h,m,0,0); }
-  const diff = Math.max(0, start - now), dd = Math.floor(diff/864e5), hh = Math.floor(diff%864e5/36e5), mm = Math.floor(diff%36e5/6e4);
-  el.innerHTML = `<div class="lbl">${statusOf(n)==='hoje' ? 'Acontecendo agora' : 'Próximo encontro'}</div>
-    <h2>${esc(n.titulo)}</h2>
-    <div class="sub">${esc(n.modulo || CATS[n.categoria]?.label || '')}${n.professor ? ' · ' + esc(n.professor) : ''}</div>
-    <div class="meta"><span class="chip-w">${esc(fmtRange(n,true))}</span>${slotTxt(n) ? `<span class="chip-w">${esc(slotTxt(n))}</span>` : ''}${n.modalidade==='online' ? '<span class="chip-w">Online</span>' : ''}</div>
-    <div class="count"><div><b>${dd}</b><small>dias</small></div><div><b>${hh}</b><small>horas</small></div><div><b>${mm}</b><small>min</small></div></div>`;
-  el.style.cursor = 'pointer'; el.onclick = () => openView(n.id);
-}
-
-function itemCard(it){
-  const st = statusOf(it), a = pd(it.inicio), b = pd(it.fim||it.inicio), multi = iso(a)!==iso(b);
-  const big = multi && (b-a) < 7*864e5 ? `${a.getDate()}–${b.getDate()}` : a.getDate();
-  const small = multi && (b-a) >= 7*864e5 ? `até ${String(b.getDate()).padStart(2,'0')}/${String(b.getMonth()+1).padStart(2,'0')}/${String(b.getFullYear()).slice(2)}` : (multi ? `${DOW[a.getDay()]}–${DOW[b.getDay()]}` : DOW[a.getDay()]);
-  return `<article class="card item ${['passado','concluido'].includes(st)?'past':''} ${st==='hoje'?'today':''} ${st==='cancelado'?'cancel':''}" style="--c:${color(it.categoria)}" data-id="${it.id}">
-    <div class="datebox"><b>${big}</b><small>${small}</small></div>
-    <div class="it-main">
-      <div class="it-top">${tagsFor(it)}</div>
-      <div class="it-title">${esc(it.titulo)}</div>
-      <div class="it-sub">
-        ${it.modulo ? `<span>${esc(it.modulo)}</span>` : ''}
-        ${it.professor ? `<span>${ICON.user}${esc(it.professor)}</span>` : ''}
-        ${slotTxt(it) ? `<span>${ICON.clock}${esc(slotTxt(it))}</span>` : ''}
-      </div>
-      ${it.notas ? `<div class="it-notes">${esc(it.notas)}</div>` : ''}
-    </div>
-    <div class="it-act">
-      <button data-a="done" title="${it.status==='concluido'?'Desmarcar concluído':'Marcar como concluído'}" aria-label="Concluir">${ICON.check}</button>
-      <button data-a="edit" title="Editar" aria-label="Editar">${ICON.edit}</button>
-      <button data-a="del" class="del" title="Excluir" aria-label="Excluir">${ICON.trash}</button>
-    </div>
-  </article>`;
-}
-
-function renderTimeline(list){
-  if (!list.length) return emptyState();
-  const groups = new Map();
-  list.forEach(it => { const d = pd(it.inicio), k = `${d.getFullYear()}-${String(d.getMonth()).padStart(2,'0')}`; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(it); });
-  let h = '';
-  for (const [k, arr] of groups){ const [y,m] = k.split('-').map(Number);
-    h += `<div class="month"><div class="month-h"><h3>${MONTHS[m]} ${y}</h3><span>${arr.length} ${arr.length>1?'itens':'item'}</span></div><div class="items">${arr.map(itemCard).join('')}</div></div>`; }
-  return h;
-}
-
-function renderCalendar(list){
-  if (!calCursor){ const nx = list.find(i => ['futuro','hoje'].includes(statusOf(i))); const base = nx ? pd(nx.inicio) : today0(); calCursor = new Date(base.getFullYear(), base.getMonth(), 1); }
-  const y = calCursor.getFullYear(), m = calCursor.getMonth();
-  const first = new Date(y, m, 1), start = new Date(first); start.setDate(1 - first.getDay());
-  const byDay = {};
-  list.forEach(it => { const a = pd(it.inicio), b = pd(it.fim||it.inicio); const long = (b-a) > 3*864e5;
-    const push = d => { (byDay[iso(d)] ||= []).push(it); };
-    if (long){ push(a); push(b); } else for (let d = new Date(a); d <= b; d.setDate(d.getDate()+1)) push(new Date(d)); });
-  const tIso = iso(today0());
-  let h = `<div class="cal-head"><h3>${MONTHS[m]} ${y}</h3>
-    <button class="btn icon-btn" data-cal="-1" aria-label="Mês anterior">${ICON.prev}</button>
-    <button class="btn" data-cal="0">Hoje</button>
-    <button class="btn icon-btn" data-cal="1" aria-label="Próximo mês">${ICON.next}</button></div><div class="cal">`;
-  h += DOW.map(d => `<div class="dow">${d}</div>`).join('');
-  for (let i = 0; i < 42; i++){ const d = new Date(start); d.setDate(start.getDate()+i); const k = iso(d);
-    if (i >= 35 && d.getMonth() !== m) break;
-    const evs = byDay[k] || [];
-    h += `<div class="day ${d.getMonth()!==m?'out':''} ${k===tIso?'is-today':''}" data-day="${k}"><span class="n">${d.getDate()}</span>${evs.map(e => `<div class="ev" style="--c:${color(e.categoria)}" data-id="${e.id}" title="${esc(e.titulo)}">${esc(e.titulo)}</div>`).join('')}</div>`; }
-  return h + '</div>';
-}
-
-function renderTable(list){
-  if (!list.length) return emptyState();
-  const key = sortKey, val = it => key==='categoria' ? (CATS[it.categoria]?.label||'') : (it[key] ?? '');
-  const arr = [...list].sort((a,b) => String(val(a)).localeCompare(String(val(b)), 'pt') * sortDir);
-  const th = (k, l) => `<th data-sort="${k}">${l}${sortKey===k ? (sortDir>0?' ↑':' ↓') : ''}</th>`;
-  return `<div class="card tbl-wrap"><table><thead><tr>${th('inicio','Data')}${th('titulo','Título')}${th('modulo','Módulo')}${th('categoria','Tipo')}${th('professor','Professor(a)')}<th>Horários</th><th></th></tr></thead><tbody>
-    ${arr.map(it => `<tr data-id="${it.id}" style="--c:${color(it.categoria)}"><td style="white-space:nowrap">${esc(fmtRange(it))}</td><td class="tt">${esc(it.titulo)}</td><td>${esc(it.modulo)}</td><td><span class="tag">${esc(CATS[it.categoria]?.label||'Outro')}</span></td><td>${esc(it.professor)}${it.modalidade==='online'?' <span class="tag plain">Online</span>':''}</td><td style="font-size:13px;color:var(--muted)">${esc(slotTxt(it))}</td>
-      <td><div class="it-act"><button data-a="edit" aria-label="Editar">${ICON.edit}</button><button data-a="del" class="del" aria-label="Excluir">${ICON.trash}</button></div></td></tr>`).join('')}
-  </tbody></table></div>`;
-}
-
-function emptyState(){
-  return `<div class="card empty"><b>Nada por aqui</b>${$('#fPast').checked ? 'Ajuste os filtros ou adicione um novo item.' : 'Ative “Mostrar realizados” para ver encontros que já aconteceram.'}<div style="margin-top:16px"><button class="btn primary" data-new>Novo item</button></div></div>`;
-}
-
-function renderFilters(){
-  const fc = $('#fCat'), cur = fc.value; const used = new Set(state.items.map(i=>i.categoria));
-  fc.innerHTML = '<option value="">Tipos</option>' + Object.entries(CATS).filter(([k])=>used.has(k)).map(([k,v]) => `<option value="${k}">${v.label}</option>`).join(''); fc.value = cur;
-  const fp = $('#fProf'), cp = fp.value; const profs = [...new Set(state.items.map(i=>i.professor).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt'));
-  fp.innerHTML = '<option value="">Professores</option>' + profs.map(p => `<option>${esc(p)}</option>`).join(''); fp.value = profs.includes(cp) ? cp : '';
-  $('#dlProfs').innerHTML = profs.map(p => `<option value="${esc(p)}">`).join('');
-  $('#dlModulos').innerHTML = [...new Set(state.items.map(i=>i.modulo).filter(Boolean))].map(p => `<option value="${esc(p)}">`).join('');
-  $('#legend').innerHTML = Object.entries(CATS).filter(([k])=>used.has(k)).map(([k,v]) => `<span><i class="dot" style="--c:${color(k)}"></i>${v.label}</span>`).join('');
-}
-
-function render(){
-  renderFilters(); renderKpis(); renderNext();
-  document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.view === view));
-  $('#fPast').parentElement.style.display = view === 'calendar' ? 'none' : '';
-  const list = filtered();
-  $('#view').innerHTML = view === 'calendar' ? renderCalendar(list) : view === 'table' ? renderTable(list) : renderTimeline(list);
-  const dirty = isDirty(), sb = $('#syncBadge');
-  sb.classList.toggle('dirty', dirty); sb.querySelector('span').textContent = dirty ? 'Alterações não publicadas' : 'Sincronizado';
-  sb.title = dirty ? 'Edições salvas só neste navegador. Use o menu ⋮ › Publicar alterações no GitHub.' : 'Igual à versão publicada';
-  $('#fonte').textContent = state.meta.fonte || '—';
-  $('#upd').textContent = state.meta.updatedAt ? new Date(state.meta.updatedAt).toLocaleString('pt-BR', {dateStyle:'short', timeStyle:'short'}) : '—';
-}
-
-/* ---------- CRUD ---------- */
-function fillSelects(){
-  $('#eCat').innerHTML = Object.entries(CATS).map(([k,v]) => `<option value="${k}">${v.label}</option>`).join('');
-  $('#eSlots').innerHTML = Object.entries(SLOTS).map(([k,v]) => `<label><input type="checkbox" value="${k}"> ${v.label}</label>`).join('');
-}
-function openEdit(id, preset={}){
-  editingId = id || null;
-  const it = id ? state.items.find(i=>i.id===id) : {titulo:'',modulo:'',categoria:'outro',inicio:preset.inicio||iso(today0()),fim:preset.inicio||'',horarios:[],professor:'',modalidade:'presencial',semestre:1,local:'',notas:'',status:'auto'};
-  if (!it) return;
-  $('#editTitle').textContent = id ? 'Editar item' : 'Novo item';
-  $('#eTitulo').value = it.titulo; $('#eModulo').value = it.modulo||''; $('#eCat').value = CATS[it.categoria] ? it.categoria : 'outro';
-  $('#eIni').value = it.inicio; $('#eFim').value = it.fim && it.fim!==it.inicio ? it.fim : '';
-  $('#eSlots').querySelectorAll('input').forEach(c => c.checked = (it.horarios||[]).includes(c.value));
-  $('#eProf').value = it.professor||''; $('#eMod').value = it.modalidade||'presencial'; $('#eSem').value = String(it.semestre ?? 1);
-  $('#eStatus').value = it.status||'auto'; $('#eLocal').value = it.local||''; $('#eNotas').value = it.notas||'';
-  $('#btnDel').style.display = id ? '' : 'none'; $('#btnDup').style.display = id ? '' : 'none';
-  $('#dlgView').open && $('#dlgView').close();
-  $('#dlgEdit').showModal(); setTimeout(()=>$('#eTitulo').focus(), 50);
-}
-function readForm(){
-  const ini = $('#eIni').value, fim = $('#eFim').value;
-  return { titulo:$('#eTitulo').value.trim(), modulo:$('#eModulo').value.trim(), categoria:$('#eCat').value, inicio:ini, fim:(fim && fim >= ini) ? fim : ini,
-    horarios:[...$('#eSlots').querySelectorAll('input:checked')].map(c=>c.value), professor:$('#eProf').value.trim(), modalidade:$('#eMod').value,
-    semestre:Number($('#eSem').value), local:$('#eLocal').value.trim(), notas:$('#eNotas').value.trim(), status:$('#eStatus').value };
-}
-$('#formEdit').addEventListener('submit', e => {
-  e.preventDefault(); const d = readForm();
-  if (!d.titulo || !d.inicio){ toast('Preencha título e data de início'); return; }
-  if ($('#eFim').value && $('#eFim').value < d.inicio) toast('Data final anterior ao início — ajustada para o mesmo dia');
-  if (editingId){ Object.assign(state.items.find(i=>i.id===editingId), d); toast('Item atualizado'); }
-  else { state.items.push({id:uid(), ...d}); toast('Item adicionado'); }
-  $('#dlgEdit').close(); saveLocal();
-});
-function delItem(id){
-  const it = state.items.find(i=>i.id===id); if (!it) return;
-  if (!confirm(`Excluir “${it.titulo}” (${fmtRange(it)})?`)) return;
-  const idx = state.items.indexOf(it); state.items.splice(idx,1); saveLocal();
-  $('#dlgEdit').open && $('#dlgEdit').close(); $('#dlgView').open && $('#dlgView').close();
-  undoToast(it, idx);
-}
-function undoToast(it, idx){
-  const t = $('#toast'); t.innerHTML = `“${esc(it.titulo)}” excluído · <u style="cursor:pointer">desfazer</u>`; t.style.pointerEvents='auto'; t.classList.add('show');
-  t.onclick = () => { state.items.splice(idx,0,it); saveLocal(); t.classList.remove('show'); t.style.pointerEvents='none'; t.onclick=null; };
-  clearTimeout(t._h); t._h = setTimeout(()=>{ t.classList.remove('show'); t.style.pointerEvents='none'; t.onclick=null; }, 6000);
-}
-$('#btnDel').onclick = () => editingId && delItem(editingId);
-$('#btnDup').onclick = () => { if (!editingId) return; const d = readForm(); const c = {id:uid(), ...d, titulo:d.titulo + ' (cópia)'}; state.items.push(c); $('#dlgEdit').close(); saveLocal(); openEdit(c.id); toast('Item duplicado — ajuste a data'); };
-
-function openView(id){
-  const it = state.items.find(i=>i.id===id); if (!it) return;
-  $('#vTitle').textContent = it.titulo;
-  const st = {passado:'Realizado',concluido:'Concluído',hoje:'Hoje',futuro:'Agendado',cancelado:'Cancelado / adiado'}[statusOf(it)];
-  const loc = it.local ? (/^https?:\/\//.test(it.local) ? `<a href="${esc(it.local)}" target="_blank" rel="noopener">${esc(it.local)}</a>` : esc(it.local)) : '—';
-  $('#vBody').innerHTML = `<div class="it-top" style="--c:${color(it.categoria)}">${tagsFor(it)}</div><dl>
-    <dt>Data</dt><dd>${esc(fmtRange(it,true))}</dd>
-    ${slotTxt(it) ? `<dt>Horários</dt><dd>${esc(slotTxt(it))}</dd>` : ''}
-    ${it.modulo ? `<dt>Módulo</dt><dd>${esc(it.modulo)}</dd>` : ''}
-    ${it.professor ? `<dt>Professor(a)</dt><dd>${esc(it.professor)}</dd>` : ''}
-    <dt>Modalidade</dt><dd>${{presencial:'Presencial',online:'Online',hibrido:'Híbrido'}[it.modalidade]||'—'}</dd>
-    <dt>Local</dt><dd>${loc}</dd>
-    <dt>Status</dt><dd>${st}</dd>
-    ${it.notas ? `<dt>Anotações</dt><dd style="white-space:pre-wrap">${esc(it.notas)}</dd>` : ''}</dl>`;
-  $('#vEdit').onclick = () => openEdit(id);
-  $('#dlgView').showModal();
-}
-
-/* ---------- events ---------- */
-document.addEventListener('click', e => {
-  const close = e.target.closest('[data-close]'); if (close){ close.closest('dialog').close(); return; }
-  if (e.target.closest('[data-new]')){ openEdit(null); return; }
-  const cal = e.target.closest('[data-cal]');
-  if (cal){ const v = Number(cal.dataset.cal); if (v===0){ const t=today0(); calCursor = new Date(t.getFullYear(), t.getMonth(), 1); } else calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth()+v, 1); render(); return; }
-  const ev = e.target.closest('.ev'); if (ev){ openView(ev.dataset.id); return; }
-  const day = e.target.closest('.day'); if (day){ openEdit(null, {inicio:day.dataset.day}); return; }
-  const th = e.target.closest('th[data-sort]'); if (th){ if (sortKey===th.dataset.sort) sortDir*=-1; else { sortKey=th.dataset.sort; sortDir=1; } render(); return; }
-  const act = e.target.closest('[data-a]');
-  const row = e.target.closest('[data-id]');
-  if (act && row){ const id = row.dataset.id, a = act.dataset.a;
-    if (a==='edit') openEdit(id);
-    if (a==='del') delItem(id);
-    if (a==='done'){ const it = state.items.find(i=>i.id===id); it.status = it.status==='concluido' ? 'auto' : 'concluido'; saveLocal(); toast(it.status==='concluido'?'Marcado como concluído':'Status automático'); }
-    return; }
-  if (row && (row.classList.contains('item') || row.tagName==='TR')){ openView(row.dataset.id); return; }
-  if (!e.target.closest('.menu')) $('#menuPop').classList.remove('open');
-});
-document.querySelectorAll('dialog').forEach(d => d.addEventListener('click', e => { if (e.target === d) d.close(); }));
-document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { view = b.dataset.view; localStorage.setItem(LS_VIEW, view); render(); });
-['q','fCat','fSem','fProf','fPast'].forEach(id => $('#'+id).addEventListener('input', render));
-$('#btnNew').onclick = $('#fab').onclick = () => openEdit(null);
-$('#btnMenu').onclick = e => { e.stopPropagation(); $('#menuPop').classList.toggle('open'); };
-$('#menuPop').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $('#menuPop').classList.remove('open'); menuAct(b.dataset.act); });
-
-/* theme */
-function applyTheme(t){ if (t) document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme; }
-applyTheme(localStorage.getItem(LS_THEME));
-$('#btnTheme').onclick = () => { const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme==='dark' : matchMedia('(prefers-color-scheme: dark)').matches; const t = dark ? 'light' : 'dark'; localStorage.setItem(LS_THEME, t); applyTheme(t); };
-
-/* ---------- menu actions ---------- */
-function download(name, text, type){ const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], {type})); a.download = name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href), 1000); }
-function menuAct(a){
-  if (a==='export') download(`mpes-2026-2-backup-${iso(new Date())}.json`, JSON.stringify(state, null, 2), 'application/json');
-  if (a==='import') $('#fileImport').click();
-  if (a==='ics') download('mpes-2026-2.ics', buildIcs(), 'text/calendar');
-  if (a==='print') window.print();
-  if (a==='gh') openGh();
-  if (a==='sync') publish();
-  if (a==='reset'){ if (!remoteSnapshot){ toast('Versão publicada indisponível'); return; } if (!confirm('Descartar as edições deste navegador e voltar à versão publicada?')) return; state = structuredClone(remoteSnapshot); localStorage.removeItem(LS_DATA); render(); toast('Versão publicada restaurada'); }
-}
-$('#fileImport').onchange = async e => {
-  const f = e.target.files[0]; if (!f) return;
-  try { const d = JSON.parse(await f.text()); if (!Array.isArray(d.items)) throw 0;
-    d.items.forEach(i => { i.id ||= uid(); i.fim ||= i.inicio; i.horarios ||= []; });
-    state = {meta:{...state.meta, ...d.meta}, items:d.items}; saveLocal(); toast(`${d.items.length} itens importados`);
-  } catch(_){ toast('Arquivo inválido'); }
-  e.target.value = '';
-};
-
-function buildIcs(){
-  const pad = n => String(n).padStart(2,'0');
-  const dt = (d, hm) => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${hm.replace(':','')}00`;
-  const dd = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
-  const txt = s => String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/[,;]/g, m => '\\'+m);
-  const stamp = new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+Z$/,'Z');
-  const L = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//MPES 2026.2//Calendario//PT-BR','CALSCALE:GREGORIAN','X-WR-CALNAME:MPES 2026.2 · CESAR School','X-WR-TIMEZONE:America/Recife'];
-  state.items.filter(i=>i.status!=='cancelado').forEach(it => {
-    const desc = [it.modulo, it.professor && 'Professor(a): '+it.professor, it.modalidade==='online'&&'Online', it.notas].filter(Boolean).join('\n');
-    const slots = (it.horarios||[]).map(k=>[k,SLOTS[k]]).filter(x=>x[1]);
-    let n = 0;
-    if (slots.length) for (let d = pd(it.inicio); d <= pd(it.fim||it.inicio); d.setDate(d.getDate()+1)) slots.forEach(([k,s]) => { if (d.getDay()!==s.dow) return;
-      L.push('BEGIN:VEVENT',`UID:${it.id}-${k}-${dd(d)}@mpes2026`,`DTSTAMP:${stamp}`,`DTSTART;TZID=America/Recife:${dt(d,s.s)}`,`DTEND;TZID=America/Recife:${dt(d,s.e)}`,`SUMMARY:${txt(it.titulo)}`,`DESCRIPTION:${txt(desc)}`,`LOCATION:${txt(it.local)}`,'END:VEVENT'); n++; });
-    if (!n){ const e = pd(it.fim||it.inicio); e.setDate(e.getDate()+1);
-      L.push('BEGIN:VEVENT',`UID:${it.id}@mpes2026`,`DTSTAMP:${stamp}`,`DTSTART;VALUE=DATE:${dd(pd(it.inicio))}`,`DTEND;VALUE=DATE:${dd(e)}`,`SUMMARY:${txt(it.titulo)}`,`DESCRIPTION:${txt(desc)}`,'END:VEVENT'); }
-  });
-  L.push('END:VCALENDAR'); return L.join('\r\n');
-}
-
-/* ---------- GitHub sync ---------- */
-function ghCfg(){ let c = {}; try { c = JSON.parse(localStorage.getItem(LS_GH)||'{}'); } catch(_){}
-  if (!c.owner && location.hostname.endsWith('github.io')){ c.owner = location.hostname.split('.')[0]; c.repo = location.pathname.split('/').filter(Boolean)[0] || `${c.owner}.github.io`; }
-  return {branch:'main', path:'data.json', ...c}; }
-function openGh(){ const c = ghCfg(); $('#gOwner').value=c.owner||''; $('#gRepo').value=c.repo||''; $('#gBranch').value=c.branch||'main'; $('#gPath').value=c.path||'data.json'; $('#gToken').value=c.token||''; $('#dlgGh').showModal(); }
-$('#formGh').addEventListener('submit', e => { e.preventDefault();
-  localStorage.setItem(LS_GH, JSON.stringify({owner:$('#gOwner').value.trim(), repo:$('#gRepo').value.trim(), branch:$('#gBranch').value.trim()||'main', path:$('#gPath').value.trim()||'data.json', token:$('#gToken').value.trim()}));
-  $('#dlgGh').close(); toast('Configuração salva neste navegador'); });
-$('#gForget').onclick = () => { const c = ghCfg(); delete c.token; localStorage.setItem(LS_GH, JSON.stringify(c)); $('#gToken').value=''; toast('Token removido'); };
-const b64 = s => { const bytes = new TextEncoder().encode(s); let bin=''; bytes.forEach(b => bin += String.fromCharCode(b)); return btoa(bin); };
-async function publish(){
-  const c = ghCfg(); if (!c.token || !c.owner || !c.repo){ toast('Configure o GitHub primeiro'); openGh(); return; }
-  const url = `https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/contents/${c.path.split('/').map(encodeURIComponent).join('/')}`;
-  const H = {Authorization:`Bearer ${c.token}`, Accept:'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28'};
-  toast('Publicando…', 10000);
-  try {
-    let sha; const g = await fetch(`${url}?ref=${encodeURIComponent(c.branch)}`, {headers:H, cache:'no-store'});
-    if (g.ok) sha = (await g.json()).sha; else if (g.status !== 404) throw new Error(`GitHub respondeu ${g.status}`);
-    state.meta.updatedAt = new Date().toISOString();
-    const body = {message:`Atualiza calendário MPES (${new Date().toLocaleString('pt-BR')})`, content:b64(JSON.stringify(state, null, 2) + '\n'), branch:c.branch}; if (sha) body.sha = sha;
-    const p = await fetch(url, {method:'PUT', headers:{...H,'Content-Type':'application/json'}, body:JSON.stringify(body)});
-    if (!p.ok){ const j = await p.json().catch(()=>({})); throw new Error(j.message || `GitHub respondeu ${p.status}`); }
-    remoteSnapshot = structuredClone(state); localStorage.setItem(LS_DATA, JSON.stringify(state)); render();
-    toast('Publicado! O site atualiza em 1–2 minutos.', 4000);
-  } catch(err){ toast('Falha ao publicar: ' + err.message, 6000); }
-}
-
-/* boot */
-try { const fp = localStorage.getItem('mpes2026_showpast'); if (fp !== null) $('#fPast').checked = fp === '1'; } catch(_){}
-$('#fPast').addEventListener('change', e => { try { localStorage.setItem('mpes2026_showpast', e.target.checked ? '1' : '0'); } catch(_){} });
-fillSelects();
-load();
-setInterval(renderNext, 30000);
-document.addEventListener('keydown', e => { if (e.key==='n' && !e.target.closest('input,textarea,select') && !document.querySelector('dialog[open]')) openEdit(null); });
-})();
-</script>
+<script src="js/app.js?v=2" defer></script>
 </body>
 </html>
