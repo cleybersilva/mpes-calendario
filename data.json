@@ -4,7 +4,8 @@
     "instituicao": "CESAR School",
     "turma": "MPES 2026.2",
     "fonte": "Calendário MPES 2026.2 (em construção) — atualizado 21/10",
-    "updatedAt": "2026-10-28T20:30:00-03:00"
+    "updatedAt": "2026-10-29T01:13:09.653Z",
+    "schema": 1
   },
   "items": [
     {
@@ -22,7 +23,7 @@
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "concluido"
     },
     {
       "id": "i002",
@@ -41,7 +42,7 @@
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "concluido"
     },
     {
       "id": "i014",
@@ -58,7 +59,7 @@
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "concluido"
     },
     {
       "id": "i003",
