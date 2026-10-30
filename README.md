@@ -266,7 +266,7 @@ avaliações de projetos SR1 (17/02/2027), SR2 (19/05/2027) e SR3 (29/07/2027).
 **Orientação:** projeto de pesquisa *"Um Agente de Inteligência Artificial
 para Apoio à Escrita de Trabalhos Acadêmicos de Conclusão de Curso,
 Dissertações e Teses em Engenharia de Software"*, com o Prof. Dr. Rafael
-Batista Duarte, primeiro encontro na terça, 03/11/2026, às 20h.
+Batista Duarte, primeiro encontro na terça, 03/11/2026, das 20h às 21h, online (Zoom ou Google Meet).
 
 **Dissertação:** acompanhamento I de set/2027 a mar/2028, qualificação até
 30/03/2028, acompanhamento II de abr/2028 a set/2028 e **defesa até

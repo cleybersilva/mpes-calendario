@@ -4,7 +4,7 @@
     "instituicao": "CESAR School",
     "turma": "MPES 2026.2",
     "fonte": "Calendário MPES 2026.2 (em construção) — atualizado 21/10",
-    "updatedAt": "2026-10-30T19:15:44.139Z",
+    "updatedAt": "2026-10-30T19:20:34.780Z",
     "schema": 1
   },
   "items": [
@@ -70,11 +70,11 @@
       "fim": "2026-11-03",
       "horarios": [],
       "horaIni": "20:00",
-      "horaFim": "",
+      "horaFim": "21:00",
       "professor": "Prof. Dr. Rafael Batista Duarte",
-      "modalidade": "adefinir",
+      "modalidade": "online",
       "semestre": 1,
-      "local": "",
+      "local": "Zoom ou Google Meet",
       "notas": "",
       "status": "auto"
     },
