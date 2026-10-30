@@ -28,9 +28,9 @@ async function desktop() {
   const n = await pg.locator('#view .item').count();
   r.check(n === data.items.length, 'Linha do tempo mostra todos os itens', `${n} de ${data.items.length}`);
   r.check((await pg.locator('#nextCard h2').innerText()).length > 0, 'Cartão "Próximo encontro" preenchido', await pg.locator('#nextCard h2').innerText());
-  for (const v of ['calendar', 'table', 'timeline']) {
+  for (const v of ['calendar', 'table', 'equipes', 'timeline']) {
     await pg.click(`.tabs [data-view=${v}]`);
-    const ok = v === 'calendar' ? await pg.locator('#calGrid .day').count() >= 28 : v === 'table' ? await pg.locator('#view tbody tr').count() === data.items.length : await pg.locator('#view .item').count() === data.items.length;
+    const ok = v === 'equipes' ? await pg.locator('#view .team').count() === (data.equipes || []).length && await pg.locator('#view .members li:not(.none)').count() === (data.equipes || []).reduce((s, t) => s + t.membros.length, 0) : v === 'calendar' ? await pg.locator('#calGrid .day').count() >= 28 : v === 'table' ? await pg.locator('#view tbody tr').count() === data.items.length : await pg.locator('#view .item').count() === data.items.length;
     r.check(ok, `Visualização "${v}" renderiza`);
   }
   if (!target) {
@@ -45,6 +45,15 @@ async function desktop() {
     await pg.click('#toast button');
     r.check(await pg.locator('.item:has-text("Item de teste CI editado")').count() === 1, 'Desfazer exclusão');
     r.check(await pg.locator('#syncBadge.dirty').count() === 1, 'Selo indica alterações não publicadas');
+    if ((data.equipes || []).length) {
+      await pg.click('.tabs [data-view=equipes]');
+      await pg.locator('#view [data-team-work]').first().click();
+      r.check(!(await pg.locator('#fEquipe').isHidden()) && await pg.inputValue('#eEquipe') === data.equipes[0].id, 'Agendar trabalho já vem com a equipe');
+      await pg.fill('#eTitulo', 'Entrega CI'); await pg.fill('#eIni', '2026-12-02'); await pg.click('#formEdit button[type=submit]');
+      await pg.click('.tabs [data-view=equipes]');
+      r.check((await pg.locator('#view .team').first().innerText()).includes('Entrega CI'), 'Trabalho aparece no cartão da equipe');
+      await pg.click('.tabs [data-view=timeline]');
+    }
     const [dl] = await Promise.all([pg.waitForEvent('download'), (async () => { await pg.click('#btnMenu'); await pg.click('[data-act=ics]'); })()]);
     const ics = readFileSync(await dl.path(), 'utf8');
     r.check(ics.startsWith('BEGIN:VCALENDAR') && (ics.match(/BEGIN:VEVENT/g) || []).length > data.items.length, 'Exportação .ics', `${(ics.match(/BEGIN:VEVENT/g) || []).length} eventos`);
@@ -67,7 +76,10 @@ async function mobile() {
   r.check(await pg.locator('#dlgView[open]').count() === 1, 'Tocar no item abre o detalhe');
   await pg.goBack();
   r.check(await pg.locator('dialog[open]').count() === 0, 'Botão voltar fecha o detalhe');
-  await pg.tap('#bnFilters');
+  await pg.tap('.bnav [data-view=equipes]');
+  r.check(await pg.locator('#view .team').count() === (data.equipes || []).length, 'Aba Equipes no celular', `${await pg.locator('#view .team').count()} equipes`);
+  await pg.tap('.bnav [data-view=timeline]');
+  await pg.tap('#btnFilters');
   r.check(await pg.locator('#filterPanel.open').count() === 1, 'Painel de filtros abre');
   await pg.tap('#filterPanel .fp-foot [data-fp-close]');
   await pg.tap('.bnav [data-view=calendar]');

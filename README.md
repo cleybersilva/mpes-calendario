@@ -116,7 +116,8 @@ flowchart LR
 | Recurso | Detalhe |
 | --- | --- |
 | CRUD completo | Adicionar, editar, duplicar, concluir e excluir, com **desfazer** |
-| Três visualizações | Linha do tempo por mês, calendário mensal e tabela ordenável |
+| Visualizações | Linha do tempo por mês, calendário mensal, tabela ordenável e **Equipes** |
+| Equipes · trabalho em grupo | Cartões das equipes com participantes (avatar com iniciais), contagem por equipe, "Sua equipe" em destaque, busca por participante, próximo trabalho de cada equipe e botão **Agendar trabalho** (já vem com a equipe marcada); criar, editar e excluir equipes |
 | Busca e filtros | Por texto, tipo, semestre e professor; opção de ocultar realizados |
 | Próximo encontro | Cartão com data, turnos e contagem regressiva |
 | Indicadores | Progresso do curso, encontros restantes, sextas com aula e prazo da defesa |
@@ -185,10 +186,14 @@ Cada item segue este formato no `data.json`:
 
 **Categorias:** `inaugural`, `gestao`, `requisitos`, `arquitetura`,
 `interoperabilidade`, `metodologia`, `eletiva`, `acompanhamento`,
-`avaliacao`, `orientacao`, `marco`, `outro`.
+`avaliacao`, `orientacao`, `grupo` (trabalho em grupo), `marco`, `outro`.
 
 **Turnos (`horarios`):** `qua` (Qua 19h–21h), `sex1` (Sex 14h–17h), `sex2`
 (Sex 18h–21h), `sab1` (Sáb 08h–12h), `sab2` (Sáb 13h–18h).
+
+**Equipes (`equipes`):** lista de `{ "id": "e2", "nome": "Equipe 2", "tema": "", "membros": [...] }`,
+com `meta.minhaEquipe` indicando a sua. Itens do tipo `grupo` podem ter
+`"equipe": "e2"`; sem equipe, o trabalho vale para todas.
 
 **Horário avulso (`horaIni`, `horaFim`):** para encontros fora dos turnos,
 como orientações (ex.: `"horaIni": "20:00"`). O fim é opcional; sem ele, a
@@ -311,6 +316,16 @@ avaliações de projetos SR1 (17/02/2027), SR2 (19/05/2027) e SR3 (29/07/2027).
 para Apoio à Escrita de Trabalhos Acadêmicos de Conclusão de Curso,
 Dissertações e Teses em Engenharia de Software"*, com o Prof. Dr. Rafael
 Batista Duarte, primeiro encontro na terça, 03/11/2026, das 20h às 21h, online (Zoom ou Google Meet).
+
+**Equipes do trabalho em grupo (28 participantes):**
+
+| Equipe | Participantes |
+| --- | --- |
+| Equipe 1 (6) | Carlos Augusto Oliveira Rocha, Douglas Antônio dos Santos, Francisco Wendel de Lima Maciel, Juracy Alexandre Dantas Junior, Nathalia Albuquerque, Rafael Rodrigues Ferreira da Silva |
+| Equipe 2 (6) | Cleyber Gomes da Silva, Daniel Cavalcante Macedo, Eduardo Cavalcanti de Andrade Filho, Estela de Lacerda Oliveira, Lucas Rodrigues Albino, Policarpo de Freitas |
+| Equipe 3 (6) | José Carlos Barbosa Pereira Filho, Lamartine Veras Sampaio de Souza, Lucas Matheus Falcão, Luís Felippe Costa Sobral, Marília Santos de Araújo Pereira, Patrick Iarrocheski |
+| Equipe 4 (5) | David Bezerra da Silva, Leonardo Pessoa Cavalcanti, Mácio Matheus Santos de Arruda, Pedro Henrique Guimarães Liberal, Victor Rodrigues de Lima Nascimento |
+| Equipe 5 (5) | Albert Sevy Bezerra Torres, Gilson Santos de Jesus, Lucas Gabriel de Brito Silva, Rodrigo Cândido de Carvalho, Silvio |
 
 **Dissertação:** acompanhamento I de set/2027 a mar/2028, qualificação até
 30/03/2028, acompanhamento II de abr/2028 a set/2028 e **defesa até

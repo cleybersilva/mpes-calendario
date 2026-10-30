@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=5">
+<link rel="stylesheet" href="css/styles.css?v=6">
 <script>try{var t=localStorage.getItem('mpes2026_theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body class="loading">
@@ -73,6 +73,7 @@
       <button role="tab" data-view="timeline" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Linha do tempo</button>
       <button role="tab" data-view="calendar" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Calendário</button>
       <button role="tab" data-view="table" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>Tabela</button>
+      <button role="tab" data-view="equipes" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/></svg>Equipes</button>
     </div>
     <label class="search" id="searchBox"><span class="sr">Buscar</span>
       <svg class="s-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -108,7 +109,7 @@
   <button type="button" data-view="calendar" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Calendário</button>
   <button type="button" class="add" id="bnAdd" aria-label="Novo item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
   <button type="button" data-view="table" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>Tabela</button>
-  <button type="button" id="bnFilters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtros<span class="badge-n" id="fCount2"></span></button>
+  <button type="button" data-view="equipes" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/></svg>Equipes</button>
 </nav>
 <div class="backdrop" id="backdrop"></div>
 
@@ -121,6 +122,7 @@
       <div class="field full" id="fTitulo"><label for="eTitulo">Título *</label><input id="eTitulo" maxlength="140" placeholder="Ex.: Gestão — Básico" enterkeyhint="next"><span class="err">Informe um título.</span></div>
       <div class="field"><label for="eModulo">Módulo / disciplina</label><input id="eModulo" list="dlModulos" maxlength="120" placeholder="Ex.: Construção de Software I"></div>
       <div class="field"><label for="eCat">Tipo</label><select id="eCat"></select></div>
+      <div class="field full" id="fEquipe" hidden><label for="eEquipe">Equipe do trabalho em grupo</label><select id="eEquipe"></select><span class="hint">Escolha uma equipe ou deixe “Todas as equipes” para um trabalho da turma inteira.</span></div>
       <div class="field" id="fIni"><label for="eIni">Início *</label><input id="eIni" type="date"><span class="err">Informe a data.</span></div>
       <div class="field" id="fFim"><label for="eFim">Fim</label><input id="eFim" type="date"><span class="err">O fim não pode ser antes do início.</span></div>
       <div class="field full"><span class="lab">Horários</span>
@@ -160,6 +162,21 @@
   </div>
 </dialog>
 
+<!-- Equipe -->
+<dialog id="dlgTeam" aria-labelledby="teamTitle">
+  <form id="formTeam" novalidate>
+    <div class="grab"></div>
+    <div class="m-head"><h2 id="teamTitle">Nova equipe</h2><button type="button" class="btn ghost icon-btn" data-close aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <div class="m-body">
+      <div class="field" id="fTNome"><label for="tNome">Nome da equipe *</label><input id="tNome" maxlength="60" placeholder="Ex.: Equipe 6"><span class="err">Informe o nome da equipe.</span></div>
+      <div class="field"><label for="tTema">Tema do trabalho</label><input id="tTema" maxlength="200" placeholder="Opcional"></div>
+      <div class="field full"><label for="tMembros">Participantes · um por linha</label><textarea id="tMembros" rows="8" placeholder="Nome completo&#10;Nome completo"></textarea><span class="hint" id="tCount">0 participantes</span></div>
+      <label class="toggle full" style="grid-column:1/-1"><input type="checkbox" id="tMine"> Esta é a minha equipe</label>
+    </div>
+    <div class="m-foot"><button type="button" class="btn danger" id="tDel">Excluir equipe</button><span class="grow"></span><button type="button" class="btn hide-sm" data-close>Cancelar</button><button type="submit" class="btn primary">Salvar</button></div>
+  </form>
+</dialog>
+
 <!-- GitHub -->
 <dialog id="dlgGh" aria-labelledby="ghTitle">
   <form id="formGh" novalidate>
@@ -181,6 +198,6 @@
 <datalist id="dlModulos"></datalist><datalist id="dlProfs"></datalist>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/app.js?v=5" defer></script>
+<script src="js/app.js?v=6" defer></script>
 </body>
 </html>

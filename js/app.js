@@ -11,7 +11,7 @@ const SCHEMA = 1;
 const CATS = {
   inaugural:{label:'Aula inaugural'}, gestao:{label:'Gestão'}, requisitos:{label:'Requisitos'},
   arquitetura:{label:'Arquitetura'}, interoperabilidade:{label:'Interoperabilidade'}, metodologia:{label:'Metodologia'},
-  eletiva:{label:'Eletivas'}, acompanhamento:{label:'Acompanhamento dos projetos'}, avaliacao:{label:'Avaliação de projetos'}, orientacao:{label:'Orientação'},
+  eletiva:{label:'Eletivas'}, acompanhamento:{label:'Acompanhamento dos projetos'}, avaliacao:{label:'Avaliação de projetos'}, orientacao:{label:'Orientação'}, grupo:{label:'Trabalho em grupo'},
   marco:{label:'Marco da dissertação'}, outro:{label:'Outro'}
 };
 const SLOTS = {
@@ -76,7 +76,8 @@ function normItem(raw){
     semestre: [0,1,2].includes(Number(raw.semestre)) ? Number(raw.semestre) : 1,
     local: str(raw.local, 300),
     notas: str(raw.notas, 2000),
-    status: STATUS.includes(raw.status) ? raw.status : 'auto'
+    status: STATUS.includes(raw.status) ? raw.status : 'auto',
+    equipe: str(raw.equipe, 40)
   };
 }
 function normData(d){
@@ -88,14 +89,32 @@ function normData(d){
   });
   const meta = (d && typeof d.meta === 'object' && d.meta) ? {...d.meta} : {};
   meta.schema = SCHEMA;
-  return { data:{meta, items}, dropped };
+  const equipes = normTeams(d?.equipes), ids = new Set(equipes.map(t => t.id));
+  items.forEach(it => { if (it.equipe && !ids.has(it.equipe)) it.equipe = ''; });
+  if (meta.minhaEquipe && !ids.has(meta.minhaEquipe)) meta.minhaEquipe = '';
+  return { data:{meta, items, equipes}, dropped };
 }
+/* equipes de trabalho em grupo: [{id, nome, tema, membros:[...]}] */
+function normTeams(arr){
+  const out = [], seen = new Set();
+  (Array.isArray(arr) ? arr : []).forEach((t, i) => {
+    if (!t || typeof t !== 'object') return;
+    let id = str(t.id, 40) || 'e' + (i + 1); while (seen.has(id)) id = uid(); seen.add(id);
+    const membros = [...new Set((Array.isArray(t.membros) ? t.membros : []).map(m => str(m, 120).replace(/\s+/g, ' ')).filter(Boolean))];
+    out.push({ id, nome: str(t.nome, 60) || `Equipe ${i + 1}`, tema: str(t.tema, 200), membros });
+  });
+  return out;
+}
+const teamById = id => (state.equipes || []).find(t => t.id === id);
+const TEAM_COLORS = ['#4C7CE0','#2EA36B','#E8590C','#8B6FD6','#D9A400','#0E9AA7','#D6336C','#66A80F'];
+const teamColor = id => TEAM_COLORS[Math.max(0, (state.equipes || []).findIndex(t => t.id === id)) % TEAM_COLORS.length];
+const initials = n => n.split(' ').filter(w => w.length > 2 || /^[A-ZÀ-Ú]/.test(w)).map(w => w[0]).slice(0, 2).join('').toUpperCase();
 
 /* ---------- estado ---------- */
-let state = {meta:{}, items:[]};
+let state = {meta:{}, items:[], equipes:[]};
 let remote = null;             // última versão publicada conhecida
 let view = store.get(KEYS.view, 'timeline');
-if (!['timeline','calendar','table'].includes(view)) view = 'timeline';
+if (!['timeline','calendar','table','equipes'].includes(view)) view = 'timeline';
 let calCursor = null, selDay = null, editingId = null, viewingId = null;
 let sortKey = 'inicio', sortDir = 1;
 
@@ -118,7 +137,8 @@ function saveLocal(){
   render();
 }
 const sameItems = (a, b) => JSON.stringify(a) === JSON.stringify(b);
-const isDirty = () => !!remote && !sameItems(remote.items, state.items);
+const snap = d => JSON.stringify([d?.items || [], d?.equipes || [], d?.meta?.minhaEquipe || '']);
+const isDirty = () => !!remote && snap(remote) !== snap(state);
 
 async function fetchRemote(){
   const r = await fetch('data.json?t=' + Date.now(), {cache:'no-store'});
@@ -134,9 +154,13 @@ async function load(){
     if (n.dropped) toast(`${n.dropped} item(ns) inválido(s) ignorado(s)`);
   } else local = null;
   const t = d => new Date(d?.meta?.updatedAt || 0).getTime();
-  if (local && (!rem || t(local) >= t(rem))) state = local;
+  if (local && (!rem || t(local) >= t(rem))){
+    state = local;
+    /* cópia local antiga, sem equipes: traz as equipes da versão publicada */
+    if (rem && !state.equipes.length && rem.equipes.length){ state.equipes = clone(rem.equipes); state.meta.minhaEquipe ||= rem.meta.minhaEquipe || ''; }
+  }
   else if (rem){ state = clone(rem); store.del(KEYS.data); }
-  else { state = {meta:{turma:'MPES 2026.2', schema:SCHEMA}, items:[]}; toast('Sem conexão e sem dados salvos neste navegador', {ms:5000}); }
+  else { state = {meta:{turma:'MPES 2026.2', schema:SCHEMA}, items:[], equipes:[]}; toast('Sem conexão e sem dados salvos neste navegador', {ms:5000}); }
   document.body.classList.remove('loading');
   render();
 }
@@ -152,7 +176,7 @@ function statusOf(it){
 }
 const isDone = it => ['passado','concluido'].includes(statusOf(it));
 const isUpcoming = it => ['futuro','hoje'].includes(statusOf(it));
-const isClass = it => !['marco','acompanhamento','avaliacao','orientacao'].includes(it.categoria);
+const isClass = it => !['marco','acompanhamento','avaliacao','orientacao','grupo'].includes(it.categoria);
 const byDate = (a,b) => a.inicio.localeCompare(b.inicio) || a.fim.localeCompare(b.fim) || a.titulo.localeCompare(b.titulo, 'pt');
 const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
@@ -210,6 +234,7 @@ const ICON = {
 /* ---------- render: topo ---------- */
 function tagsFor(it){
   const st = statusOf(it); let t = `<span class="tag">${esc(CATS[it.categoria]?.label || 'Outro')}</span>`;
+  if (it.equipe && teamById(it.equipe)) t += `<span class="tag team" style="--tc:${teamColor(it.equipe)}">${esc(teamById(it.equipe).nome)}</span>`;
   if (!['presencial','adefinir'].includes(it.modalidade)) t += `<span class="tag plain">${MODS[it.modalidade]}</span>`;
   if (st === 'hoje') t += '<span class="tag now">Hoje</span>';
   if (st === 'concluido' || st === 'passado') t += '<span class="tag ok">Realizado</span>';
@@ -225,7 +250,7 @@ function renderKpis(){
   $('#kProgS').textContent = `${done} de ${classes.length} encontros de aula`;
   const up = state.items.filter(i => i.status !== 'cancelado' && i.categoria !== 'marco' && isUpcoming(i));
   $('#kRest').textContent = up.length;
-  $('#kRestS').textContent = `${up.filter(isClass).length} de aula · ${up.filter(i => !isClass(i)).length} de projetos e orientação`;
+  $('#kRestS').textContent = `${up.filter(isClass).length} de aula · ${up.filter(i => !isClass(i)).length} outros`;
   const fridays = new Set();
   state.items.forEach(i => { if (i.status === 'cancelado' || !i.horarios.some(k => k.startsWith('sex'))) return;
     for (let d = pd(i.inicio); d <= pd(i.fim); d.setDate(d.getDate()+1)) if (d.getDay() === 5 && d >= t) fridays.add(iso(d)); });
@@ -377,7 +402,7 @@ function renderFilters(){
   if (!f.past) chips.push(['fPast', 'Ocultando realizados']);
   $('#activeFilters').innerHTML = chips.map(([id, l]) => `<button type="button" class="af" data-rm="${id}" aria-label="Remover filtro ${esc(l)}">${esc(l)}${ICON.x}</button>`).join('');
   const n = chips.length ? String(chips.length) : '';
-  $('#fCount').textContent = n; $('#fCount2').textContent = n;
+  $('#fCount').textContent = n;
   $('#searchBox').classList.toggle('has-q', !!$('#q').value);
 }
 
@@ -385,8 +410,13 @@ function renderFilters(){
 function render(){
   renderFilters(); renderKpis(); renderNext();
   $$('[data-view]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.view === view)));
-  const list = view === 'calendar' ? filtered({ignorePast:true}) : filtered();
-  $('#view').innerHTML = view === 'calendar' ? renderCalendar(list) : view === 'table' ? renderTable(list) : renderTimeline(list);
+  document.body.dataset.view = view;
+  $('#q').placeholder = view === 'equipes' ? 'Buscar participante ou equipe…' : 'Buscar módulo, professor, nota…';
+  if (view === 'equipes') $('#view').innerHTML = renderTeams();
+  else {
+    const list = view === 'calendar' ? filtered({ignorePast:true}) : filtered();
+    $('#view').innerHTML = view === 'calendar' ? renderCalendar(list) : view === 'table' ? renderTable(list) : renderTimeline(list);
+  }
   const sb = $('#syncBadge'), dirty = isDirty(), off = !navigator.onLine;
   sb.classList.toggle('dirty', dirty); sb.classList.toggle('offline', off && !dirty);
   const label = dirty ? 'Alterações não publicadas' : off ? 'Offline' : 'Sincronizado';
@@ -395,6 +425,76 @@ function render(){
   $('#fonte').textContent = state.meta.fonte || '—';
   $('#upd').textContent = state.meta.updatedAt ? new Date(state.meta.updatedAt).toLocaleString('pt-BR', {dateStyle:'short', timeStyle:'short'}) : '—';
 }
+/* ---------- render: equipes ---------- */
+const USERS_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/></svg>';
+function renderTeams(){
+  const teams = state.equipes || [], q = norm($('#q').value.trim()), mine = state.meta.minhaEquipe || '';
+  const total = teams.reduce((s, t) => s + t.membros.length, 0);
+  const max = Math.max(1, ...teams.map(t => t.membros.length));
+  const head = `<div class="teams-head"><div><h3>${USERS_ICON}Equipes · trabalho em grupo</h3>
+      <span>${teams.length} ${teams.length === 1 ? 'equipe' : 'equipes'} · ${total} participantes${q ? ' · filtrando por “' + esc($('#q').value.trim()) + '”' : ''}</span></div>
+    <button class="btn primary sm" type="button" data-team-new>${ICON.plus}Nova equipe</button></div>
+    ${teams.length ? `<div class="team-dist" aria-label="Participantes por equipe">${teams.map(t => `<button type="button" class="td" style="--tc:${teamColor(t.id)}" data-team-jump="${esc(t.id)}"><span>${esc(t.nome)}</span><i style="width:${t.membros.length / max * 100}%"></i><b>${t.membros.length}</b></button>`).join('')}</div>` : ''}`;
+  if (!teams.length) return head + `<div class="card empty"><b>Nenhuma equipe cadastrada</b>Crie as equipes do trabalho em grupo e adicione os participantes.</div>`;
+  const cards = teams.map((t, i) => {
+    const hitTeam = !q || norm(t.nome + ' ' + t.tema).includes(q);
+    const members = [...t.membros].sort((a, b) => a.localeCompare(b, 'pt'));
+    const hits = q ? members.filter(m => norm(m).includes(q)) : [];
+    if (q && !hitTeam && !hits.length) return '';
+    const works = state.items.filter(it => it.categoria === 'grupo' && (it.equipe === t.id || !it.equipe) && it.status !== 'cancelado').sort(byDate);
+    const nx = works.find(isUpcoming);
+    return `<article class="card team ${mine === t.id ? 'mine' : ''}" style="--tc:${teamColor(t.id)}" id="team-${esc(t.id)}">
+      <header><span class="team-n">${i + 1}</span><div class="team-t"><h4>${esc(t.nome)}</h4><small>${t.membros.length} ${t.membros.length === 1 ? 'participante' : 'participantes'}</small></div>
+        ${mine === t.id ? '<span class="tag now">Sua equipe</span>' : ''}
+        <button class="btn ghost icon-btn" type="button" data-team-edit="${esc(t.id)}" aria-label="Editar ${esc(t.nome)}" title="Editar equipe">${ICON.edit}</button></header>
+      ${t.tema ? `<p class="team-tema">${esc(t.tema)}</p>` : ''}
+      <ol class="members">${members.map(m => `<li class="${hits.includes(m) ? 'hit' : ''}"><span class="av">${esc(initials(m))}</span><span>${esc(m)}</span></li>`).join('') || '<li class="none">Sem participantes</li>'}</ol>
+      <footer>${nx ? `<button type="button" class="team-next" data-open="${esc(nx.id)}"><small>Próximo trabalho</small><b>${esc(nx.titulo)}</b><span>${esc(fmtRange(nx, true))}${slotTxt(nx) ? ' · ' + esc(slotTxt(nx)) : ''}</span></button>` : `<span class="team-none">${works.length ? 'Todos os trabalhos já foram realizados' : 'Nenhum trabalho agendado'}</span>`}
+        <button class="btn sm" type="button" data-team-work="${esc(t.id)}">${ICON.plus}Agendar trabalho</button></footer>
+    </article>`;
+  }).join('');
+  return head + (cards.trim() ? `<div class="teams">${cards}</div>` : `<div class="card empty"><b>Ninguém encontrado</b>Nenhum participante ou equipe corresponde à busca.</div>`);
+}
+
+/* editor de equipe */
+let editingTeam = null;
+function openTeam(id){
+  editingTeam = id || null;
+  const t = id ? teamById(id) : {nome:`Equipe ${(state.equipes || []).length + 1}`, tema:'', membros:[]};
+  if (!t) return;
+  $('#teamTitle').textContent = id ? `Editar ${t.nome}` : 'Nova equipe';
+  $('#tNome').value = t.nome; $('#tTema').value = t.tema; $('#tMembros').value = t.membros.join('\n');
+  $('#tMine').checked = !!id && state.meta.minhaEquipe === id;
+  $('#fTNome').classList.remove('invalid'); $('#tDel').hidden = !id; updateTeamCount();
+  openDlg($('#dlgTeam'));
+}
+const teamLines = () => [...new Set($('#tMembros').value.split(/\n|;/).map(s => s.trim().replace(/\s+/g, ' ')).filter(Boolean))];
+function updateTeamCount(){ const n = teamLines().length; $('#tCount').textContent = `${n} ${n === 1 ? 'participante' : 'participantes'}`; }
+$('#tMembros').addEventListener('input', updateTeamCount);
+$('#formTeam').addEventListener('submit', e => {
+  e.preventDefault();
+  const nome = $('#tNome').value.trim();
+  if (!nome){ $('#fTNome').classList.add('invalid'); $('#tNome').focus(); haptic(); return; }
+  const data = { nome: nome.slice(0, 60), tema: $('#tTema').value.trim().slice(0, 200), membros: teamLines().map(m => m.slice(0, 120)) };
+  /* um participante fica em uma equipe só: avisa se já estiver em outra */
+  const dup = data.membros.filter(m => (state.equipes || []).some(t => t.id !== editingTeam && t.membros.some(x => norm(x) === norm(m))));
+  if (dup.length && !confirm(`Já ${dup.length === 1 ? 'está' : 'estão'} em outra equipe: ${dup.join(', ')}.\n\nSalvar mesmo assim?`)) return;
+  let id = editingTeam;
+  if (id) Object.assign(teamById(id), data);
+  else { id = 'e' + Date.now().toString(36); (state.equipes ||= []).push({id, ...data}); }
+  if ($('#tMine').checked) state.meta.minhaEquipe = id; else if (state.meta.minhaEquipe === id) state.meta.minhaEquipe = '';
+  $('#dlgTeam').close(); haptic(); saveLocal(); toast(editingTeam ? 'Equipe atualizada' : 'Equipe criada');
+});
+$('#tDel').onclick = () => {
+  const idx = state.equipes.findIndex(t => t.id === editingTeam); if (idx < 0) return;
+  const t = state.equipes[idx], linked = state.items.filter(i => i.equipe === t.id);
+  if (!confirm(`Excluir “${t.nome}” (${t.membros.length} participantes)?${linked.length ? `\n\n${linked.length} trabalho(s) agendado(s) ficarão sem equipe.` : ''}`)) return;
+  const prev = clone(state); state.equipes.splice(idx, 1); linked.forEach(i => i.equipe = '');
+  if (state.meta.minhaEquipe === t.id) state.meta.minhaEquipe = '';
+  $('#dlgTeam').close(); saveLocal();
+  toast(`“${t.nome}” excluída`, {action:'Desfazer', onAction: () => { state = prev; saveLocal(); }});
+};
+
 function setView(v){ view = v; store.set(KEYS.view, v); render(); window.scrollTo({top: Math.min(window.scrollY, $('.toolbar').offsetTop - 70), behavior:'smooth'}); }
 
 /* ---------- histórico: botão "voltar" do celular fecha diálogos/painéis ---------- */
@@ -439,12 +539,18 @@ function closeMenu(){ $('#menuPop').classList.remove('open'); $('#btnMenu').setA
 /* ---------- CRUD ---------- */
 function fillSelects(){
   $('#eCat').innerHTML = Object.entries(CATS).map(([k,v]) => `<option value="${k}">${v.label}</option>`).join('');
+  $('#eCat').addEventListener('change', syncTeamField);
   $('#eSlots').innerHTML = Object.entries(SLOTS).map(([k,v]) => `<label><input type="checkbox" value="${k}"> ${v.label}</label>`).join('');
 }
+function fillTeamSelect(sel){
+  $('#eEquipe').innerHTML = '<option value="">Todas as equipes</option>' + (state.equipes || []).map(t => `<option value="${esc(t.id)}">${esc(t.nome)} · ${t.membros.length} participantes</option>`).join('');
+  $('#eEquipe').value = teamById(sel) ? sel : '';
+}
+function syncTeamField(){ $('#fEquipe').hidden = $('#eCat').value !== 'grupo'; }
 function clearErrors(){ $$('#formEdit .field.invalid').forEach(f => f.classList.remove('invalid')); }
 function openEdit(id, preset={}){
   editingId = id || null;
-  const it = id ? state.items.find(i => i.id === id) : normItem({titulo:'x', inicio: preset.inicio || iso(today0()), categoria:'outro'});
+  const it = id ? state.items.find(i => i.id === id) : normItem({titulo:'x', inicio: preset.inicio || iso(today0()), categoria: preset.categoria || 'outro', equipe: preset.equipe || ''});
   if (!it) return;
   clearErrors();
   $('#editTitle').textContent = id ? 'Editar item' : 'Novo item';
@@ -454,6 +560,8 @@ function openEdit(id, preset={}){
   $('#eHIni').value = it.horaIni; $('#eHFim').value = it.horaFim;
   $('#eProf').value = it.professor; $('#eMod').value = it.modalidade; $('#eSem').value = String(it.semestre);
   $('#eStatus').value = it.status; $('#eLocal').value = it.local; $('#eNotas').value = it.notas;
+  fillTeamSelect(it.equipe); syncTeamField();
+  if (!id && preset.equipe && teamById(preset.equipe)) $('#eTitulo').placeholder = `Ex.: Entrega do trabalho — ${teamById(preset.equipe).nome}`; else $('#eTitulo').placeholder = 'Ex.: Gestão — Básico';
   $('#btnDel').hidden = !id; $('#btnDup').hidden = !id;
   openDlg($('#dlgEdit'));
   if (!isMobile()) setTimeout(() => $('#eTitulo').focus(), 50);
@@ -461,7 +569,7 @@ function openEdit(id, preset={}){
 function readForm(){
   return normItem({ titulo:$('#eTitulo').value, modulo:$('#eModulo').value, categoria:$('#eCat').value, inicio:$('#eIni').value, fim:$('#eFim').value || $('#eIni').value,
     horarios:$$('#eSlots input:checked').map(c => c.value), horaIni:$('#eHIni').value, horaFim:$('#eHFim').value, professor:$('#eProf').value, modalidade:$('#eMod').value,
-    semestre:$('#eSem').value, local:$('#eLocal').value, notas:$('#eNotas').value, status:$('#eStatus').value, id: editingId || uid() });
+    semestre:$('#eSem').value, local:$('#eLocal').value, notas:$('#eNotas').value, status:$('#eStatus').value, equipe: $('#eCat').value === 'grupo' ? $('#eEquipe').value : '', id: editingId || uid() });
 }
 function validate(){
   clearErrors(); let ok = true;
@@ -512,6 +620,7 @@ function openView(id){
     ${slotTxt(it) ? `<dt>Horários</dt><dd>${esc(slotTxt(it))}</dd>` : ''}
     ${it.modulo ? `<dt>${it.categoria === 'orientacao' ? 'Projeto' : 'Módulo'}</dt><dd>${esc(it.modulo)}</dd>` : ''}
     ${it.professor ? `<dt>Professor(a)</dt><dd>${esc(it.professor)}</dd>` : ''}
+    ${it.categoria === 'grupo' ? (() => { const tm = teamById(it.equipe); return tm ? `<dt>Equipe</dt><dd><b>${esc(tm.nome)}</b> · ${tm.membros.length} participantes<ul class="dd-members">${[...tm.membros].sort((a,b) => a.localeCompare(b,'pt')).map(m => `<li>${esc(m)}</li>`).join('')}</ul></dd>` : `<dt>Equipes</dt><dd>Todas (${(state.equipes || []).length} equipes)</dd>`; })() : ''}
     <dt>Modalidade</dt><dd>${MODS[it.modalidade]}</dd>
     <dt>Local</dt><dd>${loc}</dd>
     <dt>Status</dt><dd>${st}</dd>
@@ -534,6 +643,7 @@ function reveal(id){
   });
 }
 function goToday(){
+  if (view === 'equipes'){ setView('timeline'); requestAnimationFrame(goToday); return; }
   if (view === 'calendar'){ const t = today0(); calCursor = new Date(t.getFullYear(), t.getMonth(), 1); selDay = iso(t); render(); return; }
   const target = filtered().find(isUpcoming);
   if (target) reveal(target.id); else toast('Nenhum item futuro na lista atual');
@@ -545,6 +655,10 @@ document.addEventListener('click', e => {
   if (t.closest('[data-close]')){ t.closest('dialog').close(); return; }
   if (t.closest('[data-fp-close]')){ closeFilters(); return; }
   if (t.closest('[data-new]')){ openEdit(null); return; }
+  if (t.closest('[data-team-new]')){ openTeam(null); return; }
+  const te = t.closest('[data-team-edit]'); if (te){ openTeam(te.dataset.teamEdit); return; }
+  const tw = t.closest('[data-team-work]'); if (tw){ openEdit(null, {categoria:'grupo', equipe: tw.dataset.teamWork}); return; }
+  const tj = t.closest('[data-team-jump]'); if (tj){ const el = document.getElementById('team-' + tj.dataset.teamJump); if (el){ el.scrollIntoView({behavior:'smooth', block:'start'}); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); } return; }
   if (t.closest('[data-clear-filters]')){ clearFilters(); return; }
   const nd = t.closest('[data-new-day]'); if (nd){ openEdit(null, {inicio: nd.dataset.newDay}); return; }
   const rm = t.closest('[data-rm]'); if (rm){ const id = rm.dataset.rm; if (id === 'fPast'){ $('#fPast').checked = true; store.set(KEYS.past,'1'); } else $('#'+id).value = ''; render(); return; }
@@ -592,7 +706,7 @@ $('#qClear').onclick = () => { $('#q').value = ''; render(); $('#q').focus(); };
 ['fCat','fSem','fProf'].forEach(id => $('#'+id).addEventListener('change', render));
 $('#fPast').addEventListener('change', e => { store.set(KEYS.past, e.target.checked ? '1' : '0'); render(); });
 $('#fpClear').onclick = clearFilters;
-$('#btnFilters').onclick = $('#bnFilters').onclick = openFilters;
+$('#btnFilters').onclick = openFilters;
 $('#backdrop').onclick = () => closeFilters();
 $('#btnToday').onclick = goToday;
 $('#btnNew').onclick = $('#bnAdd').onclick = () => openEdit(null);
@@ -656,7 +770,7 @@ $('#fileImport').onchange = async e => {
     if (!n.data.items.length) throw new Error('vazio');
     if (!confirm(`Importar ${n.data.items.length} itens? Isso substitui o calendário atual deste navegador.`)) return;
     const prev = clone(state);
-    state = {meta:{...state.meta, ...n.data.meta}, items:n.data.items}; saveLocal();
+    state = {meta:{...state.meta, ...n.data.meta}, items:n.data.items, equipes: n.data.equipes.length ? n.data.equipes : (state.equipes || [])}; saveLocal();
     toast(`${n.data.items.length} itens importados${n.dropped ? ` · ${n.dropped} ignorados` : ''}`, {action:'Desfazer', onAction: () => { state = prev; saveLocal(); }});
   } catch(_){ toast('Arquivo inválido: esperado um backup JSON deste calendário'); }
 };
@@ -670,7 +784,7 @@ function buildIcs(items){
   const L = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//MPES 2026.2//Calendario//PT-BR','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:MPES 2026.2 · CESAR School','X-WR-TIMEZONE:America/Recife',
     'BEGIN:VTIMEZONE','TZID:America/Recife','BEGIN:STANDARD','DTSTART:19700101T000000','TZOFFSETFROM:-0300','TZOFFSETTO:-0300','TZNAME:-03','END:STANDARD','END:VTIMEZONE'];
   items.filter(i => i.status !== 'cancelado').forEach(it => {
-    const desc = [it.modulo, it.professor && 'Professor(a): ' + it.professor, !['presencial','adefinir'].includes(it.modalidade) && MODS[it.modalidade], it.notas].filter(Boolean).join('\n');
+    const desc = [it.modulo, it.equipe && teamById(it.equipe) && 'Equipe: ' + teamById(it.equipe).nome, it.professor && 'Professor(a): ' + it.professor, !['presencial','adefinir'].includes(it.modalidade) && MODS[it.modalidade], it.notas].filter(Boolean).join('\n');
     const slots = it.horarios.map(k => [k, SLOTS[k]]).filter(x => x[1]); let n = 0;
     const ev = (uidv, start, end) => L.push('BEGIN:VEVENT', `UID:${uidv}@mpes2026`, `DTSTAMP:${now}`, start, end, fold(`SUMMARY:${txt(it.titulo)}`), fold(`DESCRIPTION:${txt(desc)}`), ...(it.local ? [fold(`LOCATION:${txt(it.local)}`)] : []), 'END:VEVENT');
     for (let d = pd(it.inicio); d <= pd(it.fim); d.setDate(d.getDate()+1)) slots.forEach(([k,s]) => { if (d.getDay() !== s.dow) return; n++;
@@ -714,7 +828,7 @@ async function publish(){
       const j = await g.json(); sha = j.sha;
       /* proteção contra sobrescrever edições feitas em outro dispositivo */
       try { const cur = normData(JSON.parse(unb64(j.content || ''))).data;
-        if (remote && !sameItems(cur.items, remote.items) && !sameItems(cur.items, state.items)
+        if (remote && snap(cur) !== snap(remote) && snap(cur) !== snap(state)
             && !confirm('A versão publicada mudou desde que você abriu a página (talvez editada em outro dispositivo). Publicar mesmo assim e substituí-la?')){ toast('Publicação cancelada'); return; }
       } catch(_){}
     } else if (g.status !== 404) throw new Error(`GitHub respondeu ${g.status}`);

@@ -4,8 +4,9 @@
     "instituicao": "CESAR School",
     "turma": "MPES 2026.2",
     "fonte": "Calendário MPES 2026.2 (em construção) — atualizado 21/10",
-    "updatedAt": "2026-10-30T19:20:34.780Z",
-    "schema": 1
+    "updatedAt": "2026-10-30T19:58:44.165Z",
+    "schema": 1,
+    "minhaEquipe": "e2"
   },
   "items": [
     {
@@ -755,6 +756,71 @@
       "local": "",
       "notas": "Até 30 de setembro de 2028 — tempo regular",
       "status": "auto"
+    }
+  ],
+  "equipes": [
+    {
+      "id": "e1",
+      "nome": "Equipe 1",
+      "tema": "",
+      "membros": [
+        "Carlos Augusto Oliveira Rocha",
+        "Douglas Antônio dos Santos",
+        "Francisco Wendel de Lima Maciel",
+        "Juracy Alexandre Dantas Junior",
+        "Nathalia Albuquerque",
+        "Rafael Rodrigues Ferreira da Silva"
+      ]
+    },
+    {
+      "id": "e2",
+      "nome": "Equipe 2",
+      "tema": "",
+      "membros": [
+        "Cleyber Gomes da Silva",
+        "Daniel Cavalcante Macedo",
+        "Eduardo Cavalcanti de Andrade Filho",
+        "Estela de Lacerda Oliveira",
+        "Lucas Rodrigues Albino",
+        "Policarpo de Freitas"
+      ]
+    },
+    {
+      "id": "e3",
+      "nome": "Equipe 3",
+      "tema": "",
+      "membros": [
+        "José Carlos Barbosa Pereira Filho",
+        "Lamartine Veras Sampaio de Souza",
+        "Lucas Matheus Falcão",
+        "Luís Felippe Costa Sobral",
+        "Marília Santos de Araújo Pereira",
+        "Patrick Iarrocheski"
+      ]
+    },
+    {
+      "id": "e4",
+      "nome": "Equipe 4",
+      "tema": "",
+      "membros": [
+        "David Bezerra da Silva",
+        "Leonardo Pessoa Cavalcanti",
+        "Mácio Matheus Santos de Arruda",
+        "Pedro Henrique Guimarães Liberal",
+        "Victor Rodrigues de Lima Nascimento"
+      ]
+    },
+    {
+      "id": "e5",
+      "nome": "Equipe 5",
+      "tema": "",
+      "membros": [
+        "Albert Sevy Bezerra Torres",
+        "Gilson Santos de Jesus",
+        "Lucas Gabriel de Brito Silva",
+        "Rodrigo Cândido de Carvalho",
+        "Silvio"
+      ]
     }
   ]
 }

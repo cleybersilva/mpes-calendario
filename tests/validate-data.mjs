@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { ROOT, makeReporter, summary } from './lib.mjs';
 
 const r = makeReporter('Validação do data.json');
-const CATS = ['inaugural','gestao','requisitos','arquitetura','interoperabilidade','metodologia','eletiva','acompanhamento','avaliacao','orientacao','marco','outro'];
+const CATS = ['inaugural','gestao','requisitos','arquitetura','interoperabilidade','metodologia','eletiva','acompanhamento','avaliacao','orientacao','grupo','marco','outro'];
 const SLOTS = ['qua','sex1','sex2','sab1','sab2'];
 const MODS = ['presencial','online','hibrido','adefinir'];
 const STATUS = ['auto','concluido','cancelado'];
@@ -35,6 +35,16 @@ for (const [n, it] of items.entries()) {
   if (it.horaIni && !TIME.test(it.horaIni)) problems.push(`${tag}: horaIni inválida (${it.horaIni})`);
   if (it.horaFim && (!TIME.test(it.horaFim) || !it.horaIni || it.horaFim <= it.horaIni)) problems.push(`${tag}: horaFim inválida (${it.horaFim})`);
 }
+const teams = Array.isArray(data.equipes) ? data.equipes : [], teamIds = new Set(), seenPeople = new Map();
+for (const t of teams) {
+  if (!t.id || teamIds.has(t.id)) problems.push(`equipe ${t.nome || '?'}: id ausente ou duplicado`); teamIds.add(t.id);
+  if (!String(t.nome || '').trim()) problems.push(`equipe ${t.id}: sem nome`);
+  if (!Array.isArray(t.membros)) problems.push(`equipe ${t.id}: membros não é lista`);
+  for (const m of t.membros || []) { const k = m.toLowerCase(); if (seenPeople.has(k)) problems.push(`${m}: está na ${seenPeople.get(k)} e na ${t.nome}`); seenPeople.set(k, t.nome); }
+}
+for (const it of items) if (it.equipe && !teamIds.has(it.equipe)) problems.push(`${it.id}: equipe inexistente (${it.equipe})`);
+if (data.meta?.minhaEquipe && !teamIds.has(data.meta.minhaEquipe)) problems.push(`meta.minhaEquipe inexistente (${data.meta.minhaEquipe})`);
+r.ok('Equipes', teams.length ? teams.map(t => `${t.nome}: ${t.membros.length}`).join(' · ') + ` (total ${seenPeople.size})` : 'nenhuma');
 r.check(problems.length === 0, 'Todos os itens consistentes', problems.length ? problems.slice(0, 10).join('; ') : `${items.length} itens verificados`);
 problems.forEach(p => console.error('    · ' + p));
 
