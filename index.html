@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css?v=4">
+<link rel="stylesheet" href="css/styles.css?v=5">
 <script>try{var t=localStorage.getItem('mpes2026_theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body class="loading">
@@ -127,8 +127,10 @@
         <div class="slots" id="eSlots"></div>
         <span class="hint">Marque os turnos do encontro. Usados também na exportação para a agenda.</span>
       </div>
+      <div class="field" id="fHIni"><label for="eHIni">Horário avulso · início</label><input id="eHIni" type="time"><span class="hint">Para encontros fora dos turnos (ex.: orientação às 20h).</span></div>
+      <div class="field" id="fHFim"><label for="eHFim">Horário avulso · fim</label><input id="eHFim" type="time"><span class="err">O fim precisa ser depois do início.</span></div>
       <div class="field"><label for="eProf">Professor(a)</label><input id="eProf" list="dlProfs" maxlength="80" placeholder="Nome"></div>
-      <div class="field"><label for="eMod">Modalidade</label><select id="eMod"><option value="presencial">Presencial</option><option value="online">Online</option><option value="hibrido">Híbrido</option></select></div>
+      <div class="field"><label for="eMod">Modalidade</label><select id="eMod"><option value="presencial">Presencial</option><option value="online">Online</option><option value="hibrido">Híbrido</option><option value="adefinir">A definir</option></select></div>
       <div class="field"><label for="eSem">Semestre</label><select id="eSem"><option value="1">Semestre 1</option><option value="2">Semestre 2</option><option value="0">Dissertação / outro</option></select></div>
       <div class="field"><label for="eStatus">Status</label><select id="eStatus"><option value="auto">Automático (pela data)</option><option value="concluido">Concluído</option><option value="cancelado">Cancelado / adiado</option></select></div>
       <div class="field full"><label for="eLocal">Local / link</label><input id="eLocal" maxlength="300" placeholder="Sala, endereço ou link da aula online"></div>
@@ -179,6 +181,6 @@
 <datalist id="dlModulos"></datalist><datalist id="dlProfs"></datalist>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/app.js?v=4" defer></script>
+<script src="js/app.js?v=5" defer></script>
 </body>
 </html>

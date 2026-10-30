@@ -11,7 +11,7 @@
   --nav-h:0px;
   --c-inaugural:#F08A2C; --c-gestao:#4C7CE0; --c-requisitos:#2EA36B; --c-arquitetura:#E0525A;
   --c-interoperabilidade:#D9A400; --c-metodologia:#F2884B; --c-eletiva:#8A8F99;
-  --c-acompanhamento:#8B6FD6; --c-avaliacao:#4A4A55; --c-marco:#0E9AA7; --c-outro:#B0745A;
+  --c-acompanhamento:#8B6FD6; --c-avaliacao:#4A4A55; --c-marco:#0E9AA7; --c-orientacao:#D6336C; --c-outro:#B0745A;
   color-scheme:light;
 }
 :root[data-theme="dark"]{
@@ -233,6 +233,7 @@ dialog form{display:flex;flex-direction:column;min-height:0;flex:1}
 .field textarea{height:auto;min-height:76px;padding:10px 12px;resize:vertical}
 .field .err{font-size:12px;color:var(--danger);display:none}
 .field.invalid input{border-color:var(--danger)}
+.field.invalid .hint{display:none}
 .field.invalid .err{display:block}
 .slots{display:flex;flex-wrap:wrap;gap:8px}
 .slots label{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:10px;border:1px solid var(--line-2);font-size:13.5px;font-weight:500;color:var(--text);cursor:pointer;background:var(--bg);user-select:none}

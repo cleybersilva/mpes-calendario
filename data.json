@@ -4,7 +4,7 @@
     "instituicao": "CESAR School",
     "turma": "MPES 2026.2",
     "fonte": "Calendário MPES 2026.2 (em construção) — atualizado 21/10",
-    "updatedAt": "2026-10-29T01:13:09.653Z",
+    "updatedAt": "2026-10-30T19:15:44.139Z",
     "schema": 1
   },
   "items": [
@@ -60,6 +60,23 @@
       "local": "CESAR School",
       "notas": "",
       "status": "concluido"
+    },
+    {
+      "id": "i041",
+      "titulo": "Orientação · Projeto de pesquisa",
+      "modulo": "Um Agente de Inteligência Artificial para Apoio à Escrita de Trabalhos Acadêmicos de Conclusão de Curso, Dissertações e Teses em Engenharia de Software",
+      "categoria": "orientacao",
+      "inicio": "2026-11-03",
+      "fim": "2026-11-03",
+      "horarios": [],
+      "horaIni": "20:00",
+      "horaFim": "",
+      "professor": "Prof. Dr. Rafael Batista Duarte",
+      "modalidade": "adefinir",
+      "semestre": 1,
+      "local": "",
+      "notas": "",
+      "status": "auto"
     },
     {
       "id": "i003",

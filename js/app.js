@@ -11,7 +11,7 @@ const SCHEMA = 1;
 const CATS = {
   inaugural:{label:'Aula inaugural'}, gestao:{label:'Gestão'}, requisitos:{label:'Requisitos'},
   arquitetura:{label:'Arquitetura'}, interoperabilidade:{label:'Interoperabilidade'}, metodologia:{label:'Metodologia'},
-  eletiva:{label:'Eletivas'}, acompanhamento:{label:'Acompanhamento dos projetos'}, avaliacao:{label:'Avaliação de projetos'},
+  eletiva:{label:'Eletivas'}, acompanhamento:{label:'Acompanhamento dos projetos'}, avaliacao:{label:'Avaliação de projetos'}, orientacao:{label:'Orientação'},
   marco:{label:'Marco da dissertação'}, outro:{label:'Outro'}
 };
 const SLOTS = {
@@ -21,7 +21,8 @@ const SLOTS = {
   sab1:{label:'Sáb 08h–12h', dow:6, s:'08:00', e:'12:00'},
   sab2:{label:'Sáb 13h–18h', dow:6, s:'13:00', e:'18:00'}
 };
-const MODS = { presencial:'Presencial', online:'Online', hibrido:'Híbrido' };
+const MODS = { presencial:'Presencial', online:'Online', hibrido:'Híbrido', adefinir:'A definir' };
+const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 const STATUS = ['auto','concluido','cancelado'];
 const MONTHS = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 const DOW = ['dom','seg','ter','qua','qui','sex','sáb'];
@@ -64,10 +65,12 @@ function normItem(raw){
   return {
     id: str(raw.id, 40) || uid(),
     titulo: str(raw.titulo, 140) || '(sem título)',
-    modulo: str(raw.modulo, 120),
+    modulo: str(raw.modulo, 200),
     categoria: CATS[raw.categoria] ? raw.categoria : 'outro',
     inicio, fim,
     horarios: Array.isArray(raw.horarios) ? [...new Set(raw.horarios.filter(k => SLOTS[k]))] : [],
+    horaIni: TIME_RE.test(raw.horaIni || '') ? raw.horaIni : '',
+    horaFim: TIME_RE.test(raw.horaIni || '') && TIME_RE.test(raw.horaFim || '') && raw.horaFim > raw.horaIni ? raw.horaFim : '',
     professor: str(raw.professor, 80),
     modalidade: MODS[raw.modalidade] ? raw.modalidade : 'presencial',
     semestre: [0,1,2].includes(Number(raw.semestre)) ? Number(raw.semestre) : 1,
@@ -149,7 +152,7 @@ function statusOf(it){
 }
 const isDone = it => ['passado','concluido'].includes(statusOf(it));
 const isUpcoming = it => ['futuro','hoje'].includes(statusOf(it));
-const isClass = it => !['marco','acompanhamento','avaliacao'].includes(it.categoria);
+const isClass = it => !['marco','acompanhamento','avaliacao','orientacao'].includes(it.categoria);
 const byDate = (a,b) => a.inicio.localeCompare(b.inicio) || a.fim.localeCompare(b.fim) || a.titulo.localeCompare(b.titulo, 'pt');
 const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
@@ -172,15 +175,23 @@ function fmtRange(it, long=false){
   if (!long && a.getMonth()===b.getMonth() && a.getFullYear()===b.getFullYear()) return `${a.getDate()}–${b.getDate()}/${pad(b.getMonth()+1)}`;
   return `${f(a)} – ${f(b)}${long ? '' : '/' + String(b.getFullYear()).slice(2)}`;
 }
-const slotTxt = it => it.horarios.map(k => SLOTS[k]?.label).filter(Boolean).join(' · ');
+const hm = t => { const [h,m] = t.split(':'); return m === '00' ? `${Number(h)}h` : `${Number(h)}h${m}`; };
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const customLabel = it => it.horaIni ? `${it.inicio === it.fim ? cap(DOW[pd(it.inicio).getDay()]) + ' ' : ''}${hm(it.horaIni)}${it.horaFim ? '–' + hm(it.horaFim) : ''}` : '';
+const slotTxt = it => [...it.horarios.map(k => SLOTS[k]?.label), customLabel(it)].filter(Boolean).join(' · ');
+/* horários de um dia: turnos fixos daquele dia da semana + horário avulso do item */
+function timesOn(it, d){
+  const out = it.horarios.map(k => SLOTS[k] && {...SLOTS[k], k}).filter(z => z && z.dow === d.getDay());
+  if (it.horaIni) out.push({s:it.horaIni, e:it.horaFim, k:'avulso'});
+  return out.sort((a,b) => a.s.localeCompare(b.s));
+}
+const hasTimes = it => it.horarios.length > 0 || !!it.horaIni;
 function firstStart(it){
-  const d = pd(it.inicio);
-  const s = it.horarios.map(k => SLOTS[k]).filter(Boolean);
-  for (let x = new Date(d); x <= pd(it.fim); x.setDate(x.getDate()+1)){
-    const hit = s.filter(z => z.dow === x.getDay()).sort((a,b) => a.s.localeCompare(b.s))[0];
+  for (let x = pd(it.inicio); x <= pd(it.fim); x.setDate(x.getDate()+1)){
+    const hit = timesOn(it, x)[0];
     if (hit){ const [h,m] = hit.s.split(':').map(Number); x.setHours(h,m,0,0); return x; }
   }
-  return d;
+  return pd(it.inicio);
 }
 
 /* ---------- ícones ---------- */
@@ -199,7 +210,7 @@ const ICON = {
 /* ---------- render: topo ---------- */
 function tagsFor(it){
   const st = statusOf(it); let t = `<span class="tag">${esc(CATS[it.categoria]?.label || 'Outro')}</span>`;
-  if (it.modalidade !== 'presencial') t += `<span class="tag plain">${MODS[it.modalidade]}</span>`;
+  if (!['presencial','adefinir'].includes(it.modalidade)) t += `<span class="tag plain">${MODS[it.modalidade]}</span>`;
   if (st === 'hoje') t += '<span class="tag now">Hoje</span>';
   if (st === 'concluido' || st === 'passado') t += '<span class="tag ok">Realizado</span>';
   if (st === 'cancelado') t += '<span class="tag no">Cancelado</span>';
@@ -214,7 +225,7 @@ function renderKpis(){
   $('#kProgS').textContent = `${done} de ${classes.length} encontros de aula`;
   const up = state.items.filter(i => i.status !== 'cancelado' && i.categoria !== 'marco' && isUpcoming(i));
   $('#kRest').textContent = up.length;
-  $('#kRestS').textContent = `${up.filter(isClass).length} de aula · ${up.filter(i => !isClass(i)).length} de projetos`;
+  $('#kRestS').textContent = `${up.filter(isClass).length} de aula · ${up.filter(i => !isClass(i)).length} de projetos e orientação`;
   const fridays = new Set();
   state.items.forEach(i => { if (i.status === 'cancelado' || !i.horarios.some(k => k.startsWith('sex'))) return;
     for (let d = pd(i.inicio); d <= pd(i.fim); d.setDate(d.getDate()+1)) if (d.getDay() === 5 && d >= t) fridays.add(iso(d)); });
@@ -226,12 +237,11 @@ function renderKpis(){
 }
 /* uma linha por dia do encontro: "sex, 6 de novembro · 14h–17h · 18h–21h" */
 const DOW_LONG = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
-const hm = t => { const [h,m] = t.split(':'); return m === '00' ? `${Number(h)}h` : `${Number(h)}h${m}`; };
 function dayLines(it){
-  const a = pd(it.inicio), b = pd(it.fim), slots = it.horarios.map(k => SLOTS[k]).filter(Boolean), out = [];
-  if ((b - a) > 7*DAY || !slots.length) return [fmtRange(it, true)];
+  const a = pd(it.inicio), b = pd(it.fim), out = [];
+  if ((b - a) > 7*DAY || !hasTimes(it)) return [fmtRange(it, true)];
   for (let d = new Date(a); d <= b; d.setDate(d.getDate()+1)){
-    const ts = slots.filter(z => z.dow === d.getDay()).sort((x,y) => x.s.localeCompare(y.s)).map(z => `${hm(z.s)}–${hm(z.e)}`);
+    const ts = timesOn(it, d).map(z => z.e ? `${hm(z.s)}–${hm(z.e)}` : hm(z.s));
     if (ts.length) out.push(`${DOW_LONG[d.getDay()]}, ${d.getDate()} de ${MONTHS[d.getMonth()]} · ${ts.join(' · ')}`);
   }
   return out.length ? out : [fmtRange(it, true)];
@@ -441,6 +451,7 @@ function openEdit(id, preset={}){
   $('#eTitulo').value = id ? it.titulo : ''; $('#eModulo').value = it.modulo; $('#eCat').value = it.categoria;
   $('#eIni').value = it.inicio; $('#eFim').value = it.fim !== it.inicio ? it.fim : '';
   $$('#eSlots input').forEach(c => c.checked = it.horarios.includes(c.value));
+  $('#eHIni').value = it.horaIni; $('#eHFim').value = it.horaFim;
   $('#eProf').value = it.professor; $('#eMod').value = it.modalidade; $('#eSem').value = String(it.semestre);
   $('#eStatus').value = it.status; $('#eLocal').value = it.local; $('#eNotas').value = it.notas;
   $('#btnDel').hidden = !id; $('#btnDup').hidden = !id;
@@ -449,7 +460,7 @@ function openEdit(id, preset={}){
 }
 function readForm(){
   return normItem({ titulo:$('#eTitulo').value, modulo:$('#eModulo').value, categoria:$('#eCat').value, inicio:$('#eIni').value, fim:$('#eFim').value || $('#eIni').value,
-    horarios:$$('#eSlots input:checked').map(c => c.value), professor:$('#eProf').value, modalidade:$('#eMod').value,
+    horarios:$$('#eSlots input:checked').map(c => c.value), horaIni:$('#eHIni').value, horaFim:$('#eHFim').value, professor:$('#eProf').value, modalidade:$('#eMod').value,
     semestre:$('#eSem').value, local:$('#eLocal').value, notas:$('#eNotas').value, status:$('#eStatus').value, id: editingId || uid() });
 }
 function validate(){
@@ -458,6 +469,7 @@ function validate(){
   if (!$('#eTitulo').value.trim()) bad('#fTitulo');
   if (!validDate($('#eIni').value)) bad('#fIni');
   else if ($('#eFim').value && $('#eFim').value < $('#eIni').value) bad('#fFim');
+  if ($('#eHFim').value && (!$('#eHIni').value || $('#eHFim').value <= $('#eHIni').value)) bad('#fHFim');
   return ok;
 }
 $('#formEdit').addEventListener('submit', e => {
@@ -498,7 +510,7 @@ function openView(id){
   $('#vBody').innerHTML = `<div class="it-top" style="--c:${color(it.categoria)}">${tagsFor(it)}</div><dl>
     <dt>Data</dt><dd>${esc(fmtRange(it,true))}</dd>
     ${slotTxt(it) ? `<dt>Horários</dt><dd>${esc(slotTxt(it))}</dd>` : ''}
-    ${it.modulo ? `<dt>Módulo</dt><dd>${esc(it.modulo)}</dd>` : ''}
+    ${it.modulo ? `<dt>${it.categoria === 'orientacao' ? 'Projeto' : 'Módulo'}</dt><dd>${esc(it.modulo)}</dd>` : ''}
     ${it.professor ? `<dt>Professor(a)</dt><dd>${esc(it.professor)}</dd>` : ''}
     <dt>Modalidade</dt><dd>${MODS[it.modalidade]}</dd>
     <dt>Local</dt><dd>${loc}</dd>
@@ -658,11 +670,15 @@ function buildIcs(items){
   const L = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//MPES 2026.2//Calendario//PT-BR','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:MPES 2026.2 · CESAR School','X-WR-TIMEZONE:America/Recife',
     'BEGIN:VTIMEZONE','TZID:America/Recife','BEGIN:STANDARD','DTSTART:19700101T000000','TZOFFSETFROM:-0300','TZOFFSETTO:-0300','TZNAME:-03','END:STANDARD','END:VTIMEZONE'];
   items.filter(i => i.status !== 'cancelado').forEach(it => {
-    const desc = [it.modulo, it.professor && 'Professor(a): ' + it.professor, it.modalidade !== 'presencial' && MODS[it.modalidade], it.notas].filter(Boolean).join('\n');
+    const desc = [it.modulo, it.professor && 'Professor(a): ' + it.professor, !['presencial','adefinir'].includes(it.modalidade) && MODS[it.modalidade], it.notas].filter(Boolean).join('\n');
     const slots = it.horarios.map(k => [k, SLOTS[k]]).filter(x => x[1]); let n = 0;
     const ev = (uidv, start, end) => L.push('BEGIN:VEVENT', `UID:${uidv}@mpes2026`, `DTSTAMP:${now}`, start, end, fold(`SUMMARY:${txt(it.titulo)}`), fold(`DESCRIPTION:${txt(desc)}`), ...(it.local ? [fold(`LOCATION:${txt(it.local)}`)] : []), 'END:VEVENT');
     for (let d = pd(it.inicio); d <= pd(it.fim); d.setDate(d.getDate()+1)) slots.forEach(([k,s]) => { if (d.getDay() !== s.dow) return; n++;
       ev(`${it.id}-${k}-${dd(d)}`, `DTSTART;TZID=America/Recife:${dt(d,s.s)}`, `DTEND;TZID=America/Recife:${dt(d,s.e)}`); });
+    if (it.horaIni) for (let d = pd(it.inicio); d <= pd(it.fim); d.setDate(d.getDate()+1)){ n++;
+      /* sem horário de término: a agenda recebe 1 hora de duração */
+      const end = it.horaFim || `${pad(Math.min(23, Number(it.horaIni.slice(0,2)) + 1))}:${it.horaIni.slice(3)}`;
+      ev(`${it.id}-avulso-${dd(d)}`, `DTSTART;TZID=America/Recife:${dt(d,it.horaIni)}`, `DTEND;TZID=America/Recife:${dt(d,end)}`); }
     if (!n){ const e = pd(it.fim); e.setDate(e.getDate()+1); ev(it.id, `DTSTART;VALUE=DATE:${dd(pd(it.inicio))}`, `DTEND;VALUE=DATE:${dd(e)}`); }
   });
   L.push('END:VCALENDAR'); return L.join('\r\n') + '\r\n';

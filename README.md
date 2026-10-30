@@ -175,10 +175,14 @@ Cada item segue este formato no `data.json`:
 
 **Categorias:** `inaugural`, `gestao`, `requisitos`, `arquitetura`,
 `interoperabilidade`, `metodologia`, `eletiva`, `acompanhamento`,
-`avaliacao`, `marco`, `outro`.
+`avaliacao`, `orientacao`, `marco`, `outro`.
 
 **Turnos (`horarios`):** `qua` (Qua 19h–21h), `sex1` (Sex 14h–17h), `sex2`
 (Sex 18h–21h), `sab1` (Sáb 08h–12h), `sab2` (Sáb 13h–18h).
+
+**Horário avulso (`horaIni`, `horaFim`):** para encontros fora dos turnos,
+como orientações (ex.: `"horaIni": "20:00"`). O fim é opcional; sem ele, a
+exportação para a agenda usa 1 hora de duração.
 
 ## 🔄 Sincronização com o GitHub
 
@@ -258,6 +262,11 @@ Fonte: *Calendário MPES 2026.2 (em construção)*, atualizado em 21/10/2026.
 
 **Quartas (19h–21h):** acompanhamento dos projetos com Washington Almeida e
 avaliações de projetos SR1 (17/02/2027), SR2 (19/05/2027) e SR3 (29/07/2027).
+
+**Orientação:** projeto de pesquisa *"Um Agente de Inteligência Artificial
+para Apoio à Escrita de Trabalhos Acadêmicos de Conclusão de Curso,
+Dissertações e Teses em Engenharia de Software"*, com o Prof. Dr. Rafael
+Batista Duarte, primeiro encontro na terça, 03/11/2026, às 20h.
 
 **Dissertação:** acompanhamento I de set/2027 a mar/2028, qualificação até
 30/03/2028, acompanhamento II de abr/2028 a set/2028 e **defesa até
