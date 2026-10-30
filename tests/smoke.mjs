@@ -54,9 +54,31 @@ async function desktop() {
       r.check((await pg.locator('#view .team').first().innerText()).includes('Entrega CI'), 'Trabalho aparece no cartão da equipe');
       await pg.click('.tabs [data-view=timeline]');
     }
-    const [dl] = await Promise.all([pg.waitForEvent('download'), (async () => { await pg.click('#btnMenu'); await pg.click('[data-act=ics]'); })()]);
+    {
+      const it = data.items.find(i => i.horaIni && i.horaFim && i.status !== 'cancelado') || data.items.find(i => (i.horarios || []).length);
+      await pg.locator(`#view [data-id="${it.id}"] [data-a=cal]`).click();
+      const g = await pg.locator('#acBody a[data-cal-kind=google]').first().getAttribute('href');
+      const o = await pg.locator('#acBody a[data-cal-kind=outlook]').first().getAttribute('href');
+      r.check(g.startsWith('https://calendar.google.com/calendar/render?action=TEMPLATE') && g.includes('dates=' + it.inicio.replace(/-/g, '')), 'Adicionar à agenda: link do Google', it.titulo);
+      r.check(o.includes('outlook.live.com') && o.includes('startdt=' + encodeURIComponent(it.inicio)), 'Adicionar à agenda: link do Outlook');
+      r.check(await pg.locator('#acBody a[data-cal-kind=yahoo]').count() > 0 && await pg.locator('#acIcs').count() === 1, 'Adicionar à agenda: Yahoo e .ics');
+      await pg.keyboard.press('Escape');
+      await pg.click('#btnAddCal');
+      r.check(await pg.locator('#dlgSub[open] #subIcs').count() === 1, 'Botão "Adicionar à minha agenda" abre as opções');
+      await pg.keyboard.press('Escape');
+    }
+    const [dl] = await Promise.all([pg.waitForEvent('download'), (async () => { await pg.click('#btnAddCal'); await pg.click('#subIcs'); })()]);
     const ics = readFileSync(await dl.path(), 'utf8');
     r.check(ics.startsWith('BEGIN:VCALENDAR') && (ics.match(/BEGIN:VEVENT/g) || []).length > data.items.length, 'Exportação .ics', `${(ics.match(/BEGIN:VEVENT/g) || []).length} eventos`);
+  }
+  if (target) {
+    const res = await pg.request.get(new URL('calendario.ics', URL0).href);
+    const body = res.ok() ? await res.text() : '';
+    r.check(body.startsWith('BEGIN:VCALENDAR'), 'Feed de assinatura calendario.ics no ar', `${(body.match(/BEGIN:VEVENT/g) || []).length} eventos`);
+    await pg.click('#btnAddCal');
+    const gs = await pg.locator('#subBody a[data-cal-kind=google]').getAttribute('href');
+    r.check(gs.includes(encodeURIComponent('webcal://')), 'Link de assinatura do Google Agenda');
+    await pg.keyboard.press('Escape');
   }
   await pg.screenshot({ path: SHOTS + 'desktop.png', fullPage: false });
   r.check(errors.length === 0, 'Sem erros no console', errors.slice(0, 3).join(' | '));

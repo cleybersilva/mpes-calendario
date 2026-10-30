@@ -23,6 +23,7 @@
 [Funcionalidades](#-funcionalidades) •
 [Instalação](#-instalação) •
 [Uso](#️-uso) •
+[Agenda](#-adicionar-à-agenda) •
 [CI/CD](#-pipeline-cicd) •
 [Sincronização](#-sincronização-com-o-github) •
 [Por que sincronizar](#-por-que-sincronizar) •
@@ -102,6 +103,7 @@ flowchart LR
 | --- | --- |
 | `index.html` | Marcação da interface |
 | `css/styles.css` | Estilos: tema claro/escuro, layout responsivo, bottom sheets e barra inferior no celular |
+| `js/ics.js` | Sessões de cada encontro, arquivo `.ics` (RFC 5545) e links do Google, Outlook, Microsoft 365 e Yahoo; usado pela página e pelo build |
 | `js/app.js` | Lógica: CRUD, validação dos dados, filtros, calendário, exportação `.ics`, sincronização com GitHub |
 | `sw.js` · `manifest.webmanifest` | PWA: funciona offline e pode ser instalado na tela inicial |
 | `data.json` | Fonte publicada dos itens (`meta` + `items`) |
@@ -121,7 +123,7 @@ flowchart LR
 | Busca e filtros | Por texto, tipo, semestre e professor; opção de ocultar realizados |
 | Próximo encontro | Cartão com data, turnos e contagem regressiva |
 | Indicadores | Progresso do curso, encontros restantes, sextas com aula e prazo da defesa |
-| Agenda | Exporta `.ics` com cada turno como evento (fuso America/Recife) |
+| Adicionar à agenda | Botão **Adicionar à minha agenda** (assinatura que se atualiza sozinha no Google Agenda, Outlook.com, Microsoft 365 e Apple/iPhone, ou cópia `.ics`) e, em cada encontro, **Adicionar à agenda** com um clique por sessão no Google, Outlook, Microsoft 365 e Yahoo, mais `.ics` para Apple, Outlook no computador, Samsung e Thunderbird |
 | Backup | Baixa e importa o calendário em JSON |
 | Tema | Claro e escuro, seguindo o sistema ou escolhido manualmente |
 | Mobile | Barra de navegação inferior, formulários e detalhes em *bottom sheet* (arrastar para baixo fecha), filtros em painel, botão "voltar" do celular fecha janelas, deslizar no calendário troca o mês |
@@ -237,6 +239,31 @@ gerar outro e colar no mesmo lugar. O token fica salvo só no navegador onde
 foi colado, então repita a configuração em cada aparelho de onde quiser
 publicar.
 
+## 📅 Adicionar à agenda
+
+**O calendário inteiro (recomendado):** no topo da página, **Adicionar à minha agenda** ›
+escolha Google Agenda, Outlook.com, Microsoft 365 ou Apple/iPhone. É uma
+assinatura do feed [`calendario.ics`](https://cleybersilva.github.io/mpes-calendario/calendario.ics),
+gerado pela pipeline a cada publicação, então a sua agenda acompanha as
+mudanças sozinha (o Google atualiza a cada 12–24 h; Apple e Outlook, em
+poucas horas). Para outros apps, copie o link e use "Adicionar calendário por
+URL".
+
+**Um encontro:** no detalhe do item (ou no ícone 📅 do cartão), **Adicionar à
+agenda** mostra cada sessão (ex.: sexta 14h–17h, sexta 18h–21h, sábado…) com
+botões do Google, Outlook, Microsoft 365 e Yahoo, que abrem o evento já
+preenchido, e o `.ics` com todas as sessões para Apple Calendário, Outlook no
+computador, Samsung e Thunderbird.
+
+| Calendário | Calendário inteiro | Um encontro |
+| --- | --- | --- |
+| Google Agenda | Assinatura (link direto) | Link por sessão |
+| Outlook.com / Hotmail | Assinatura (link direto) | Link por sessão |
+| Microsoft 365 (trabalho/escola) | Assinatura (link direto) | Link por sessão |
+| Apple Calendário (iPhone, Mac) | Assinatura `webcal://` | Arquivo `.ics` |
+| Yahoo, Thunderbird, Android, outros | Colar o link do feed | Link (Yahoo) ou `.ics` |
+| Outlook no computador | Colar o link do feed | Arquivo `.ics` |
+
 ## 🔁 Pipeline CI/CD
 
 Cada push na `main`, inclusive as publicações feitas pela própria página
@@ -260,7 +287,7 @@ flowchart LR
 | --- | --- | --- |
 | 🔎 Validação | `data.json` (datas, categorias, turnos, horários, IDs únicos), arquivos referenciados, sintaxe JS, manifest e versões do cache offline | Nada é publicado; o erro aparece no resumo da execução |
 | 🧪 Testes | Chromium em 1366px e 390px: todas as visualizações, criar/editar/excluir/desfazer, exportação `.ics`, barra inferior, painéis e botão voltar no celular, sem erros de console | Nada é publicado; capturas de tela ficam nos artefatos |
-| 📦 Build | Monta só os arquivos do site (sem testes e docs) e grava `version.json` com o commit | Nada é publicado |
+| 📦 Build | Monta só os arquivos do site (sem testes e docs), grava `version.json` com o commit e gera o feed `calendario.ics` | Nada é publicado |
 | 🚀 Deploy | Publica no GitHub Pages, ambiente `github-pages`, com link direto para o site | O site continua na versão anterior |
 | ✅ Verificação | Espera o `version.json` do site mostrar o novo commit e repete os testes no endereço público | Alerta que a produção não corresponde ao commit |
 

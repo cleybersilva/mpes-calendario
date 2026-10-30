@@ -172,6 +172,37 @@ header.top{position:sticky;top:0;z-index:30;background:color-mix(in oklab,var(--
 .it-act button.on{color:var(--ok)}
 .it-act svg{width:17px;height:17px}
 
+/* ---------- adicionar à agenda ---------- */
+.hero-sub{display:flex;align-items:center;gap:12px 18px;flex-wrap:wrap;margin-top:6px}
+.hero-sub p{margin:0 !important}
+.btn.add-cal{border-color:color-mix(in oklab,var(--brand) 45%,var(--line-2));color:var(--brand);background:var(--brand-50);font-weight:700}
+.btn.add-cal:hover{background:var(--brand);color:#fff}
+.ac-sub{margin:2px 0 0;font-size:13.5px;color:var(--muted);overflow-wrap:anywhere}
+.ac-lead{margin:4px 0 12px;font-size:14px;color:var(--muted)}
+.ac-list{display:grid;gap:10px}
+.ac-row{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--surface-2)}
+.ac-when{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;margin-bottom:8px}
+.ac-when svg{width:16px;height:16px;color:var(--brand);flex:none}
+.ac-when small{font-weight:500;color:var(--soft)}
+.ac-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.cal-btn{display:flex;align-items:center;justify-content:center;gap:7px;height:38px;padding:0 8px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface);color:var(--text);font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;transition:.15s}
+.detail a.cal-btn{color:var(--text)}
+.cal-btn:hover{border-color:var(--brand);transform:translateY(-1px)}
+.cal-btn svg{width:18px;height:18px;flex:none}
+.ac-btns.big .cal-btn{height:48px;font-size:14px}
+.ac-ics{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px;padding:12px;border:1px dashed var(--line-2);border-radius:14px}
+.ac-ics>div{display:flex;gap:10px;align-items:flex-start;flex:1;min-width:220px}
+.ac-ics>div svg{width:22px;height:22px;flex:none;margin-top:2px}
+.ac-ics b{display:block;font-size:13.5px}
+.ac-ics small{display:block;font-size:12.5px;color:var(--muted)}
+.ac-ics .btn svg,.sub-sec .btn svg{width:16px;height:16px}
+.sub-sec{padding:6px 0 14px}
+.sub-sec+.sub-sec{border-top:1px solid var(--line);padding-top:16px}
+.sub-sec h3{font-size:16px;display:flex;align-items:center;gap:8px;margin:0 0 4px}
+.sub-sec .hint{margin:4px 0 12px}
+.sub-link{display:flex;gap:8px;margin:12px 0 4px}
+.sub-link input{flex:1;min-width:0;height:38px;border-radius:10px;border:1px solid var(--line-2);background:var(--bg);padding:0 10px;font-size:13px;color:var(--muted)}
+
 /* ---------- equipes ---------- */
 .teams-head{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:0 0 14px}
 .teams-head>div{flex:1;min-width:200px}
@@ -407,6 +438,8 @@ footer a{color:var(--muted)}
   .detail dl{grid-template-columns:96px 1fr}
 
   .teams{grid-template-columns:1fr}
+  .ac-btns{grid-template-columns:1fr 1fr}
+  .hero-sub .btn.add-cal{width:100%;height:46px}
   .teams-head{align-items:center}
   .teams-head h3{font-size:17px}
   .teams-head h3 svg{width:19px;height:19px}

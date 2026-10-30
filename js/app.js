@@ -14,13 +14,7 @@ const CATS = {
   eletiva:{label:'Eletivas'}, acompanhamento:{label:'Acompanhamento dos projetos'}, avaliacao:{label:'Avaliação de projetos'}, orientacao:{label:'Orientação'}, grupo:{label:'Trabalho em grupo'},
   marco:{label:'Marco da dissertação'}, outro:{label:'Outro'}
 };
-const SLOTS = {
-  qua:{label:'Qua 19h–21h', dow:3, s:'19:00', e:'21:00'},
-  sex1:{label:'Sex 14h–17h', dow:5, s:'14:00', e:'17:00'},
-  sex2:{label:'Sex 18h–21h', dow:5, s:'18:00', e:'21:00'},
-  sab1:{label:'Sáb 08h–12h', dow:6, s:'08:00', e:'12:00'},
-  sab2:{label:'Sáb 13h–18h', dow:6, s:'13:00', e:'18:00'}
-};
+const SLOTS = MPESICS.SLOTS; /* turnos definidos em js/ics.js */
 const MODS = { presencial:'Presencial', online:'Online', hibrido:'Híbrido', adefinir:'A definir' };
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 const STATUS = ['auto','concluido','cancelado'];
@@ -228,6 +222,7 @@ const ICON = {
   prev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>',
   next:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>',
   x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+  calAdd:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M12 14v4M10 16h4"/></svg>',
   plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
 };
 
@@ -304,6 +299,7 @@ function itemCard(it){
     </div>
     <div class="it-act">
       <button type="button" data-a="done" class="${it.status==='concluido'?'on':''}" title="${it.status==='concluido'?'Desmarcar concluído':'Marcar como concluído'}" aria-label="Concluir">${ICON.check}</button>
+      <button type="button" data-a="cal" title="Adicionar à agenda" aria-label="Adicionar à agenda">${ICON.calAdd}</button>
       <button type="button" data-a="edit" title="Editar" aria-label="Editar">${ICON.edit}</button>
       <button type="button" data-a="del" class="del" title="Excluir" aria-label="Excluir">${ICON.trash}</button>
     </div>
@@ -631,7 +627,7 @@ function openView(id){
 $('#vEdit').onclick = () => viewingId && openEdit(viewingId);
 $('#vDel').onclick = () => viewingId && delItem(viewingId);
 $('#vDone').onclick = () => { if (!viewingId) return; toggleDone(viewingId); openView(viewingId); };
-$('#vIcs').onclick = () => { const it = state.items.find(i => i.id === viewingId); if (it) download(`${slug(it.titulo)}.ics`, buildIcs([it]), 'text/calendar'); };
+$('#vIcs').onclick = () => viewingId && openAddCal(viewingId);
 
 /* destacar item após salvar */
 function reveal(id){
@@ -670,7 +666,7 @@ document.addEventListener('click', e => {
   const th = t.closest('[data-sort]'); if (th){ if (sortKey === th.dataset.sort) sortDir *= -1; else { sortKey = th.dataset.sort; sortDir = 1; } render(); return; }
   const act = t.closest('[data-a]'), row = t.closest('#view [data-id]');
   if (act && row){ const id = row.dataset.id, a = act.dataset.a;
-    if (a === 'edit') openEdit(id); else if (a === 'del') delItem(id); else if (a === 'done') toggleDone(id);
+    if (a === 'edit') openEdit(id); else if (a === 'cal') openAddCal(id); else if (a === 'del') delItem(id); else if (a === 'done') toggleDone(id);
     return; }
   if (row){ openView(row.dataset.id); return; }
   if (!t.closest('.menu')) closeMenu();
@@ -709,6 +705,7 @@ $('#fpClear').onclick = clearFilters;
 $('#btnFilters').onclick = openFilters;
 $('#backdrop').onclick = () => closeFilters();
 $('#btnToday').onclick = goToday;
+$('#btnAddCal').onclick = openSub;
 $('#btnNew').onclick = $('#bnAdd').onclick = () => openEdit(null);
 $('#nextCard').onclick = () => { const id = $('#nextCard').dataset.id; if (id) openView(id); };
 $('#syncBadge').onclick = () => isDirty() ? publish() : toast(navigator.onLine ? 'Tudo publicado' : 'Sem conexão no momento');
@@ -745,7 +742,7 @@ window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); instal
 async function menuAct(a){
   if (a === 'export') download(`mpes-2026-2-backup-${iso(new Date())}.json`, JSON.stringify(state, null, 2), 'application/json');
   if (a === 'import') $('#fileImport').click();
-  if (a === 'ics') download('mpes-2026-2.ics', buildIcs(state.items), 'text/calendar');
+  if (a === 'ics') openSub();
   if (a === 'print') window.print();
   if (a === 'gh') openGh();
   if (a === 'sync') publish();
@@ -775,27 +772,59 @@ $('#fileImport').onchange = async e => {
   } catch(_){ toast('Arquivo inválido: esperado um backup JSON deste calendário'); }
 };
 
-function buildIcs(items){
-  const dt = (d, hm) => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${hm.replace(':','')}00`;
-  const dd = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
-  const txt = s => String(s || '').replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/[,;]/g, m => '\\' + m);
-  const fold = l => { const out = []; while (l.length > 74){ out.push(l.slice(0,74)); l = ' ' + l.slice(74); } out.push(l); return out.join('\r\n'); };
-  const now = new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+Z$/,'Z');
-  const L = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//MPES 2026.2//Calendario//PT-BR','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:MPES 2026.2 · CESAR School','X-WR-TIMEZONE:America/Recife',
-    'BEGIN:VTIMEZONE','TZID:America/Recife','BEGIN:STANDARD','DTSTART:19700101T000000','TZOFFSETFROM:-0300','TZOFFSETTO:-0300','TZNAME:-03','END:STANDARD','END:VTIMEZONE'];
-  items.filter(i => i.status !== 'cancelado').forEach(it => {
-    const desc = [it.modulo, it.equipe && teamById(it.equipe) && 'Equipe: ' + teamById(it.equipe).nome, it.professor && 'Professor(a): ' + it.professor, !['presencial','adefinir'].includes(it.modalidade) && MODS[it.modalidade], it.notas].filter(Boolean).join('\n');
-    const slots = it.horarios.map(k => [k, SLOTS[k]]).filter(x => x[1]); let n = 0;
-    const ev = (uidv, start, end) => L.push('BEGIN:VEVENT', `UID:${uidv}@mpes2026`, `DTSTAMP:${now}`, start, end, fold(`SUMMARY:${txt(it.titulo)}`), fold(`DESCRIPTION:${txt(desc)}`), ...(it.local ? [fold(`LOCATION:${txt(it.local)}`)] : []), 'END:VEVENT');
-    for (let d = pd(it.inicio); d <= pd(it.fim); d.setDate(d.getDate()+1)) slots.forEach(([k,s]) => { if (d.getDay() !== s.dow) return; n++;
-      ev(`${it.id}-${k}-${dd(d)}`, `DTSTART;TZID=America/Recife:${dt(d,s.s)}`, `DTEND;TZID=America/Recife:${dt(d,s.e)}`); });
-    if (it.horaIni) for (let d = pd(it.inicio); d <= pd(it.fim); d.setDate(d.getDate()+1)){ n++;
-      /* sem horário de término: a agenda recebe 1 hora de duração */
-      const end = it.horaFim || `${pad(Math.min(23, Number(it.horaIni.slice(0,2)) + 1))}:${it.horaIni.slice(3)}`;
-      ev(`${it.id}-avulso-${dd(d)}`, `DTSTART;TZID=America/Recife:${dt(d,it.horaIni)}`, `DTEND;TZID=America/Recife:${dt(d,end)}`); }
-    if (!n){ const e = pd(it.fim); e.setDate(e.getDate()+1); ev(it.id, `DTSTART;VALUE=DATE:${dd(pd(it.inicio))}`, `DTEND;VALUE=DATE:${dd(e)}`); }
+const siteUrl = () => new URL('./', location.href).href;
+const buildIcs = items => MPESICS.build(items, { equipes: state.equipes, siteUrl: siteUrl() });
+
+/* ---------- adicionar à agenda: um encontro ---------- */
+const CAL_ICON = {
+  google:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3Z"/><path fill="#34A853" d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22Z"/><path fill="#FBBC05" d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2L6.4 14Z"/><path fill="#EA4335" d="M12 6c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10C7.2 7.8 9.4 6 12 6Z"/></svg>',
+  outlook:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="13" height="16" rx="2" fill="#0A64C8"/><path fill="#fff" d="M8.5 8.3c-2 0-3.3 1.6-3.3 3.7s1.3 3.7 3.3 3.7 3.3-1.6 3.3-3.7-1.3-3.7-3.3-3.7Zm0 5.9c-1.1 0-1.7-1-1.7-2.2s.6-2.2 1.7-2.2 1.7 1 1.7 2.2-.6 2.2-1.7 2.2Z"/><path fill="#28A8EA" d="M15 7h6a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-6Z"/><path fill="#fff" d="m15 9 7 4.5V11l-7-4Z" opacity=".5"/></svg>',
+  office:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#D83B01" d="M4 6.5 14 3l6 2v14l-6 2-10-3.5V6.5Z"/><path fill="#fff" d="m14 5.5-6 2v9l6 2v-13Z" opacity=".9"/></svg>',
+  yahoo:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" fill="#6001D2"/><path fill="#fff" d="m6 8 3.2 7.2-1.1 2.8h2.3L14.6 8h-2.3l-1.9 4.7L8.4 8Zm9.7 0-1 5.4h2L18.4 8Zm-1.1 6.6a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Z"/></svg>',
+  apple:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8a4.5 4.5 0 0 0-3.8 2.3c-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.6s-2.5-1-2.5-3.8ZM14.1 5.8c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1.1.1 2.1-.5 2.7-1.3Z"/></svg>',
+  link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.7-1.7"/></svg>',
+  download:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>'
+};
+const calBtn = (href, kind, label) => `<a class="cal-btn" href="${esc(href)}" target="_blank" rel="noopener noreferrer" data-cal-kind="${kind}">${CAL_ICON[kind]}<span>${label}</span></a>`;
+let addCalId = null;
+function openAddCal(id){
+  const it = state.items.find(i => i.id === id); if (!it) return;
+  addCalId = id;
+  const ss = MPESICS.sessions(it), ctx = { equipes: state.equipes, siteUrl: siteUrl() };
+  $('#acTitle').textContent = it.titulo;
+  $('#acBody').innerHTML = !ss.length ? '<p class="hint">Este item está cancelado e não pode ser adicionado à agenda.</p>' : `
+    <p class="ac-lead">${ss.length > 1 ? `Este encontro tem <b>${ss.length} sessões</b>. Adicione cada uma no seu calendário ou baixe todas de uma vez no arquivo .ics.` : 'Escolha o seu calendário. Ele abre com o evento já preenchido; é só salvar.'}</p>
+    <div class="ac-list">${ss.map(x => { const L = MPESICS.links(it, x, ctx); return `<div class="ac-row">
+      <div class="ac-when">${ICON.clock}<span>${esc(cap(MPESICS.sessionLabel(x)))}${x.approxEnd ? ' <small>(término estimado)</small>' : ''}</span></div>
+      <div class="ac-btns">${calBtn(L.google, 'google', 'Google')}${calBtn(L.outlook, 'outlook', 'Outlook')}${calBtn(L.office, 'office', 'Microsoft 365')}${calBtn(L.yahoo, 'yahoo', 'Yahoo')}</div></div>`; }).join('')}</div>
+    <div class="ac-ics"><div>${CAL_ICON.apple}<span><b>Apple Calendário, Outlook no computador, Samsung, Thunderbird</b><small>Baixe o arquivo .ics${ss.length > 1 ? ` com as ${ss.length} sessões` : ''} e abra-o para importar.</small></span></div>
+      <button class="btn sm" type="button" id="acIcs">${CAL_ICON.download}Baixar .ics</button></div>`;
+  $('#acIcs')?.addEventListener('click', () => { download(`${slug(it.titulo)}.ics`, buildIcs([it]), 'text/calendar'); toast('Arquivo .ics baixado — abra-o para adicionar à agenda'); });
+  openDlg($('#dlgAddCal'));
+}
+
+/* ---------- adicionar à agenda: o calendário inteiro (assinatura) ---------- */
+function openSub(){
+  const feed = new URL('calendario.ics', siteUrl()).href, S = MPESICS.subscribe(feed), live = location.protocol === 'https:';
+  const n = state.items.reduce((s, it) => s + MPESICS.sessions(it).length, 0);
+  $('#subBody').innerHTML = `
+    <section class="sub-sec"><h3>Assinar <span class="tag ok">recomendado</span></h3>
+      <p class="hint">A sua agenda passa a mostrar todo o calendário do MPES (${n} eventos) e <b>se atualiza sozinha</b> quando algo muda aqui: nova data, professor, orientação ou trabalho em grupo.</p>
+      ${live ? `<div class="ac-btns big">${calBtn(S.google, 'google', 'Google Agenda')}${calBtn(S.outlook, 'outlook', 'Outlook.com')}${calBtn(S.office, 'office', 'Microsoft 365')}${calBtn(S.webcal, 'apple', 'Apple / iPhone')}</div>
+      <div class="sub-link"><input id="subUrl" readonly value="${esc(feed)}" aria-label="Link do calendário"><button class="btn sm" type="button" id="subCopy">${CAL_ICON.link}Copiar link</button></div>
+      <p class="hint">Outros apps (Yahoo, Thunderbird, Android): use “Adicionar calendário por URL” e cole o link. O Google atualiza assinaturas a cada 12–24 h; Apple e Outlook, em poucas horas.</p>`
+      : '<p class="hint">A assinatura funciona na página publicada (https://cleybersilva.github.io/mpes-calendario/).</p>'}
+    </section>
+    <section class="sub-sec"><h3>Importar uma cópia</h3>
+      <p class="hint">Baixa todos os eventos de agora em um arquivo .ics. Não se atualiza depois.</p>
+      <button class="btn" type="button" id="subIcs">${CAL_ICON.download}Baixar calendário completo (.ics)</button>
+    </section>`;
+  $('#subCopy')?.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(feed); } catch(_){ const i = $('#subUrl'); i.select(); document.execCommand('copy'); }
+    toast('Link do calendário copiado');
   });
-  L.push('END:VCALENDAR'); return L.join('\r\n') + '\r\n';
+  $('#subIcs').addEventListener('click', () => { download('mpes-2026-2.ics', buildIcs(state.items), 'text/calendar'); toast('Arquivo .ics baixado'); });
+  openDlg($('#dlgSub'));
 }
 
 /* ---------- sincronização com GitHub ---------- */
