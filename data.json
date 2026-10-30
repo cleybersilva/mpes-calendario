@@ -4,7 +4,7 @@
     "instituicao": "CESAR School",
     "turma": "MPES 2026.2",
     "fonte": "Calendário MPES 2026.2 (em construção) — atualizado 21/10",
-    "updatedAt": "2026-10-30T19:58:44.165Z",
+    "updatedAt": "2026-10-30T20:36:41.437Z",
     "schema": 1,
     "minhaEquipe": "e2"
   },
@@ -19,12 +19,15 @@
       "horarios": [
         "sex1"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "concluido"
+      "status": "concluido",
+      "equipe": ""
     },
     {
       "id": "i002",
@@ -38,12 +41,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Allan Araujo",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "concluido"
+      "status": "concluido",
+      "equipe": ""
     },
     {
       "id": "i014",
@@ -55,12 +61,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Washington Almeida",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "concluido"
+      "status": "concluido",
+      "equipe": ""
     },
     {
       "id": "i041",
@@ -77,7 +86,8 @@
       "semestre": 1,
       "local": "Zoom ou Google Meet",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i003",
@@ -92,12 +102,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Rodrigo Medeiros",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i015",
@@ -109,12 +122,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Washington Almeida",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i004",
@@ -129,12 +145,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Walter Seiffert",
       "modalidade": "online",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i005",
@@ -149,12 +168,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Fernando Carvalho",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i016",
@@ -166,12 +188,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Washington Almeida",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i006",
@@ -186,12 +211,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Suzanna Sandes",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i007",
@@ -206,12 +234,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Allan Araujo",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i017",
@@ -223,12 +254,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Washington Almeida",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i008",
@@ -243,12 +277,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Carlos Diego",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i009",
@@ -263,12 +300,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "A definir",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i018",
@@ -280,12 +320,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Washington Almeida",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i026",
@@ -297,12 +340,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i010",
@@ -317,12 +363,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Suzanna Sandes",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i019",
@@ -334,12 +383,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Washington Almeida",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i011",
@@ -354,12 +406,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Aêda Sousa",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i020",
@@ -371,12 +426,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Washington Almeida",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i012",
@@ -391,12 +449,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Milton Lima",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i021",
@@ -408,12 +469,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Washington Almeida",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i013",
@@ -428,12 +492,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Carlos Diego",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i022",
@@ -445,12 +512,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Washington Almeida",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i023",
@@ -462,12 +532,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Washington Almeida",
       "modalidade": "presencial",
       "semestre": 1,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i024",
@@ -479,12 +552,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Washington Almeida",
       "modalidade": "presencial",
       "semestre": 2,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i027",
@@ -496,12 +572,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "",
       "modalidade": "presencial",
       "semestre": 2,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i029",
@@ -516,12 +595,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Gustavo",
       "modalidade": "online",
       "semestre": 2,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i030",
@@ -536,12 +618,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "",
       "modalidade": "presencial",
       "semestre": 2,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i025",
@@ -553,12 +638,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Washington Almeida",
       "modalidade": "presencial",
       "semestre": 2,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i031",
@@ -573,12 +661,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Danilo",
       "modalidade": "presencial",
       "semestre": 2,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i032",
@@ -593,12 +684,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "",
       "modalidade": "presencial",
       "semestre": 2,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i028",
@@ -610,12 +704,15 @@
       "horarios": [
         "qua"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "",
       "modalidade": "presencial",
       "semestre": 2,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i033",
@@ -630,12 +727,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Danilo",
       "modalidade": "presencial",
       "semestre": 2,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i034",
@@ -650,12 +750,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "Gustavo",
       "modalidade": "online",
       "semestre": 2,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i035",
@@ -670,12 +773,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "",
       "modalidade": "presencial",
       "semestre": 2,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i037",
@@ -685,12 +791,15 @@
       "inicio": "2027-09-01",
       "fim": "2028-03-31",
       "horarios": [],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "",
       "modalidade": "presencial",
       "semestre": 0,
       "local": "",
       "notas": "De set/2027 até mar/2028",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i036",
@@ -705,12 +814,15 @@
         "sab1",
         "sab2"
       ],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "",
       "modalidade": "presencial",
       "semestre": 2,
       "local": "CESAR School",
       "notas": "",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i038",
@@ -720,12 +832,15 @@
       "inicio": "2028-03-30",
       "fim": "2028-03-30",
       "horarios": [],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "",
       "modalidade": "presencial",
       "semestre": 0,
       "local": "",
       "notas": "Até 30 de março de 2028",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i039",
@@ -735,12 +850,15 @@
       "inicio": "2028-04-01",
       "fim": "2028-09-30",
       "horarios": [],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "",
       "modalidade": "presencial",
       "semestre": 0,
       "local": "",
       "notas": "De abr/2028 até set/2028",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     },
     {
       "id": "i040",
@@ -750,19 +868,22 @@
       "inicio": "2028-09-30",
       "fim": "2028-09-30",
       "horarios": [],
+      "horaIni": "",
+      "horaFim": "",
       "professor": "",
       "modalidade": "presencial",
       "semestre": 0,
       "local": "",
       "notas": "Até 30 de setembro de 2028 — tempo regular",
-      "status": "auto"
+      "status": "auto",
+      "equipe": ""
     }
   ],
   "equipes": [
     {
       "id": "e1",
       "nome": "Equipe 1",
-      "tema": "",
+      "tema": "Projeto 2 - VALCANN",
       "membros": [
         "Carlos Augusto Oliveira Rocha",
         "Douglas Antônio dos Santos",
@@ -775,7 +896,7 @@
     {
       "id": "e2",
       "nome": "Equipe 2",
-      "tema": "",
+      "tema": "Projeto 1 - MCP",
       "membros": [
         "Cleyber Gomes da Silva",
         "Daniel Cavalcante Macedo",
@@ -788,7 +909,7 @@
     {
       "id": "e3",
       "nome": "Equipe 3",
-      "tema": "",
+      "tema": "Projeto 2 - TELEMEDICINA",
       "membros": [
         "José Carlos Barbosa Pereira Filho",
         "Lamartine Veras Sampaio de Souza",
@@ -801,7 +922,7 @@
     {
       "id": "e4",
       "nome": "Equipe 4",
-      "tema": "",
+      "tema": "Projeto 3 - FUNDAÇÃO PAVEL",
       "membros": [
         "David Bezerra da Silva",
         "Leonardo Pessoa Cavalcanti",
@@ -813,7 +934,7 @@
     {
       "id": "e5",
       "nome": "Equipe 5",
-      "tema": "",
+      "tema": "Projeto 1 - VALCANN",
       "membros": [
         "Albert Sevy Bezerra Torres",
         "Gilson Santos de Jesus",
