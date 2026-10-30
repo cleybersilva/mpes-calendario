@@ -4,6 +4,7 @@
 
 ### Calendário vivo das aulas do Mestrado Profissional em Engenharia de Software da CESAR School (turma MPES 2026.2), editável no navegador e publicado no GitHub Pages
 
+[![CI/CD](https://github.com/cleybersilva/mpes-calendario/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/cleybersilva/mpes-calendario/actions/workflows/ci-cd.yml)
 [![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-online-222222?logo=github&logoColor=white)](https://cleybersilva.github.io/mpes-calendario/)
 [![HTML5](https://img.shields.io/badge/HTML5-PWA-E34F26?logo=html5&logoColor=white)](index.html)
 [![JavaScript](https://img.shields.io/badge/JavaScript-vanilla-F7DF1E?logo=javascript&logoColor=black)](js/app.js)
@@ -22,6 +23,7 @@
 [Funcionalidades](#-funcionalidades) •
 [Instalação](#-instalação) •
 [Uso](#️-uso) •
+[CI/CD](#-pipeline-cicd) •
 [Sincronização](#-sincronização-com-o-github) •
 [Por que sincronizar](#-por-que-sincronizar) •
 [Segurança](#-segurança) •
@@ -105,6 +107,8 @@ flowchart LR
 | `data.json` | Fonte publicada dos itens (`meta` + `items`) |
 | `assets/logo-cesar.png` | Logo e favicon |
 | `docs/` | Capturas usadas neste README |
+| `tests/` · `package.json` | Validação, testes no navegador (Playwright) e build da pipeline |
+| `.github/workflows/ci-cd.yml` | Pipeline CI/CD no GitHub Actions |
 | `.nojekyll` | Serve os arquivos como estão, sem processamento Jekyll |
 
 ## ✨ Funcionalidades
@@ -138,8 +142,14 @@ python3 -m http.server 8080
 Abra **http://localhost:8080/**. Use um servidor local em vez de abrir o HTML
 como arquivo, porque o `fetch('data.json')` não funciona via `file://`.
 
-O deploy usa **Settings › Pages › Deploy from a branch › `main` / `(root)`**.
-Cada push na `main` atualiza o site.
+O deploy é feito pela pipeline de CI/CD (abaixo), com **Settings › Pages ›
+Source: GitHub Actions**. Para rodar as mesmas verificações localmente:
+
+```bash
+npm ci
+npx playwright install chromium
+npm test            # validação + testes no navegador (desktop e celular)
+```
 
 ## ▶️ Uso
 
@@ -221,6 +231,40 @@ dias). Quando vencer, a publicação avisa que o token é inválido; basta
 gerar outro e colar no mesmo lugar. O token fica salvo só no navegador onde
 foi colado, então repita a configuração em cada aparelho de onde quiser
 publicar.
+
+## 🔁 Pipeline CI/CD
+
+Cada push na `main`, inclusive as publicações feitas pela própria página
+(que gravam o `data.json`), dispara a pipeline
+[**CI/CD · Calendário MPES**](https://github.com/cleybersilva/mpes-calendario/actions/workflows/ci-cd.yml)
+no GitHub Actions. Ela só publica se todas as etapas anteriores passarem, e
+cada execução mostra o andamento em um grafo e um resumo visual.
+
+```mermaid
+flowchart LR
+    P["Push na main<br/>ou publicação pela página"] --> V["🔎 1 · Validação<br/>data.json + estrutura do site"]
+    V --> TD["🧪 2 · Testes · desktop"]
+    V --> TM["🧪 2 · Testes · celular"]
+    TD --> B["📦 3 · Build<br/>pacote _site + version.json"]
+    TM --> B
+    B --> D["🚀 4 · Deploy<br/>GitHub Pages"]
+    D --> X["✅ 5 · Verificação em produção<br/>mesmos testes no site publicado"]
+```
+
+| Etapa | O que verifica | Se falhar |
+| --- | --- | --- |
+| 🔎 Validação | `data.json` (datas, categorias, turnos, horários, IDs únicos), arquivos referenciados, sintaxe JS, manifest e versões do cache offline | Nada é publicado; o erro aparece no resumo da execução |
+| 🧪 Testes | Chromium em 1366px e 390px: todas as visualizações, criar/editar/excluir/desfazer, exportação `.ics`, barra inferior, painéis e botão voltar no celular, sem erros de console | Nada é publicado; capturas de tela ficam nos artefatos |
+| 📦 Build | Monta só os arquivos do site (sem testes e docs) e grava `version.json` com o commit | Nada é publicado |
+| 🚀 Deploy | Publica no GitHub Pages, ambiente `github-pages`, com link direto para o site | O site continua na versão anterior |
+| ✅ Verificação | Espera o `version.json` do site mostrar o novo commit e repete os testes no endereço público | Alerta que a produção não corresponde ao commit |
+
+**Como acompanhar:** aba **Actions** do repositório › execução mais recente.
+O grafo mostra cada etapa ficando verde; a aba **Summary** traz as tabelas de
+verificação, o pacote publicado e o link do site. O histórico de implantações
+fica em **Deployments › github-pages**. Pull requests rodam validação, testes e
+build, sem publicar. Alterações só no README ou em `docs/` não disparam
+implantação.
 
 ## 🔒 Segurança
 

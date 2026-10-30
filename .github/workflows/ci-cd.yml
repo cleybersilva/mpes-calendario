@@ -1,0 +1,189 @@
+name: CI/CD · Calendário MPES
+
+# Pipeline de implantação: cada push na main (inclusive as publicações feitas
+# pela própria página, que gravam o data.json) passa por validação, testes no
+# navegador, build, deploy no GitHub Pages e verificação em produção.
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['README.md', 'docs/**']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '20'
+  SITE_URL: https://cleybersilva.github.io/mpes-calendario/
+
+jobs:
+  validate:
+    name: 🔎 1 · Validação
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Contexto da implantação
+        run: |
+          {
+            echo "## 🚦 Implantação #${GITHUB_RUN_NUMBER}"
+            echo
+            echo "| Item | Valor |"
+            echo "| --- | --- |"
+            echo "| Evento | \`${GITHUB_EVENT_NAME}\` |"
+            echo "| Autor | @${GITHUB_ACTOR} |"
+            echo "| Commit | [\`${GITHUB_SHA::7}\`](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}) |"
+            echo "| Mensagem | $(git log -1 --pretty=%s | sed 's/|/\\|/g') |"
+            echo
+            echo '```mermaid'
+            echo 'flowchart LR'
+            echo '  A["🔎 Validação"] --> B["🧪 Testes desktop + celular"] --> C["📦 Build"] --> D["🚀 Deploy"] --> E["✅ Verificação em produção"]'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Validar data.json
+        run: node tests/validate-data.mjs
+      - name: Validar estrutura do site
+        run: node tests/check-site.mjs
+
+  test:
+    name: 🧪 2 · Testes · ${{ matrix.device }}
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        device: [desktop, mobile]
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Instalar dependências
+        run: npm ci
+      - name: Cache do navegador
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Instalar Chromium
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Dependências do sistema para o Chromium
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: Testar no navegador (${{ matrix.device }})
+        run: node tests/smoke.mjs ${{ matrix.device }}
+      - name: Guardar capturas de tela
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: capturas-${{ matrix.device }}
+          path: test-results/
+          retention-days: 14
+
+  build:
+    name: 📦 3 · Build
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Montar pacote do site
+        run: node tests/build.mjs
+      - name: Configurar GitHub Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v5
+      - name: Enviar pacote para o Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: 🚀 4 · Deploy em produção
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Registrar implantação
+        run: |
+          {
+            echo "### 🚀 Publicado em produção"
+            echo
+            echo "**${{ steps.deployment.outputs.page_url }}**"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  verify:
+    name: ✅ 5 · Verificação em produção
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Aguardar a nova versão no ar
+        run: |
+          for i in $(seq 1 30); do
+            live=$(curl -fsS "${SITE_URL}version.json?t=$(date +%s)" | sed -n 's/.*"commit": "\([0-9a-f]*\)".*/\1/p' || true)
+            if [ "$live" = "$GITHUB_SHA" ]; then echo "Versão ${GITHUB_SHA::7} no ar"; exit 0; fi
+            echo "Aguardando CDN (no ar: ${live:-nenhuma}) — tentativa $i/30"; sleep 10
+          done
+          echo "::error title=Verificação::A versão ${GITHUB_SHA::7} não apareceu no site em 5 minutos"; exit 1
+      - name: Instalar dependências
+        run: npm ci
+      - name: Cache do navegador
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Instalar Chromium
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Dependências do sistema para o Chromium
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: Testar o site publicado (desktop + celular)
+        run: node tests/smoke.mjs all "$SITE_URL"
+      - name: Guardar capturas de produção
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: capturas-producao
+          path: test-results/
+          retention-days: 14

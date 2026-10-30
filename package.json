@@ -1,0 +1,16 @@
+{
+  "name": "mpes-calendario",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Calendário vivo do MPES 2026.2 — CESAR School",
+  "type": "module",
+  "scripts": {
+    "validate": "node tests/validate-data.mjs && node tests/check-site.mjs",
+    "test:smoke": "node tests/smoke.mjs",
+    "build": "node tests/build.mjs",
+    "test": "npm run validate && npm run test:smoke"
+  },
+  "devDependencies": {
+    "playwright": "1.48.2"
+  }
+}
