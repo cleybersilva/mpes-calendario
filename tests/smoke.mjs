@@ -80,6 +80,18 @@ async function desktop() {
     r.check(gs.includes(encodeURIComponent('webcal://')), 'Link de assinatura do Google Agenda');
     await pg.keyboard.press('Escape');
   }
+  {
+    /* animações ligadas (?anim): a abertura some sozinha e a troca de aba continua funcionando */
+    const ap = await browser.newPage({ viewport: { width: 1366, height: 900 } }); watch(ap);
+    await ap.goto(URL0 + '?anim=1&ci=' + Date.now());
+    r.check(await ap.locator('#splash').count() === 1, 'Abertura animada aparece');
+    await ap.waitForSelector('#splash', { state: 'detached', timeout: 8000 }).catch(() => {});
+    r.check(await ap.locator('#splash').count() === 0 && !(await ap.evaluate(() => document.body.classList.contains('pre'))), 'Abertura termina e libera o app');
+    await ap.click('.tabs [data-view=table]'); await ap.waitForTimeout(700);
+    const ind = await ap.evaluate(() => { const i = document.querySelector('.tab-ind'), b = document.querySelector('.tabs [aria-selected=true]'); return Math.abs(i.getBoundingClientRect().left - b.getBoundingClientRect().left) < 3; });
+    r.check(ind && await ap.locator('#view tbody tr').count() === data.items.length, 'Troca de aba animada e indicador no lugar');
+    await ap.close();
+  }
   await pg.screenshot({ path: SHOTS + 'desktop.png', fullPage: false });
   r.check(errors.length === 0, 'Sem erros no console', errors.slice(0, 3).join(' | '));
   return r;

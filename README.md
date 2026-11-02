@@ -130,6 +130,7 @@ flowchart LR
 | Agenda do dia | Toque num dia do calendário para ver os itens e adicionar um novo naquela data |
 | Offline / app | Funciona sem internet com a última versão salva e pode ser instalado como app (PWA) |
 | Robustez | Dados validados e normalizados ao carregar/importar, aviso antes de sobrescrever uma versão publicada por outro dispositivo, sincronização entre abas |
+| Animações | Abertura com a logo da CESAR School no centro, anéis pulsando e barra de carregamento; a tela se revela em círculo enquanto a logo voa até o cabeçalho. Troca de aba e de mês deslizando na direção do movimento (View Transitions), pílula das abas e marcador da barra inferior deslizantes, entrada em cascata, números dos indicadores contando, troca de tema claro/escuro em círculo a partir do botão, janelas que entram e saem com movimento, onda de toque nos botões. Desligadas automaticamente para quem ativa "reduzir movimento" no sistema |
 | Atalhos | `n` novo item · `/` buscar · `t` ir para hoje · `←` `→` trocar mês |
 
 ## 🚀 Instalação

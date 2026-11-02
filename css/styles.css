@@ -555,5 +555,85 @@ footer a{color:var(--muted)}
   .kpi:hover,.team:hover{box-shadow:var(--shadow),0 14px 28px -18px rgba(255,98,0,.55)}
 }
 
-/* respeita quem pediu menos movimento no sistema (inclui os círculos, que são pseudo-elementos) */
+/* ---------- abertura: logo → app ---------- */
+#splash{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;pointer-events:none}
+.sp-bg{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 40%,#FF8A3D 0%,var(--brand) 45%,#B83E00 100%);overflow:hidden;will-change:clip-path}
+.sp-ring{position:absolute;left:50%;top:44%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;border:2px solid rgba(255,255,255,.55);opacity:0;animation:spRing 2.4s cubic-bezier(.2,.6,.3,1) infinite}
+.sp-ring:nth-child(2){animation-delay:.8s}
+.sp-ring:nth-child(3){animation-delay:1.6s}
+@keyframes spRing{0%{opacity:.7;transform:scale(.8)}100%{opacity:0;transform:scale(4.2)}}
+.sp-logo{position:absolute;left:50%;top:44%;width:132px;height:132px;margin:-66px 0 0 -66px;border-radius:30px;object-fit:cover;box-shadow:0 30px 60px -20px rgba(80,20,0,.6),0 0 0 6px rgba(255,255,255,.14);animation:spLogo .9s cubic-bezier(.2,1.3,.35,1) both;transform-origin:center;will-change:transform}
+@keyframes spLogo{0%{opacity:0;transform:scale(.4) rotate(-12deg);filter:blur(8px)}60%{opacity:1;filter:blur(0)}100%{opacity:1;transform:scale(1) rotate(0)}}
+.sp-text{position:absolute;left:0;right:0;top:calc(44% + 90px);text-align:center;color:#fff;padding:0 24px}
+.sp-text b{display:block;font-family:Sora,Inter,system-ui,sans-serif;font-size:30px;font-weight:800;letter-spacing:-.02em;animation:spUp .7s .35s cubic-bezier(.2,1,.3,1) both}
+.sp-text span{display:block;margin-top:6px;font-size:14px;opacity:.9;animation:spUp .7s .5s cubic-bezier(.2,1,.3,1) both}
+@keyframes spUp{from{opacity:0;transform:translateY(14px)}}
+.sp-bar{position:absolute;left:50%;top:calc(44% + 170px);width:140px;height:4px;margin-left:-70px;border-radius:99px;background:rgba(255,255,255,.25);overflow:hidden;animation:spUp .5s .65s both}
+.sp-bar i{display:block;height:100%;width:40%;border-radius:inherit;background:#fff;animation:spLoad 1s .7s ease-in-out infinite}
+#splash.ready .sp-bar i{animation:none;width:100%;transition:width .25s}
+@keyframes spLoad{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
+body.pre{overflow:hidden}
+.top .logo.landed{animation:logoLand .5s var(--ease)}
+@keyframes logoLand{0%{box-shadow:0 0 0 0 rgba(255,98,0,.7)}100%{box-shadow:0 4px 14px -6px rgba(255,98,0,.6),0 0 0 14px rgba(255,98,0,0)}}
+
+/* ---------- indicadores deslizantes das abas ---------- */
+.tabs{position:relative;isolation:isolate}
+.tab-ind,.bn-ind{position:absolute;opacity:0;pointer-events:none;transition:translate .5s var(--ease),width .5s var(--ease),opacity .2s}
+.tab-ind.instant,.bn-ind.instant{transition:none}
+.tab-ind{z-index:0;top:5px;bottom:5px;left:0;width:var(--w,0);translate:var(--x,0) 0;border-radius:12px;background:linear-gradient(135deg,#FF7A26,var(--brand) 55%,#E04F00);box-shadow:0 8px 18px -8px rgba(255,98,0,.85),inset 0 1px 0 rgba(255,255,255,.25)}
+.tabs button{position:relative;z-index:1}
+.tabs.has-ind button[aria-selected="true"]{background:transparent;box-shadow:none}
+.bn-ind{display:none}
+@media (max-width:720px){
+  .bn-ind{display:block;top:0;left:0;height:3px;width:28px;border-radius:0 0 3px 3px;background:var(--brand);translate:calc(var(--x,0) + var(--w,0) / 2 - 14px) 0;box-shadow:0 2px 10px rgba(255,98,0,.7)}
+  .bnav.has-ind button[aria-selected="true"]::before{display:none}
+}
+
+/* ---------- transições de aba, mês e tema (View Transitions) ---------- */
+html.vt-view #view{view-transition-name:view}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+html[data-dir="fwd"]{--vtx:56px}
+html[data-dir="back"]{--vtx:-56px}
+html.vt-view::view-transition-group(view){animation-duration:.45s;animation-timing-function:var(--ease)}
+html.vt-view::view-transition-old(view){animation:vtOut .28s cubic-bezier(.4,0,1,1) both}
+html.vt-view::view-transition-new(view){animation:vtIn .5s var(--ease) both}
+@keyframes vtOut{to{opacity:0;transform:translateX(calc(var(--vtx) * -1)) scale(.985);filter:blur(2px)}}
+@keyframes vtIn{from{opacity:0;transform:translateX(var(--vtx)) scale(.985)}}
+
+/* ---------- diálogos: entrada e saída ---------- */
+dialog[open]::backdrop{animation:fadeIn .25s ease-out}
+dialog.closing{animation:popOut .16s ease-in forwards}
+dialog.closing::backdrop{animation:fadeOut .16s ease-in forwards}
+@keyframes fadeIn{from{opacity:0}}
+@keyframes fadeOut{to{opacity:0}}
+@keyframes popOut{to{opacity:0;transform:translateY(8px) scale(.97)}}
+@media (max-width:720px){
+  dialog[open]{animation:sheet .32s cubic-bezier(.2,.9,.3,1)}
+  dialog.closing{animation:sheetOut .22s cubic-bezier(.4,0,1,1) forwards}
+  dialog.closing::backdrop{animation-duration:.22s}
+  @keyframes sheetOut{to{transform:translateY(100%)}}
+}
+dialog[open] .m-body>*,dialog[open] .detail>*{animation:rise .4s var(--ease) backwards}
+dialog[open] .m-body>:nth-child(2),dialog[open] .detail>:nth-child(2){animation-delay:.04s}
+dialog[open] .m-body>:nth-child(3),dialog[open] .detail>:nth-child(3){animation-delay:.08s}
+dialog[open] .m-body>:nth-child(n+4),dialog[open] .detail>:nth-child(n+4){animation-delay:.12s}
+dialog[open] .ac-row{animation:rise .4s var(--ease) backwards}
+dialog[open] .ac-row:nth-child(2){animation-delay:.05s}
+dialog[open] .ac-row:nth-child(3){animation-delay:.1s}
+dialog[open] .ac-row:nth-child(n+4){animation-delay:.15s}
+
+/* ---------- onda de toque ---------- */
+.btn,.tabs button,.bnav button,.cal-btn,.td,.af,.legend button,.ag-item,.team-next{position:relative;overflow:hidden}
+.rpl{position:absolute;border-radius:50%;background:currentColor;opacity:.22;transform:scale(0);pointer-events:none;animation:ripple .6s cubic-bezier(.2,.6,.3,1) forwards}
+@keyframes ripple{to{transform:scale(1);opacity:0}}
+
+/* painel de filtros e menu com movimento mais suave */
+.menu-pop.open{animation:menuIn .22s var(--ease)}
+@keyframes menuIn{from{opacity:0;transform:translateY(-6px) scale(.97)}}
+.toast{transition:opacity .25s,transform .35s var(--ease)}
+
+/* sem movimento: testes automatizados e quem prefere menos animação */
+.no-motion *,.no-motion *::before,.no-motion *::after{animation:none !important;transition:none !important}
+
+ (inclui os círculos, que são pseudo-elementos) */
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none !important;transition:none !important;scroll-behavior:auto !important}}

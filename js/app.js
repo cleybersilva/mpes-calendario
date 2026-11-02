@@ -156,8 +156,8 @@ async function load(){
   else if (rem){ state = clone(rem); store.del(KEYS.data); }
   else { state = {meta:{turma:'MPES 2026.2', schema:SCHEMA}, items:[], equipes:[]}; toast('Sem conexão e sem dados salvos neste navegador', {ms:5000}); }
   document.body.classList.remove('loading');
-  playIntro();
   render();
+  openingSequence();
 }
 
 /* ---------- derivados ---------- */
@@ -415,6 +415,7 @@ function renderFilters(){
 function render(){
   renderFilters(); renderKpis(); renderNext();
   $$('[data-view]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.view === view)));
+  placeIndicators();
   document.body.dataset.view = view;
   $('#q').placeholder = view === 'equipes' ? 'Buscar participante ou equipe…' : 'Buscar módulo, professor, nota…';
   if (view === 'equipes') $('#view').innerHTML = renderTeams();
@@ -501,10 +502,98 @@ $('#tDel').onclick = () => {
 };
 
 /* ---------- animações pontuais: só na abertura e na troca de aba, nunca em re-renders (busca, filtros, contagem) ---------- */
+/* ---------- movimento ---------- */
+const VIEWS = ['timeline','calendar','table','equipes'];
+const MOTION = !matchMedia('(prefers-reduced-motion: reduce)').matches && (!navigator.webdriver || /[?&]anim/.test(location.search));
+if (!MOTION) document.documentElement.classList.add('no-motion');
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* abertura: logo no centro → a tela se revela a partir do cabeçalho e a logo voa até o lugar dela */
+const splashT0 = performance.now();
+async function openingSequence(){
+  const sp = $('#splash');
+  if (!sp){ playIntro(); countUpKpis(); return; }
+  await sleep(Math.max(0, 1250 - (performance.now() - splashT0)));
+  sp.classList.add('ready');
+  await sleep(260);
+  const logo = sp.querySelector('.sp-logo'), target = $('.top .logo');
+  target.style.opacity = '0';
+  const a = logo.getBoundingClientRect(), b = target.getBoundingClientRect();
+  const dx = (b.left + b.width / 2) - (a.left + a.width / 2), dy = (b.top + b.height / 2) - (a.top + a.height / 2), s = b.width / a.width;
+  const cx = b.left + b.width / 2, cy = b.top + b.height / 2, R = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy));
+  const ease = 'cubic-bezier(.7,0,.2,1)';
+  sp.querySelectorAll('.sp-fade').forEach(e => e.animate([{ opacity:1 }, { opacity:0, transform:'translateY(10px)' }], { duration:220, fill:'forwards' }));
+  const fly = logo.animate([{ transform:'translate(0,0) scale(1)', borderRadius:'30px' }, { transform:`translate(${dx}px,${dy}px) scale(${s})`, borderRadius:`${12 / s}px` }],
+    { duration:780, easing:ease, fill:'forwards' });
+  const reveal = sp.querySelector('.sp-bg').animate([{ clipPath:`circle(${R}px at ${cx}px ${cy}px)` }, { clipPath:`circle(0px at ${cx}px ${cy}px)` }],
+    { duration:820, delay:120, easing:ease, fill:'forwards' });
+  setTimeout(() => { document.body.classList.remove('pre'); playIntro(); countUpKpis(); }, 260);
+  await Promise.allSettled([fly.finished, reveal.finished]);
+  target.style.opacity = ''; target.classList.add('landed'); sp.remove();
+}
+
+/* números dos indicadores contam até o valor */
+function countUpKpis(){
+  if (!MOTION) return;
+  ['#kProg', '#kRest', '#kSex'].forEach((sel, i) => {
+    const el = $(sel), m = /^(\d+)(.*)$/.exec(el.textContent); if (!m) return;
+    const to = Number(m[1]), suf = m[2], t0 = performance.now() + 200 + i * 60, dur = 900;
+    const step = now => { const p = Math.min(1, Math.max(0, (now - t0) / dur)), e = 1 - Math.pow(1 - p, 3);
+      if (el.textContent.replace(/\d+/, '') !== suf) return; /* re-render no meio: desiste */
+      el.textContent = Math.round(to * e) + suf; if (p < 1) requestAnimationFrame(step); };
+    el.textContent = '0' + suf; requestAnimationFrame(step);
+  });
+}
+
+/* troca de aba e de mês: o conteúdo desliza na direção do movimento */
+function withViewTransition(dir, fn){
+  if (!MOTION || !document.startViewTransition || !dir){ fn(); return; }
+  const root = document.documentElement;
+  root.dataset.dir = dir > 0 ? 'fwd' : 'back'; root.classList.add('vt-view');
+  const t = document.startViewTransition(fn);
+  t.finished.finally(() => root.classList.remove('vt-view'));
+}
+
+/* pílula das abas (desktop) e marcador da barra inferior deslizam até a aba ativa */
+function placeIndicators(){
+  for (const [wrap, ind] of [['.tabs', '.tab-ind'], ['.bnav', '.bn-ind']]){
+    const w = $(wrap), i = $(ind), b = w && w.querySelector('[aria-selected="true"]');
+    if (!w || !i) continue;
+    if (!b || !b.offsetWidth){ i.style.opacity = '0'; continue; }
+    w.classList.add('has-ind');
+    i.style.opacity = '1';
+    i.style.setProperty('--x', b.offsetLeft + 'px'); i.style.setProperty('--w', b.offsetWidth + 'px');
+  }
+}
+addEventListener('resize', debounce(() => { $$('.tab-ind,.bn-ind').forEach(i => i.classList.add('instant')); placeIndicators(); requestAnimationFrame(() => $$('.tab-ind,.bn-ind').forEach(i => i.classList.remove('instant'))); }, 100));
+
+/* diálogos fecham com animação (o close nativo só acontece no fim) */
+function animateClose(d){
+  const nativeClose = HTMLDialogElement.prototype.close;
+  d.close = function(v){
+    if (!this.open) return;
+    if (!MOTION || this.classList.contains('closing')){ if (!this.classList.contains('closing')) nativeClose.call(this, v); return; }
+    this.classList.add('closing');
+    setTimeout(() => { this.classList.remove('closing'); nativeClose.call(this, v); }, isMobile() ? 220 : 160);
+  };
+  d.addEventListener('cancel', e => { if (MOTION){ e.preventDefault(); d.close(); } });
+}
+
+/* onda de toque nos botões */
+document.addEventListener('pointerdown', e => {
+  if (!MOTION) return;
+  const el = e.target.closest('.btn,.tabs button,.bnav button,.cal-btn,.td,.af,.legend button,.ag-item,.team-next'); if (!el) return;
+  const r = el.getBoundingClientRect(), size = Math.max(r.width, r.height) * 2.2, s = document.createElement('span');
+  s.className = 'rpl'; s.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+  el.appendChild(s); setTimeout(() => s.remove(), 650);
+}, { passive:true });
+
 function playOnce(el, cls, ms){ if (!el) return; el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); clearTimeout(el['_' + cls]); el['_' + cls] = setTimeout(() => el.classList.remove(cls), ms); }
 function playIntro(){ playOnce(document.body, 'intro', 1600); playOnce($('#view'), 'view-in', 1100); }
 
-function setView(v){ const changed = v !== view; view = v; store.set(KEYS.view, v); render(); if (changed) playOnce($('#view'), 'view-in', 1100); window.scrollTo({top: Math.min(window.scrollY, $('.toolbar').offsetTop - 70), behavior:'smooth'}); }
+function setView(v){ const changed = v !== view, dir = VIEWS.indexOf(v) - VIEWS.indexOf(view); view = v; store.set(KEYS.view, v);
+  if (changed) withViewTransition(dir, render); else render();
+  if (changed) playOnce($('#view'), 'view-in', 1100); window.scrollTo({top: Math.min(window.scrollY, $('.toolbar').offsetTop - 70), behavior:'smooth'}); }
 
 /* ---------- histórico: botão "voltar" do celular fecha diálogos/painéis ---------- */
 let skipPop = false;
@@ -523,6 +612,7 @@ function openDlg(d){
   d.showModal();
 }
 $$('dialog').forEach(d => {
+  animateClose(d);
   d.addEventListener('close', () => { if (d._silent){ d._silent = false; return; } popLayer(d.id); });
   d.addEventListener('click', e => { if (e.target === d) d.close(); });
   enableSwipeDown(d, () => d.close());
@@ -698,7 +788,7 @@ document.addEventListener('keydown', e => {
   else if (e.key === 't'){ goToday(); }
   else if (view === 'calendar' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !e.target.closest('.day')) shiftMonth(e.key === 'ArrowLeft' ? -1 : 1);
 });
-function shiftMonth(v){ calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth()+v, 1); selDay = null; haptic(); render(); }
+function shiftMonth(v){ calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth()+v, 1); selDay = null; haptic(); withViewTransition(v, render); }
 
 /* deslizar no calendário troca o mês */
 (() => { let x0 = null, y0 = 0;
@@ -735,7 +825,16 @@ function applyTheme(t){ if (t) document.documentElement.dataset.theme = t; else 
 $('#btnTheme').onclick = () => {
   const cur = document.documentElement.dataset.theme;
   const dark = cur ? cur === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-  const t = dark ? 'light' : 'dark'; store.set(KEYS.theme, t); applyTheme(t);
+  const t = dark ? 'light' : 'dark', run = () => { store.set(KEYS.theme, t); applyTheme(t); };
+  if (!MOTION || !document.startViewTransition){ run(); return; }
+  /* o novo tema se espalha em círculo a partir do botão */
+  const r = $('#btnTheme').getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+  const R = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  const root = document.documentElement; root.classList.add('vt-theme');
+  const tr = document.startViewTransition(run);
+  tr.ready.then(() => root.animate({ clipPath:[`circle(0px at ${x}px ${y}px)`, `circle(${R}px at ${x}px ${y}px)`] },
+    { duration:650, easing:'cubic-bezier(.4,0,.2,1)', pseudoElement:'::view-transition-new(root)' })).catch(() => {});
+  tr.finished.finally(() => root.classList.remove('vt-theme'));
 };
 
 /* sincroniza entre abas abertas */
