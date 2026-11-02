@@ -112,9 +112,11 @@ async function desktop() {
     /* tablet (toque, tela > 720 px): topo centralizado; computador continua alinhado à esquerda */
     const tctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, hasTouch: true, isMobile: true });
     const tp = await tctx.newPage(); await tp.goto(URL0 + '?ci=' + Date.now()); await tp.waitForSelector('body:not(.loading)', { timeout: 15000 });
-    const tab = await tp.evaluate(() => { const b = document.querySelector('#btnAddCal').getBoundingClientRect(); return { h1: getComputedStyle(document.querySelector('.hero h1')).textAlign, off: Math.abs(b.left + b.width / 2 - innerWidth / 2) }; });
+    /* título centralizado; texto da CESAR School e botão na MESMA linha, botão no fim, conjunto centralizado */
+    const tab = await tp.evaluate(() => { const b = document.querySelector('#btnAddCal').getBoundingClientRect(), p = document.querySelector('.hero-sub p').getBoundingClientRect();
+      return { h1: getComputedStyle(document.querySelector('.hero h1')).textAlign, sameLine: Math.abs((b.top + b.bottom) / 2 - (p.top + p.bottom) / 2) < 6, after: b.left > p.right, off: Math.abs((p.left + b.right) / 2 - innerWidth / 2) }; });
     const desk = await pg.evaluate(() => getComputedStyle(document.querySelector('.hero h1')).textAlign);
-    r.check(tab.h1 === 'center' && tab.off < 2 && desk !== 'center', 'Topo centralizado só no tablet', `tablet ${tab.h1} · computador ${desk}`);
+    r.check(tab.h1 === 'center' && tab.sameLine && tab.after && tab.off < 3 && desk !== 'center', 'Topo do tablet: título centralizado e botão no fim da 2ª linha', `tablet ${tab.h1} · mesma linha ${tab.sameLine} · computador ${desk}`);
     await tctx.close();
   }
   await pg.screenshot({ path: SHOTS + 'desktop.png', fullPage: false });

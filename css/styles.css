@@ -212,7 +212,8 @@ header.top{position:sticky;top:0;z-index:30;background:color-mix(in oklab,var(--
    Só toque + tela > 720 px: não afeta computador (mouse) nem celular (layout próprio). */
 @media (min-width:721px) and (hover:none) and (pointer:coarse){
   .hero h1{text-align:center}
-  .hero-sub{flex-direction:column;align-items:center;text-align:center;gap:14px;margin-top:10px}
+  /* segunda linha: texto da CESAR School e, no fim dela, o botão da agenda — o conjunto centralizado */
+  .hero-sub{flex-direction:row;justify-content:center;align-items:center;flex-wrap:wrap;gap:12px 18px;margin-top:10px}
   .hero-sub p{max-width:none}
 }
 
