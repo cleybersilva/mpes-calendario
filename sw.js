@@ -1,6 +1,6 @@
 /* Service worker: tudo do site em rede primeiro (versões novas aparecem na hora); cache só para uso offline */
-const VERSION = 'mpes-v17';
-const SHELL = ['./', 'index.html', 'css/styles.css?v=16', 'js/ics.js?v=7', 'js/app.js?v=15', 'manifest.webmanifest',
+const VERSION = 'mpes-v18';
+const SHELL = ['./', 'index.html', 'css/styles.css?v=17', 'js/ics.js?v=7', 'js/app.js?v=15', 'manifest.webmanifest',
   'assets/logo-cesar.png', 'assets/icon-192.png', 'assets/icon-512.png'];
 
 self.addEventListener('install', e => {

@@ -31,6 +31,10 @@
 *{box-sizing:border-box}
 html{scroll-padding-top:84px;overflow-anchor:none} /* a posição na troca de aba é controlada pelo app; a ancoragem automática do navegador empurrava a página */
 html,body{margin:0}
+/* nada pode passar da largura da tela: no celular, um transbordo lateral (mesmo de 20 px, durante a
+   animação de troca de aba) faz o navegador reduzir o zoom e a página inteira "sobe e desce" */
+body{overflow-x:clip}
+main.wrap{overflow-x:clip}
 body{background:var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;-webkit-tap-highlight-color:transparent}
 h1,h2,h3{font-family:Sora,Inter,system-ui,sans-serif;letter-spacing:-.02em;margin:0}
 button,input,select,textarea{font:inherit;color:inherit}

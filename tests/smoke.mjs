@@ -143,6 +143,26 @@ async function mobile() {
   await pg.tap('#filterPanel .fp-foot [data-fp-close]');
   await pg.tap('.bnav [data-view=calendar]');
   r.check(await pg.locator('.agenda').isVisible(), 'Calendário com agenda do dia');
+  {
+    /* com animações ligadas (como no celular de verdade): a troca de aba não pode alargar a página
+       (o navegador reduziria o zoom e tudo "subiria e desceria") nem mexer a barra inferior */
+    const actx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
+    const ap = await actx.newPage(); watch(ap);
+    await ap.goto(URL0 + '?anim=1&ci=' + Date.now());
+    await ap.waitForSelector('#splash', { state: 'detached', timeout: 8000 }).catch(() => {});
+    await ap.waitForTimeout(900);
+    let over = 0, bnMove = 0;
+    for (const v of ['calendar', 'table', 'equipes', 'timeline']) {
+      await ap.evaluate(() => { window.__w = []; const f = () => { window.__w.push([document.documentElement.scrollWidth - innerWidth, document.querySelector('.bnav').getBoundingClientRect().top]); if (window.__w.length < 40) requestAnimationFrame(f); }; f(); });
+      const bx = await ap.locator(`.bnav [data-view=${v}]`).boundingBox();
+      await ap.touchscreen.tap(bx.x + bx.width / 2, bx.y + bx.height / 2); await ap.waitForTimeout(750);
+      const w = await ap.evaluate(() => window.__w);
+      over = Math.max(over, ...w.map(x => x[0]));
+      bnMove = Math.max(bnMove, Math.max(...w.map(x => x[1])) - Math.min(...w.map(x => x[1])));
+    }
+    r.check(over <= 0 && bnMove <= 1, 'Troca de aba animada não alarga a página nem mexe a barra inferior', `transbordo ${over}px · barra ${Math.round(bnMove)}px`);
+    await actx.close();
+  }
   await pg.screenshot({ path: SHOTS + 'mobile.png' });
   r.check(errors.length === 0, 'Sem erros no console', errors.slice(0, 3).join(' | '));
   return r;
