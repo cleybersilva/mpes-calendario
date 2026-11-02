@@ -90,6 +90,15 @@ async function desktop() {
     await ap.click('.tabs [data-view=table]'); await ap.waitForTimeout(700);
     const ind = await ap.evaluate(() => { const i = document.querySelector('.tab-ind'), b = document.querySelector('.tabs [aria-selected=true]'); return Math.abs(i.getBoundingClientRect().left - b.getBoundingClientRect().left) < 3; });
     r.check(ind && await ap.locator('#view tbody tr').count() === data.items.length, 'Troca de aba animada e indicador no lugar');
+    /* a área de conteúdo não pode mudar de altura/posição ao trocar de aba (nada "desce" ou "sobe") */
+    let maxShift = 0;
+    for (const v of ['equipes', 'timeline', 'calendar', 'equipes', 'table']) {
+      const y0 = await ap.evaluate(() => document.querySelector('#view').getBoundingClientRect().top);
+      await ap.click(`.tabs [data-view=${v}]`); await ap.waitForTimeout(450);
+      const y1 = await ap.evaluate(() => document.querySelector('#view').getBoundingClientRect().top);
+      maxShift = Math.max(maxShift, Math.abs(y1 - y0));
+    }
+    r.check(maxShift < 2, 'Abas não deslocam o conteúdo', `${Math.round(maxShift)}px`);
     await ap.close();
   }
   await pg.screenshot({ path: SHOTS + 'desktop.png', fullPage: false });

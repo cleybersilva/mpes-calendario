@@ -417,6 +417,10 @@ function render(){
   $$('[data-view]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.view === view)));
   placeIndicators();
   document.body.dataset.view = view;
+  /* filtros desativados (não somem) na aba Equipes: para leitores de tela e teclado também */
+  const teamsView = view === 'equipes';
+  $$('.legend button, #btnFilters, .filters select, #fPast, #activeFilters button').forEach(el => { el.disabled = teamsView; el.tabIndex = teamsView ? -1 : 0; });
+  $('.legend').setAttribute('aria-disabled', String(teamsView));
   $('#q').placeholder = view === 'equipes' ? 'Buscar participante ou equipe…' : 'Buscar módulo, professor, nota…';
   if (view === 'equipes') $('#view').innerHTML = renderTeams();
   else {

@@ -1,6 +1,6 @@
 /* Service worker: app shell em cache (offline) e data.json sempre buscado na rede primeiro */
-const VERSION = 'mpes-v14';
-const SHELL = ['./', 'index.html', 'css/styles.css?v=13', 'js/ics.js?v=7', 'js/app.js?v=12', 'manifest.webmanifest',
+const VERSION = 'mpes-v15';
+const SHELL = ['./', 'index.html', 'css/styles.css?v=14', 'js/ics.js?v=7', 'js/app.js?v=13', 'manifest.webmanifest',
   'assets/logo-cesar.png', 'assets/icon-192.png', 'assets/icon-512.png'];
 
 self.addEventListener('install', e => {

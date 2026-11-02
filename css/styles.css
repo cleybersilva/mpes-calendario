@@ -240,7 +240,9 @@ header.top{position:sticky;top:0;z-index:30;background:color-mix(in oklab,var(--
 .team-none{flex:1;font-size:13px;color:var(--soft)}
 .tag.team{background:color-mix(in oklab,var(--tc) 16%,transparent);color:color-mix(in oklab,var(--tc) 80%,var(--text))}
 .dd-members{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:13.5px}
-body[data-view="equipes"] .legend,body[data-view="equipes"] #activeFilters,body[data-view="equipes"] #btnFilters,body[data-view="equipes"] .filters,body[data-view="equipes"] .filter-panel .toggle{display:none !important}
+/* na aba Equipes os filtros não se aplicam: ficam no lugar (sem mudar a altura da página), esmaecidos e desativados */
+.legend,#activeFilters,#btnFilters,.filters,.filter-panel .toggle{transition:opacity .25s,filter .25s}
+body[data-view="equipes"] .legend,body[data-view="equipes"] #activeFilters,body[data-view="equipes"] #btnFilters,body[data-view="equipes"] .filters,body[data-view="equipes"] .filter-panel .toggle{opacity:.38;filter:saturate(.3);pointer-events:none}
 
 /* ---------- calendar ---------- */
 .cal-layout{display:grid;grid-template-columns:1fr 320px;gap:16px;align-items:start}
