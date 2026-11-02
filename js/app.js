@@ -545,13 +545,14 @@ function countUpKpis(){
   });
 }
 
-/* troca de aba e de mês: o conteúdo desliza na direção do movimento */
-function withViewTransition(dir, fn){
-  if (!MOTION || !document.startViewTransition || !dir){ fn(); return; }
-  const root = document.documentElement;
-  root.dataset.dir = dir > 0 ? 'fwd' : 'back'; root.classList.add('vt-view');
-  const t = document.startViewTransition(fn);
-  t.finished.finally(() => root.classList.remove('vt-view'));
+/* troca de aba e de mês: o conteúdo novo entra deslizando de leve na direção do movimento.
+   Anima só o próprio elemento (sem View Transitions), então fica sempre por baixo do cabeçalho
+   e da barra inferior, sem tela vazia no meio e sem disputar com a rolagem. */
+function slideIn(el, dir, dist){
+  if (!MOTION || !el || !el.animate) return;
+  el.getAnimations().forEach(a => a.cancel());
+  el.animate([{ opacity:0, transform:`translateX(${(dir || 0) * dist}px)` }, { opacity:1, transform:'none' }],
+    { duration:dir ? 320 : 220, easing:'cubic-bezier(.22,1,.36,1)' });
 }
 
 /* pílula das abas (desktop) e marcador da barra inferior deslizam até a aba ativa */
@@ -591,9 +592,15 @@ document.addEventListener('pointerdown', e => {
 function playOnce(el, cls, ms){ if (!el) return; el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); clearTimeout(el['_' + cls]); el['_' + cls] = setTimeout(() => el.classList.remove(cls), ms); }
 function playIntro(){ playOnce(document.body, 'intro', 1600); playOnce($('#view'), 'view-in', 1100); }
 
-function setView(v){ const changed = v !== view, dir = VIEWS.indexOf(v) - VIEWS.indexOf(view); view = v; store.set(KEYS.view, v);
-  if (changed) withViewTransition(dir, render); else render();
-  if (changed) playOnce($('#view'), 'view-in', 1100); window.scrollTo({top: Math.min(window.scrollY, $('.toolbar').offsetTop - 70), behavior:'smooth'}); }
+function setView(v){
+  const changed = v !== view, dir = Math.sign(VIEWS.indexOf(v) - VIEWS.indexOf(view));
+  view = v; store.set(KEYS.view, v);
+  /* rola antes de trocar (sem animação), para o conteúdo novo não dar tranco durante a entrada */
+  const top = $('.toolbar').offsetTop - 70;
+  if (changed && window.scrollY > top) window.scrollTo({ top, behavior:'instant' });
+  render();
+  if (changed) slideIn($('#view'), dir, 20);
+}
 
 /* ---------- histórico: botão "voltar" do celular fecha diálogos/painéis ---------- */
 let skipPop = false;
@@ -788,7 +795,7 @@ document.addEventListener('keydown', e => {
   else if (e.key === 't'){ goToday(); }
   else if (view === 'calendar' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !e.target.closest('.day')) shiftMonth(e.key === 'ArrowLeft' ? -1 : 1);
 });
-function shiftMonth(v){ calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth()+v, 1); selDay = null; haptic(); withViewTransition(v, render); }
+function shiftMonth(v){ calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth()+v, 1); selDay = null; haptic(); render(); slideIn($('#calGrid'), v, 28); slideIn($('.cal-head h3'), v, 14); }
 
 /* deslizar no calendário troca o mês */
 (() => { let x0 = null, y0 = 0;

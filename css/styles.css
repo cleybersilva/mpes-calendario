@@ -589,16 +589,8 @@ body.pre{overflow:hidden}
   .bnav.has-ind button[aria-selected="true"]::before{display:none}
 }
 
-/* ---------- transições de aba, mês e tema (View Transitions) ---------- */
-html.vt-view #view{view-transition-name:view}
+/* ---------- tema claro/escuro em círculo (View Transitions só aqui) ---------- */
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
-html[data-dir="fwd"]{--vtx:56px}
-html[data-dir="back"]{--vtx:-56px}
-html.vt-view::view-transition-group(view){animation-duration:.45s;animation-timing-function:var(--ease)}
-html.vt-view::view-transition-old(view){animation:vtOut .28s cubic-bezier(.4,0,1,1) both}
-html.vt-view::view-transition-new(view){animation:vtIn .5s var(--ease) both}
-@keyframes vtOut{to{opacity:0;transform:translateX(calc(var(--vtx) * -1)) scale(.985);filter:blur(2px)}}
-@keyframes vtIn{from{opacity:0;transform:translateX(var(--vtx)) scale(.985)}}
 
 /* ---------- diálogos: entrada e saída ---------- */
 dialog[open]::backdrop{animation:fadeIn .25s ease-out}
