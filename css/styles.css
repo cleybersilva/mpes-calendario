@@ -359,6 +359,13 @@ footer a{color:var(--muted)}
   footer{padding-bottom:calc(var(--nav-h) + 30px + env(safe-area-inset-bottom))}
   .hero{padding-top:18px}
   .hero p{font-size:14px}
+  /* título e subtítulo centralizados em duas linhas (só no celular) */
+  .hero h1{text-align:center;line-height:1.15}
+  .hero h1 em{display:block}
+  .hero-sub{flex-direction:column;text-align:center}
+  .hero-sub p{max-width:none}
+  .hs-a,.hs-b{display:block}
+  .hs-sep{display:none}
   .grid-top{margin-top:16px;gap:12px}
   .next{min-height:0;padding:18px}
   .next h2{max-width:100%}
