@@ -41,7 +41,6 @@ button{cursor:pointer;touch-action:manipulation}
 [hidden]{display:none !important}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .show-sm{display:none}
-@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;scroll-behavior:auto !important}}
 
 /* ---------- header ---------- */
 header.top{position:sticky;top:0;z-index:30;background:color-mix(in oklab,var(--bg) 82%,transparent);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
@@ -480,3 +479,81 @@ footer a{color:var(--muted)}
   .item.past{opacity:1}
   .month-h{position:static}
 }
+
+/* ---------- animações ----------
+   Usam as propriedades individuais translate/scale/rotate para não disputar com os
+   transform já existentes, e keyframes só com "from" para terminar no estilo normal. */
+:root{--ease:cubic-bezier(.22,1,.36,1)}
+@keyframes rise{from{opacity:0;translate:0 14px}}
+@keyframes popIn{from{opacity:0;scale:.86}}
+@keyframes barFill{from{width:0}}
+@keyframes tick{from{opacity:0;translate:0 -8px}}
+@keyframes navDot{from{opacity:0;scale:.3 1}}
+@keyframes iconPop{0%{scale:1}40%{scale:1.2}100%{scale:1}}
+@keyframes liveDot{0%,100%{box-shadow:0 0 0 0 color-mix(in oklab,var(--ok) 45%,transparent)}60%{box-shadow:0 0 0 6px transparent}}
+@keyframes fabGlow{0%,100%{box-shadow:0 10px 24px -10px rgba(255,98,0,.9)}50%{box-shadow:0 12px 30px -6px rgba(255,98,0,1)}}
+@keyframes orbitA{0%{transform:translate(0,0) scale(1)}35%{transform:translate(-90px,34px) scale(1.1)}70%{transform:translate(-36px,96px) scale(.94)}100%{transform:translate(-120px,120px) scale(1.14)}}
+@keyframes orbitB{0%{transform:translate(0,0) scale(1)}40%{transform:translate(-120px,60px) scale(1.25)}75%{transform:translate(-40px,150px) scale(.9)}100%{transform:translate(-170px,190px) scale(1.15)}}
+
+/* círculos do card em movimento contínuo */
+.next::after{animation:orbitA 14s ease-in-out infinite alternate;will-change:transform}
+.next::before{animation:orbitB 11s ease-in-out infinite alternate;will-change:transform}
+.next .lbl{position:relative;z-index:1}
+.count b.tick{animation:tick .45s var(--ease)}
+
+/* abertura do app */
+.intro .hero h1{animation:rise .6s var(--ease) backwards}
+.intro .hero-sub{animation:rise .6s .07s var(--ease) backwards}
+.intro .next{animation:rise .65s .14s var(--ease) backwards}
+.intro .next .count div{animation:popIn .5s var(--ease) backwards}
+.intro .next .count div:nth-child(1){animation-delay:.4s}
+.intro .next .count div:nth-child(2){animation-delay:.47s}
+.intro .next .count div:nth-child(3){animation-delay:.54s}
+.intro .kpi{animation:rise .6s var(--ease) backwards}
+.intro .kpi:nth-child(1){animation-delay:.2s}
+.intro .kpi:nth-child(2){animation-delay:.26s}
+.intro .kpi:nth-child(3){animation-delay:.32s}
+.intro .kpi:nth-child(4){animation-delay:.38s}
+.intro .bar i{animation:barFill 1s .4s var(--ease) backwards}
+.intro .toolbar{animation:rise .6s .34s var(--ease) backwards}
+.intro .bnav .add{animation:popIn .5s .5s var(--ease) backwards,fabGlow 2.6s 1s ease-in-out 2}
+
+/* troca de aba: entrada suave com cascata curta */
+.view-in>*{animation:rise .5s var(--ease) backwards}
+.view-in .month:nth-child(n+2){animation-delay:.1s}
+.view-in .item:not(.flash),.view-in .team:not(.flash){animation:rise .5s var(--ease) backwards}
+.view-in .item:nth-child(2),.view-in .team:nth-child(2){animation-delay:.05s}
+.view-in .item:nth-child(3),.view-in .team:nth-child(3){animation-delay:.1s}
+.view-in .item:nth-child(4),.view-in .team:nth-child(4){animation-delay:.15s}
+.view-in .item:nth-child(n+5),.view-in .team:nth-child(n+5){animation-delay:.2s}
+
+/* status online */
+.sync:not(.dirty):not(.offline) i{animation:liveDot 2.8s ease-out infinite}
+
+/* botões e navegação */
+.btn{transition:translate .2s var(--ease),transform .15s var(--ease),background-color .2s,border-color .2s,color .2s,box-shadow .25s}
+.btn svg{transition:rotate .35s var(--ease),scale .25s var(--ease)}
+.btn:active svg{scale:.88}
+.kpi,.next,.team{transition:translate .25s var(--ease),box-shadow .25s}
+.item{transition:transform .15s,border-color .15s,opacity .15s,scale .15s}
+.item:active{scale:.985}
+.tabs button[aria-selected="true"] svg{animation:iconPop .4s var(--ease)}
+.bnav button svg{transition:scale .2s var(--ease)}
+.bnav button:active svg{scale:.84}
+.bnav button[aria-selected="true"] svg{animation:iconPop .4s var(--ease)}
+.bnav button[aria-selected="true"]::before{animation:navDot .35s var(--ease)}
+.bnav .add{transition:scale .2s var(--ease)}
+.bnav .add svg{transition:rotate .35s var(--ease)}
+.bnav .add:active{scale:.92}
+.bnav .add:active svg{rotate:90deg;scale:1}
+@media (hover:hover){
+  .btn:hover{translate:0 -1px}
+  .btn:active{translate:0}
+  .btn.primary:hover{box-shadow:0 10px 24px -8px rgba(255,98,0,.9)}
+  .add-cal:hover svg{rotate:-8deg;scale:1.1}
+  .next:hover,.kpi:hover,.team:hover{translate:0 -2px}
+  .kpi:hover,.team:hover{box-shadow:var(--shadow),0 14px 28px -18px rgba(255,98,0,.55)}
+}
+
+/* respeita quem pediu menos movimento no sistema (inclui os círculos, que são pseudo-elementos) */
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none !important;transition:none !important;scroll-behavior:auto !important}}

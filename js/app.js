@@ -156,6 +156,7 @@ async function load(){
   else if (rem){ state = clone(rem); store.del(KEYS.data); }
   else { state = {meta:{turma:'MPES 2026.2', schema:SCHEMA}, items:[], equipes:[]}; toast('Sem conexão e sem dados salvos neste navegador', {ms:5000}); }
   document.body.classList.remove('loading');
+  playIntro();
   render();
 }
 
@@ -267,12 +268,14 @@ function dayLines(it){
   return out.length ? out : [fmtRange(it, true)];
 }
 function nextItem(){ return state.items.filter(i => i.status !== 'cancelado' && i.categoria !== 'marco' && isUpcoming(i)).sort(byDate)[0]; }
+let lastCount = null; /* só o número que mudou anima na contagem regressiva */
 function renderNext(){
   const n = nextItem(), el = $('#nextCard');
   if (!n){ el.innerHTML = '<div class="lbl">Próximo encontro</div><h2>Nenhum encontro agendado</h2><div class="sub">Toque em + para adicionar.</div>'; el.dataset.id = ''; return; }
   const diff = Math.max(0, firstStart(n) - new Date());
   const dd = Math.floor(diff/DAY), hh = Math.floor(diff%DAY/36e5), mm = Math.floor(diff%36e5/6e4);
   el.dataset.id = n.id;
+  const tick = (i, v) => lastCount && lastCount[i] !== v ? ' class="tick"' : '';
   /* orientação: "Orientação" em cima e o restante do título na linha de baixo */
   const titulo = n.categoria === 'orientacao' ? n.titulo.split(' · ').map(p => `<span class="ln">${esc(p)}</span>`).join('') : esc(n.titulo);
   /* orientação: cada parte do projeto (separada por " · ") fica em uma linha */
@@ -282,7 +285,8 @@ function renderNext(){
     <h2>${titulo}</h2>
     ${subs}${n.professor ? `<div class="sub prof">${esc(n.professor)}</div>` : ''}
     <div class="meta">${dayLines(n).map(l => `<span class="chip-w">${esc(l)}</span>`).join('')}${n.modalidade === 'online' ? '<span class="chip-w">Online</span>' : ''}</div>
-    <div class="count" aria-label="Faltam ${dd} dias, ${hh} horas e ${mm} minutos"><div><b>${dd}</b><small>dias</small></div><div><b>${hh}</b><small>horas</small></div><div><b>${mm}</b><small>min</small></div></div>`;
+    <div class="count" aria-label="Faltam ${dd} dias, ${hh} horas e ${mm} minutos"><div><b${tick(0, dd)}>${dd}</b><small>dias</small></div><div><b${tick(1, hh)}>${hh}</b><small>horas</small></div><div><b${tick(2, mm)}>${mm}</b><small>min</small></div></div>`;
+  lastCount = [dd, hh, mm];
 }
 
 /* ---------- render: linha do tempo ---------- */
@@ -496,7 +500,11 @@ $('#tDel').onclick = () => {
   toast(`“${t.nome}” excluída`, {action:'Desfazer', onAction: () => { state = prev; saveLocal(); }});
 };
 
-function setView(v){ view = v; store.set(KEYS.view, v); render(); window.scrollTo({top: Math.min(window.scrollY, $('.toolbar').offsetTop - 70), behavior:'smooth'}); }
+/* ---------- animações pontuais: só na abertura e na troca de aba, nunca em re-renders (busca, filtros, contagem) ---------- */
+function playOnce(el, cls, ms){ if (!el) return; el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); clearTimeout(el['_' + cls]); el['_' + cls] = setTimeout(() => el.classList.remove(cls), ms); }
+function playIntro(){ playOnce(document.body, 'intro', 1600); playOnce($('#view'), 'view-in', 1100); }
+
+function setView(v){ const changed = v !== view; view = v; store.set(KEYS.view, v); render(); if (changed) playOnce($('#view'), 'view-in', 1100); window.scrollTo({top: Math.min(window.scrollY, $('.toolbar').offsetTop - 70), behavior:'smooth'}); }
 
 /* ---------- histórico: botão "voltar" do celular fecha diálogos/painéis ---------- */
 let skipPop = false;
