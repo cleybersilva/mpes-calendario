@@ -275,9 +275,12 @@ function renderNext(){
   el.dataset.id = n.id;
   /* orientação: "Orientação" em cima e o restante do título na linha de baixo */
   const titulo = n.categoria === 'orientacao' ? n.titulo.split(' · ').map(p => `<span class="ln">${esc(p)}</span>`).join('') : esc(n.titulo);
+  /* orientação: cada parte do projeto (separada por " · ") fica em uma linha */
+  const texto = n.modulo || CATS[n.categoria]?.label || '';
+  const subs = (n.categoria === 'orientacao' ? texto.split(' · ') : [texto]).map(p => `<div class="sub">${esc(p)}</div>`).join('');
   el.innerHTML = `<div class="lbl">${statusOf(n) === 'hoje' ? 'Acontecendo hoje' : 'Próximo encontro'}</div>
     <h2>${titulo}</h2>
-    <div class="sub">${esc(n.modulo || CATS[n.categoria]?.label || '')}</div>${n.professor ? `<div class="sub prof">${esc(n.professor)}</div>` : ''}
+    ${subs}${n.professor ? `<div class="sub prof">${esc(n.professor)}</div>` : ''}
     <div class="meta">${dayLines(n).map(l => `<span class="chip-w">${esc(l)}</span>`).join('')}${n.modalidade === 'online' ? '<span class="chip-w">Online</span>' : ''}</div>
     <div class="count" aria-label="Faltam ${dd} dias, ${hh} horas e ${mm} minutos"><div><b>${dd}</b><small>dias</small></div><div><b>${hh}</b><small>horas</small></div><div><b>${mm}</b><small>min</small></div></div>`;
 }
