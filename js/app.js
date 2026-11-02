@@ -596,14 +596,25 @@ document.addEventListener('pointerdown', e => {
 function playOnce(el, cls, ms){ if (!el) return; el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); clearTimeout(el['_' + cls]); el['_' + cls] = setTimeout(() => el.classList.remove(cls), ms); }
 function playIntro(){ playOnce(document.body, 'intro', 1600); playOnce($('#view'), 'view-in', 1100); }
 
+/* Troca de aba sem nada sair do lugar: a barra de abas/busca termina exatamente na mesma
+   posição da tela em que estava antes do toque. Se o conteúdo novo for curto, a área ganha
+   altura mínima para o navegador não precisar "puxar" a página (o que fazia tudo descer). */
 function setView(v){
   const changed = v !== view, dir = Math.sign(VIEWS.indexOf(v) - VIEWS.indexOf(view));
+  const anchor = $('#tbAnchor'), tb = $('.toolbar'), vw = $('#view');
+  const headH = $('header.top').getBoundingClientRect().bottom;
+  const mt = parseFloat(getComputedStyle(tb).marginTop) || 0;
+  const a = anchor.getBoundingClientRect().top;          /* posição natural da barra (antes da margem) */
+  const keep = a + mt >= headH ? a : headH - mt;           /* visível: fica onde está · rolada além: presa sob o cabeçalho */
   view = v; store.set(KEYS.view, v);
-  /* rola antes de trocar (sem animação), para o conteúdo novo não dar tranco durante a entrada */
-  const top = $('.toolbar').offsetTop - 70;
-  if (changed && window.scrollY > top) window.scrollTo({ top, behavior:'instant' });
+  if (changed) vw.style.minHeight = '';
   render();
-  if (changed) slideIn($('#view'), dir, 20);
+  if (!changed) return;
+  const target = Math.max(0, anchor.getBoundingClientRect().top + scrollY - keep);
+  const missing = target + innerHeight - document.documentElement.scrollHeight;
+  if (missing > 0) vw.style.minHeight = Math.ceil(vw.offsetHeight + missing) + 'px';
+  window.scrollTo({ top: target, behavior:'instant' });
+  slideIn(vw, dir, 20);
 }
 
 /* ---------- histórico: botão "voltar" do celular fecha diálogos/painéis ---------- */
@@ -808,7 +819,11 @@ function shiftMonth(v){ calCursor = new Date(calCursor.getFullYear(), calCursor.
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) shiftMonth(dx < 0 ? 1 : -1); });
 })();
 
-$$('[data-view]').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+$$('[data-view]').forEach(b => {
+  /* ao clicar/tocar, o foco não pode rolar a página (o navegador "empurrava" a barra para fora da área sob o cabeçalho) */
+  b.addEventListener('pointerdown', e => { if (e.button === 0){ e.preventDefault(); b.focus({ preventScroll:true }); } });
+  b.addEventListener('click', () => setView(b.dataset.view));
+});
 const rerender = debounce(render, 140);
 $('#q').addEventListener('input', rerender);
 $('#q').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });

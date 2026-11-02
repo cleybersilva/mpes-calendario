@@ -90,13 +90,20 @@ async function desktop() {
     await ap.click('.tabs [data-view=table]'); await ap.waitForTimeout(700);
     const ind = await ap.evaluate(() => { const i = document.querySelector('.tab-ind'), b = document.querySelector('.tabs [aria-selected=true]'); return Math.abs(i.getBoundingClientRect().left - b.getBoundingClientRect().left) < 3; });
     r.check(ind && await ap.locator('#view tbody tr').count() === data.items.length, 'Troca de aba animada e indicador no lugar');
-    /* a área de conteúdo não pode mudar de altura/posição ao trocar de aba (nada "desce" ou "sobe") */
+    /* a barra de abas não pode sair do lugar ao trocar de aba (nada "desce" ou "sobe"), inclusive
+       com a barra colada no cabeçalho e em tela alta. Clique real por coordenada (o click() do
+       Playwright rola o elemento sozinho e mascararia o resultado). */
     let maxShift = 0;
-    for (const v of ['equipes', 'timeline', 'calendar', 'equipes', 'table']) {
-      const y0 = await ap.evaluate(() => document.querySelector('#view').getBoundingClientRect().top);
-      await ap.click(`.tabs [data-view=${v}]`); await ap.waitForTimeout(450);
-      const y1 = await ap.evaluate(() => document.querySelector('#view').getBoundingClientRect().top);
-      maxShift = Math.max(maxShift, Math.abs(y1 - y0));
+    await ap.setViewportSize({ width: 1920, height: 1080 });
+    for (const pos of ['0', "document.querySelector('.toolbar').getBoundingClientRect().top + scrollY - 70"]) {
+      for (const v of ['calendar', 'table', 'equipes', 'timeline', 'equipes', 'calendar']) {
+        await ap.evaluate(`window.scrollTo(0, ${pos})`); await ap.waitForTimeout(80);
+        const y0 = await ap.evaluate(() => document.querySelector('.toolbar').getBoundingClientRect().top);
+        const bx = await ap.locator(`.tabs [data-view=${v}]`).boundingBox();
+        await ap.mouse.click(bx.x + bx.width / 2, bx.y + bx.height / 2); await ap.waitForTimeout(450);
+        const y1 = await ap.evaluate(() => document.querySelector('.toolbar').getBoundingClientRect().top);
+        maxShift = Math.max(maxShift, Math.abs(y1 - y0));
+      }
     }
     r.check(maxShift < 2, 'Abas não deslocam o conteúdo', `${Math.round(maxShift)}px`);
     await ap.close();
@@ -119,6 +126,15 @@ async function mobile() {
   r.check(await pg.locator('#dlgView[open]').count() === 1, 'Tocar no item abre o detalhe');
   await pg.goBack();
   r.check(await pg.locator('dialog[open]').count() === 0, 'Botão voltar fecha o detalhe');
+  {
+    await pg.evaluate(() => window.scrollTo(0, document.body.scrollHeight)); await pg.waitForTimeout(150);
+    const y0 = await pg.evaluate(() => document.querySelector('.toolbar').getBoundingClientRect().top);
+    const bx = await pg.locator('.bnav [data-view=calendar]').boundingBox();
+    await pg.touchscreen.tap(bx.x + bx.width / 2, bx.y + bx.height / 2); await pg.waitForTimeout(400);
+    const y1 = await pg.evaluate(() => document.querySelector('.toolbar').getBoundingClientRect().top);
+    r.check(Math.abs(y1 - y0) < 2, 'Barra de busca fica no lugar ao trocar de aba (lista rolada)', `${Math.round(y0)} → ${Math.round(y1)}px`);
+    await pg.tap('.bnav [data-view=timeline]');
+  }
   await pg.tap('.bnav [data-view=equipes]');
   r.check(await pg.locator('#view .team').count() === (data.equipes || []).length, 'Aba Equipes no celular', `${await pg.locator('#view .team').count()} equipes`);
   await pg.tap('.bnav [data-view=timeline]');

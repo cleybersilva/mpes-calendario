@@ -29,7 +29,7 @@
   }
 }
 *{box-sizing:border-box}
-html{scroll-padding-top:84px}
+html{scroll-padding-top:84px;overflow-anchor:none} /* a posição na troca de aba é controlada pelo app; a ancoragem automática do navegador empurrava a página */
 html,body{margin:0}
 body{background:var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;-webkit-tap-highlight-color:transparent}
 h1,h2,h3{font-family:Sora,Inter,system-ui,sans-serif;letter-spacing:-.02em;margin:0}
@@ -352,7 +352,7 @@ footer a{color:var(--muted)}
 }
 @media (max-width:720px){
   :root{--nav-h:64px}
-  html{scroll-padding-top:70px}
+  html{scroll-padding-top:130px}
   .wrap{padding:0 14px}
   .top .wrap{height:58px;gap:10px}
   .logo{width:38px;height:38px}
@@ -385,7 +385,9 @@ footer a{color:var(--muted)}
   .kpi small{font-size:11px}
 
   /* toolbar compacta: busca + botão de filtros */
-  .toolbar{margin:20px 0 12px;gap:8px;flex-wrap:nowrap}
+  /* barra de busca e filtros presa sob o cabeçalho: não sai do lugar ao trocar de aba */
+  .toolbar{margin:12px -14px 4px;padding:8px 14px;gap:8px;flex-wrap:nowrap;position:sticky;top:calc(58px + env(safe-area-inset-top));z-index:40;background:var(--bg);box-shadow:0 10px 14px -14px rgba(0,0,0,.5)}
+  .backdrop{z-index:39}
   .tabs{display:none}
   .search{min-width:0}
   .btn-filters{display:inline-flex;height:42px;flex:none;padding:0 12px}
@@ -409,7 +411,7 @@ footer a{color:var(--muted)}
   .legend button{flex:none;border:1px solid var(--line);background:var(--surface);padding:6px 10px;border-radius:99px;font-size:12.5px}
   .legend button[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-50);color:var(--brand)}
 
-  .month-h{top:58px}
+  .month-h{top:calc(116px + env(safe-area-inset-top))}
   .item{grid-template-columns:58px 1fr;gap:12px;padding:12px 12px 12px 10px}
   .item:hover{transform:none}
   .it-act{display:none}
