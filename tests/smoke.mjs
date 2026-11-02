@@ -108,6 +108,15 @@ async function desktop() {
     r.check(maxShift < 2, 'Abas não deslocam o conteúdo', `${Math.round(maxShift)}px`);
     await ap.close();
   }
+  {
+    /* tablet (toque, tela > 720 px): topo centralizado; computador continua alinhado à esquerda */
+    const tctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, hasTouch: true, isMobile: true });
+    const tp = await tctx.newPage(); await tp.goto(URL0 + '?ci=' + Date.now()); await tp.waitForSelector('body:not(.loading)', { timeout: 15000 });
+    const tab = await tp.evaluate(() => { const b = document.querySelector('#btnAddCal').getBoundingClientRect(); return { h1: getComputedStyle(document.querySelector('.hero h1')).textAlign, off: Math.abs(b.left + b.width / 2 - innerWidth / 2) }; });
+    const desk = await pg.evaluate(() => getComputedStyle(document.querySelector('.hero h1')).textAlign);
+    r.check(tab.h1 === 'center' && tab.off < 2 && desk !== 'center', 'Topo centralizado só no tablet', `tablet ${tab.h1} · computador ${desk}`);
+    await tctx.close();
+  }
   await pg.screenshot({ path: SHOTS + 'desktop.png', fullPage: false });
   r.check(errors.length === 0, 'Sem erros no console', errors.slice(0, 3).join(' | '));
   return r;

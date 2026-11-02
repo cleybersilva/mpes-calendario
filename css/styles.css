@@ -208,6 +208,14 @@ header.top{position:sticky;top:0;z-index:30;background:color-mix(in oklab,var(--
 .sub-link{display:flex;gap:8px;margin:12px 0 4px}
 .sub-link input{flex:1;min-width:0;height:38px;border-radius:10px;border:1px solid var(--line-2);background:var(--bg);padding:0 10px;font-size:13px;color:var(--muted)}
 
+/* ---------- tablet (tela de toque maior que celular): topo centralizado ----------
+   Só toque + tela > 720 px: não afeta computador (mouse) nem celular (layout próprio). */
+@media (min-width:721px) and (hover:none) and (pointer:coarse){
+  .hero h1{text-align:center}
+  .hero-sub{flex-direction:column;align-items:center;text-align:center;gap:14px;margin-top:10px}
+  .hero-sub p{max-width:none}
+}
+
 /* ---------- equipes ---------- */
 .teams-head{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:0 0 14px}
 .teams-head>div{flex:1;min-width:200px}
