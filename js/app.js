@@ -613,7 +613,7 @@ function setView(v){
   const target = Math.max(0, anchor.getBoundingClientRect().top + scrollY - keep);
   const missing = target + innerHeight - document.documentElement.scrollHeight;
   if (missing > 0) vw.style.minHeight = Math.ceil(vw.offsetHeight + missing) + 'px';
-  window.scrollTo({ top: target, behavior:'instant' });
+  window.scrollTo(0, target); /* sem animação; forma aceita por todos os navegadores (Safari antigo rejeita 'instant') */
   slideIn(vw, dir, 20);
 }
 
@@ -1013,13 +1013,20 @@ async function publish(){
 /* ---------- PWA: funciona offline e pode ser instalado ---------- */
 if ('serviceWorker' in navigator && location.protocol === 'https:'){
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').then(reg => {
-      reg.addEventListener('updatefound', () => { const w = reg.installing; if (!w) return;
-        w.addEventListener('statechange', () => { if (w.state === 'installed' && navigator.serviceWorker.controller)
-          toast('Nova versão disponível', {action:'Atualizar', ms:15000, onAction: () => location.reload()}); }); });
-    }).catch(() => {});
+    const hadController = !!navigator.serviceWorker.controller, t0 = Date.now();
+    /* versão nova do app: recarrega sozinho se acabou de abrir; se já estiver em uso, oferece atualizar */
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadController) return;
+      if (Date.now() - t0 < 15000 && !document.querySelector('dialog[open]')) location.reload();
+      else toast('Nova versão disponível', {action:'Atualizar', ms:15000, onAction: () => location.reload()});
+    });
+    navigator.serviceWorker.register('sw.js', { updateViaCache:'none' }).then(reg => reg.update()).catch(() => {});
   });
 }
+
+/* versão publicada (gerada pela pipeline): ajuda a confirmar que o aparelho está com a última */
+fetch('version.json?t=' + Date.now(), { cache:'no-store' }).then(r => r.ok ? r.json() : null)
+  .then(v => { if (v && v.shortCommit) $('#appVer').textContent = ` · versão ${v.shortCommit}`; }).catch(() => {});
 
 /* ---------- inicialização ---------- */
 const sp = store.get(KEYS.past); if (sp !== null) $('#fPast').checked = sp === '1';

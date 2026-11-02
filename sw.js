@@ -1,6 +1,6 @@
-/* Service worker: app shell em cache (offline) e data.json sempre buscado na rede primeiro */
-const VERSION = 'mpes-v16';
-const SHELL = ['./', 'index.html', 'css/styles.css?v=15', 'js/ics.js?v=7', 'js/app.js?v=14', 'manifest.webmanifest',
+/* Service worker: tudo do site em rede primeiro (versões novas aparecem na hora); cache só para uso offline */
+const VERSION = 'mpes-v17';
+const SHELL = ['./', 'index.html', 'css/styles.css?v=16', 'js/ics.js?v=7', 'js/app.js?v=15', 'manifest.webmanifest',
   'assets/logo-cesar.png', 'assets/icon-192.png', 'assets/icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -32,10 +32,12 @@ self.addEventListener('fetch', e => {
     }).catch(() => caches.match(url.pathname)));
     return;
   }
-  // demais arquivos: cache primeiro, atualizando em segundo plano
-  e.respondWith(caches.match(req).then(hit => {
-    const net = fetch(req).then(r => { if (r.ok) { const copy = r.clone(); caches.open(VERSION).then(c => c.put(req, copy)); } return r; })
-      .catch(() => hit || (req.mode === 'navigate' ? caches.match('index.html') : undefined));
-    return hit || net;
-  }));
+  // página, CSS e JS: REDE PRIMEIRO (cada publicação aparece no próximo carregamento);
+  // o cache só é usado sem internet ou se a rede demorar mais de 4 s
+  const isPage = req.mode === 'navigate';
+  const net = fetch(isPage ? new Request(url.href, { cache:'no-cache', credentials:'same-origin' }) : req, isPage ? undefined : { cache:'no-cache' })
+    .then(r => { if (r.ok) { const copy = r.clone(); caches.open(VERSION).then(c => c.put(isPage ? 'index.html' : req, copy)); } return r; });
+  const fallback = () => caches.match(isPage ? 'index.html' : req).then(hit => hit || (isPage ? caches.match('./') : undefined));
+  e.respondWith(Promise.race([net, new Promise((_, no) => setTimeout(() => no(new Error('lento')), 4000))])
+    .catch(() => fallback().then(hit => hit || net)));
 });
