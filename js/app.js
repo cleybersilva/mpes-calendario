@@ -199,6 +199,27 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const customLabel = it => it.horaIni ? `${it.inicio === it.fim ? cap(DOW[pd(it.inicio).getDay()]) + ' ' : ''}${hm(it.horaIni)}${it.horaFim ? '–' + hm(it.horaFim) : ''}` : '';
 const slotTxt = it => [...it.horarios.map(k => SLOTS[k]?.label), customLabel(it)].filter(Boolean).join(' · ');
 /* horários de um dia: turnos fixos daquele dia da semana + horário avulso do item */
+/* link da aula online (Zoom, Meet, Teams…) informado em "Local / link" */
+function meetLink(it){
+  const u = (it.local || '').trim().match(/https?:\/\/[^\s]+/i); if (!u) return null;
+  const url = u[0], h = (() => { try { return new URL(url).hostname; } catch(_){ return ''; } })();
+  const app = /zoom\./i.test(h) ? 'Zoom' : /meet\.google/i.test(h) ? 'Google Meet' : /teams\.(microsoft|live)/i.test(h) ? 'Teams' : /webex/i.test(h) ? 'Webex' : /jitsi/i.test(h) ? 'Jitsi' : '';
+  return { url, app };
+}
+/* acontecendo agora (ou começa em até 15 min) — destaca o botão de entrar */
+function liveState(it){
+  if (it.status === 'cancelado') return '';
+  const now = new Date(), ts = timesOn(it, today0()); if (iso(today0()) < it.inicio || iso(today0()) > it.fim) return '';
+  const m = now.getHours() * 60 + now.getMinutes(), mins = t => { const [h, x] = t.split(':').map(Number); return h * 60 + x; };
+  for (const z of ts){ const s = mins(z.s), e = z.e ? mins(z.e) : s + 60; if (m >= s && m < e) return 'live'; if (m >= s - 15 && m < s) return 'soon'; }
+  return '';
+}
+function joinButton(it, big){
+  const L = meetLink(it); if (!L || isDone(it)) return '';
+  const live = liveState(it), label = live === 'live' ? 'Entrar agora · ao vivo' : `Entrar na aula${L.app ? ' · ' + L.app : ''}`;
+  return `<a class="join ${big ? 'big' : ''} ${live}" href="${esc(L.url)}" target="_blank" rel="noopener noreferrer" data-join aria-label="${esc(label)} (abre em nova aba)">${ICON.video}<span>${esc(label)}</span>${ICON.ext}</a>`;
+}
+
 function timesOn(it, d){
   const out = it.horarios.map(k => SLOTS[k] && {...SLOTS[k], k}).filter(z => z && z.dow === d.getDay());
   if (it.horaIni) out.push({s:it.horaIni, e:it.horaFim, k:'avulso'});
@@ -224,6 +245,8 @@ const ICON = {
   next:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>',
   x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
   calAdd:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M12 14v4M10 16h4"/></svg>',
+  video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="13" height="12" rx="2.5"/><path d="m15 10.5 5.2-3.1a.8.8 0 0 1 1.3.7v7.8a.8.8 0 0 1-1.3.7L15 13.5"/></svg>',
+  ext:'<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
   plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
 };
 
@@ -285,6 +308,7 @@ function renderNext(){
     <h2>${titulo}</h2>
     ${subs}${n.professor ? `<div class="sub prof">${esc(n.professor)}</div>` : ''}
     <div class="meta">${dayLines(n).map(l => `<span class="chip-w">${esc(l)}</span>`).join('')}${n.modalidade === 'online' ? '<span class="chip-w">Online</span>' : ''}</div>
+    ${joinButton(n, true)}
     <div class="count" aria-label="Faltam ${dd} dias, ${hh} horas e ${mm} minutos"><div><b${tick(0, dd)}>${dd}</b><small>dias</small></div><div><b${tick(1, hh)}>${hh}</b><small>horas</small></div><div><b${tick(2, mm)}>${mm}</b><small>min</small></div></div>`;
   lastCount = [dd, hh, mm];
 }
@@ -305,6 +329,7 @@ function itemCard(it){
         ${slotTxt(it) ? `<span>${ICON.clock}${esc(slotTxt(it))}</span>` : ''}
       </div>
       ${it.notas ? `<div class="it-notes">${esc(it.notas)}</div>` : ''}
+      ${joinButton(it)}
     </div>
     <div class="it-act">
       <button type="button" data-a="done" class="${it.status==='concluido'?'on':''}" title="${it.status==='concluido'?'Desmarcar concluído':'Marcar como concluído'}" aria-label="Concluir">${ICON.check}</button>
@@ -373,7 +398,7 @@ function renderTable(list){
   return `<div class="card tbl-wrap"><table><thead><tr>${th('inicio','Data')}${th('titulo','Título')}${th('modulo','Módulo')}${th('categoria','Tipo')}${th('professor','Professor(a)')}<th>Horários</th><th><span class="sr">Ações</span></th></tr></thead><tbody>
     ${arr.map(it => `<tr data-id="${esc(it.id)}" style="--c:${color(it.categoria)}" tabindex="0" class="${isDone(it)?'past':''}">
       <td style="white-space:nowrap" data-l="Data">${esc(fmtRange(it))}</td>
-      <td class="tt tt-cell">${esc(it.titulo)}</td>
+      <td class="tt tt-cell">${esc(it.titulo)}${joinButton(it)}</td>
       <td data-l="Módulo">${esc(it.modulo) || '—'}</td>
       <td><span class="tag">${esc(CATS[it.categoria]?.label || 'Outro')}</span></td>
       <td data-l="Professor(a)">${esc(it.professor) || '—'}${it.modalidade==='online'?' <span class="tag plain">Online</span>':''}</td>
@@ -736,7 +761,7 @@ function openView(id){
   $('#vTitle').textContent = it.titulo;
   const st = {passado:'Realizado', concluido:'Concluído', hoje:'Hoje', futuro:'Agendado', cancelado:'Cancelado / adiado'}[statusOf(it)];
   const loc = it.local ? (safeUrl(it.local) ? `<a href="${esc(it.local)}" target="_blank" rel="noopener noreferrer">${esc(it.local)}</a>` : esc(it.local)) : '—';
-  $('#vBody').innerHTML = `<div class="it-top" style="--c:${color(it.categoria)}">${tagsFor(it)}</div><dl>
+  $('#vBody').innerHTML = `<div class="it-top" style="--c:${color(it.categoria)}">${tagsFor(it)}</div>${meetLink(it) ? `<div class="v-join">${joinButton(it, true) || `<a class="join big" href="${esc(meetLink(it).url)}" target="_blank" rel="noopener noreferrer" data-join>${ICON.video}<span>Abrir link da aula</span>${ICON.ext}</a>`}</div>` : ''}<dl>
     <dt>Data</dt><dd>${esc(fmtRange(it,true))}</dd>
     ${slotTxt(it) ? `<dt>Horários</dt><dd>${esc(slotTxt(it))}</dd>` : ''}
     ${it.modulo ? `<dt>${it.categoria === 'orientacao' ? 'Projeto' : 'Módulo'}</dt><dd>${esc(it.modulo)}</dd>` : ''}
@@ -773,6 +798,7 @@ function goToday(){
 /* ---------- eventos ---------- */
 document.addEventListener('click', e => {
   const t = e.target;
+  if (t.closest('a[data-join]')) return; /* deixa o link da aula abrir normalmente */
   if (t.closest('[data-close]')){ t.closest('dialog').close(); return; }
   if (t.closest('[data-fp-close]')){ closeFilters(); return; }
   if (t.closest('[data-new]')){ openEdit(null); return; }

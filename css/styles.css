@@ -217,6 +217,29 @@ header.top{position:sticky;top:0;z-index:30;background:color-mix(in oklab,var(--
   .hero-sub p{max-width:none}
 }
 
+/* ---------- botão "Entrar na aula" (link do Zoom/Meet/Teams) ---------- */
+.join{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:7px 12px 7px 10px;border-radius:10px;background:color-mix(in oklab,#2D8CFF 16%,var(--surface));border:1px solid color-mix(in oklab,#2D8CFF 45%,var(--line));color:color-mix(in oklab,#2D8CFF 70%,var(--text));font-size:13.5px;font-weight:700;text-decoration:none;transition:background .15s,transform .15s,box-shadow .15s;position:relative;overflow:hidden;max-width:100%}
+.join span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.join svg{width:17px;height:17px;flex:none}
+.join .ext{width:13px;height:13px;opacity:.7}
+.join:hover{background:color-mix(in oklab,#2D8CFF 26%,var(--surface));transform:translateY(-1px);box-shadow:0 6px 16px -8px rgba(45,140,255,.7)}
+.join.big{font-size:15px;padding:10px 16px 10px 14px;border-radius:12px}
+.join.big svg{width:20px;height:20px}
+.next .join{background:#fff;color:#C94400;border-color:transparent;position:relative;z-index:1;margin-top:14px;box-shadow:0 8px 20px -10px rgba(0,0,0,.45)}
+.next .join:hover{background:#fff6ef}
+.join.live,.join.soon{background:#1F9D63;border-color:#1F9D63;color:#fff}
+.join.live::before{content:"";width:8px;height:8px;border-radius:50%;background:#fff;flex:none;animation:liveDot 1.2s ease-in-out infinite}
+@keyframes liveDot{50%{opacity:.25;transform:scale(.7)}}
+.next .join.live,.next .join.soon{background:#1F9D63;color:#fff}
+td .join{display:flex;width:max-content;margin-top:6px;font-size:12.5px;padding:5px 10px 5px 8px}
+.v-join{margin:12px 0 2px}
+.v-join .join{margin-top:0}
+@media (max-width:720px){
+  .item .join{display:flex;width:100%;justify-content:center}
+  .next .join{width:100%;justify-content:center}
+  .v-join .join{width:100%;justify-content:center}
+}
+
 /* ---------- equipes ---------- */
 .teams-head{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:0 0 14px}
 .teams-head>div{flex:1;min-width:200px}

@@ -40,6 +40,11 @@ async function desktop() {
     r.check(await pg.locator('.item:has-text("Item de teste CI")').count() === 1, 'Criar item');
     await pg.locator('.item:has-text("Item de teste CI") [data-a=edit]').click(); await pg.fill('#eTitulo', 'Item de teste CI editado'); await pg.click('#formEdit button[type=submit]');
     r.check(await pg.locator('.item:has-text("Item de teste CI editado")').count() === 1, 'Editar item');
+    /* link de aula online no campo Local vira botão "Entrar na aula" no cartão */
+    await pg.locator('.item:has-text("Item de teste CI editado") [data-a=edit]').click();
+    await pg.fill('#eLocal', 'https://cesar.zoom.us/j/123456789'); await pg.click('#formEdit button[type=submit]');
+    const jl = pg.locator('.item:has-text("Item de teste CI editado") a[data-join]');
+    r.check(await jl.count() === 1 && (await jl.getAttribute('href')) === 'https://cesar.zoom.us/j/123456789' && (await jl.innerText()).includes('Zoom') && (await jl.getAttribute('target')) === '_blank', 'Botão "Entrar na aula" com o link do Zoom');
     await pg.locator('.item:has-text("Item de teste CI editado") [data-a=del]').click();
     r.check(await pg.locator('.item:has-text("Item de teste CI")').count() === 0, 'Excluir item');
     await pg.click('#toast button');
