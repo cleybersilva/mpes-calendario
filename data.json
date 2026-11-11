@@ -4,7 +4,7 @@
     "instituicao": "CESAR School",
     "turma": "MPES 2026.2",
     "fonte": "Calendário MPES 2026.2 (em construção) — atualizado 21/10",
-    "updatedAt": "2026-10-30T20:39:30.502Z",
+    "updatedAt": "2026-11-11T22:49:14.884Z",
     "schema": 1,
     "minhaEquipe": "e2"
   },
@@ -127,7 +127,7 @@
       "professor": "Washington Almeida",
       "modalidade": "presencial",
       "semestre": 1,
-      "local": "CESAR School",
+      "local": "https://cesar.zoom.us/j/85292505130",
       "notas": "",
       "status": "auto",
       "equipe": ""
